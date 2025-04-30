@@ -22,25 +22,32 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 
+import static page.prueba1.eliminarCapturas;
+import static page.prueba1.obtenerSiguienteNumero;
+
 public class CapturasStepDefinitions {
     private WebDriver driver;
-    private String pdfPath = "C:/Pruebas/Capturas.pdf"; // Ruta del PDF
+    private String pdfPath = "C:/git/aut-Enternet/src/main/java/pdf/"; // Ruta del PDF
     private PdfDocument pdfDoc;
     private Document document;
+    private static final String RUTA_PDF = "C:/git/aut-Enternet/src/main/java/pdf/";
+    private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/src/main/java/pdf/capturas/";
 
     @Given("el usuario abre Google")
     public void elUsuarioAbreGoogle() {
-        System.setProperty("webdriver.chrome.driver", "ruta/al/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "C:/git/aut-Enternet/src/main/java/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); // Espera implícita
         driver.get("https://www.google.com");
 
         // Crear el directorio si no existe
-        new File("C:/Pruebas").mkdirs();
+        new File("C:/git/aut-Enternet/src/main/java/pdf/capturas/").mkdirs();
 
         // Iniciar el documento PDF
         try {
-            pdfDoc = new PdfDocument(new PdfWriter(pdfPath));
+            int numeroPdf = obtenerSiguienteNumero(RUTA_PDF);
+            String rutaPdf = RUTA_PDF + "Reporte_" + numeroPdf + ".pdf";
+            pdfDoc = new PdfDocument(new PdfWriter(rutaPdf));
             document = new Document(pdfDoc);
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,6 +57,7 @@ public class CapturasStepDefinitions {
     @When("el usuario toma capturas de pantalla con tiempos de carga")
     public void elUsuarioTomaCapturasConTiempos() throws IOException {
         tomarCaptura("Página de inicio de Google");
+        medirTiempoDeCarga(By.name("q"), "Campo de búsqueda en Google");
 
         driver.get("https://www.wikipedia.org");
         tomarCaptura("Página de inicio de Wikipedia");
@@ -57,7 +65,7 @@ public class CapturasStepDefinitions {
         driver.get("https://www.github.com");
         tomarCaptura("Página de inicio de GitHub");
 
-        medirTiempoDeCarga(By.name("q"), "Campo de búsqueda en Google");
+
     }
 
     @Then("se genera un PDF con todas las capturas y tiempos registrados")
@@ -67,6 +75,7 @@ public class CapturasStepDefinitions {
             pdfDoc.close();
             driver.quit();
             System.out.println("PDF generado con éxito en: " + pdfPath);
+            eliminarCapturas();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,6 +93,7 @@ public class CapturasStepDefinitions {
 
         ImageData imageData = ImageDataFactory.create(screenshotPath);
         Image image = new Image(imageData);
+        image.scaleToFit(400, 300);  // Ajuste de tamaño
         document.add(image);
     }
 

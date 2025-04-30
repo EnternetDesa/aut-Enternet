@@ -15,6 +15,8 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.Map;
 
+import static definitions.Commons.BaseTest.esperarElementoYMedirTiempo;
+
 public class SalidaDeInventarioDef {
 
     WebDriver driver;
@@ -35,6 +37,7 @@ public class SalidaDeInventarioDef {
         } catch (AWTException e) {
             throw new RuntimeException(e);
         }
+//        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"ICONCREAR\"]"), "Icono crear");
 
         loginDef.esperarElementoVisible(By.xpath("//*[@id=\"ICONCREAR\"]"),10);
         WebElement btnCrear = driver.findElement(By.xpath("//*[@id=\"ICONCREAR\"]"));

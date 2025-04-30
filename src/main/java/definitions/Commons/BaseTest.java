@@ -39,8 +39,8 @@ public class BaseTest {
     public static Map<String, String> datos;
     public static Map<String, String> datosPOS;
     public static final String RUTA_PDF = "C:/git/aut-Enternet/reportes/";
-    private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/reportes/";
-    public static List<String> mensajes = new ArrayList<>();
+    private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/reportes/capturas/";
+    public static List<String> tiemposDeCarga = new ArrayList<>();
     public static PdfDocument pdfDocument;
     public static Document document;
     static String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -86,6 +86,7 @@ public class BaseTest {
             // ✅ Ahora SÍ es momento de generar el PDF con las capturas tomadas
             generarPDFConCapturas(RUTA_PDF, timestamp, nombreFeature, estadoEjecucion);
             cerrarPDF();
+            eliminarCapturas();
         }
     }
 
@@ -96,7 +97,7 @@ public class BaseTest {
         return driver;
     }
 
-    // Método para ingresar datos y validar si los elementos existen o están ocultos
+    // Metodo para ingresar datos y validar si los elementos existen o están ocultos
     public static void validarIngreso(WebDriver driver, String dato, By locator) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
@@ -172,6 +173,40 @@ public class BaseTest {
       }
   }
 
+    //    public static String esperarElementoYMedirTiempo( By locator, String descripcion) {
+//
+//        long inicio = System.currentTimeMillis();
+//        try {
+//            new WebDriverWait(driver, Duration.ofSeconds(10))
+//                    .until(ExpectedConditions.visibilityOfElementLocated(locator));
+//            long fin = System.currentTimeMillis();
+//            String mensaje = descripcion + " apareció en " + (fin - inicio) + " ms";
+//            mensajes.add(mensaje);
+//            return mensaje;
+//        } catch (TimeoutException e) {
+//            String mensaje = "⚠️ No apareció " + descripcion;
+//            mensajes.add(mensaje);
+//            return mensaje;
+//        }
+//    } FUNCIONA OK EN CASO DE NO FUNCIONAR LA NUEVA VOLVER A ESTA-------
+    public static String esperarElementoYMedirTiempo( By locator, String descripcion) {
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        long inicio = System.currentTimeMillis();
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+            long fin = System.currentTimeMillis();
+            long tiempoCarga = fin - inicio;
+
+            tiemposDeCarga.add("⏱ Tiempo de carga de "+ descripcion+ ":" +tiempoCarga+ "ms");
+        } catch (TimeoutException e) {
+
+            tiemposDeCarga.add("⏱ Tiempo de carga de "+ descripcion+ ": No apareció en el tiempo esperado.");
+
+        }
+        return descripcion;
+    }
+
     public static void generarPDFConCapturas(String rutaPdf, String fechaHora, String nombreFeature, String status) {
         try {
             document.add(new Paragraph("📄 Reporte de pruebas Selenium").setBold().setFontSize(16));
@@ -185,6 +220,7 @@ public class BaseTest {
             }
             document.add(new Paragraph("🕒 Fecha: " + fechaHora).setTextAlignment(TextAlignment.LEFT));
 
+
             if (!capturasPendientes.get().isEmpty()) {
                 for (String rutaCaptura : capturasPendientes.get()) {
                     File captura = new File(rutaCaptura);
@@ -194,13 +230,20 @@ public class BaseTest {
                         document.add(new Paragraph("📸 Captura: " + captura.getName()));
                         document.add(image);
                         document.add(new Paragraph("\n"));
+
+                        // Agregar los tiempos de carga
+                        if (!tiemposDeCarga.isEmpty()) {
+                            for (String tiempo : tiemposDeCarga) {
+                                document.add(new Paragraph(tiempo));
+                            }
+                        }
                     }
                 }
             } else {
                 document.add(new Paragraph("⚠️ No hay capturas disponibles."));
             }
             // ✅ Limpieza final
-         //   capturasPendientes.clear();
+           // capturasPendientes.clear();
             System.out.println("✅ PDF generado correctamente: " + rutaPdf);
 
         } catch (Exception e) {
@@ -209,7 +252,7 @@ public class BaseTest {
         }
     }
 
-    // Método para cerrar el PDF después de la prueba
+    // Metodo para cerrar el PDF después de la prueba
     public static void cerrarPDF() {
         if (document != null) {
             document.close();
@@ -217,7 +260,7 @@ public class BaseTest {
         }
     }
 
-    // Método para inicializar el PDF antes de comenzar a agregar capturas
+    // Metodo para inicializar el PDF antes de comenzar a agregar capturas
     public static void inicializarPDF() {
         try {
             int numero = obtenerNumeroConsecutivo(RUTA_PDF);
@@ -233,23 +276,8 @@ public class BaseTest {
             estadoEjecucion = "Failed";
         }
     }
-    public static String esperarElementoYMedirTiempo( By locator, String descripcion) {
 
-        long inicio = System.currentTimeMillis();
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(10))
-                    .until(ExpectedConditions.visibilityOfElementLocated(locator));
-            long fin = System.currentTimeMillis();
-            String mensaje = descripcion + " apareció en " + (fin - inicio) + " ms";
-            mensajes.add(mensaje);
-            return mensaje;
-        } catch (TimeoutException e) {
-            String mensaje = "⚠️ No apareció " + descripcion;
-            mensajes.add(mensaje);
-            return mensaje;
-        }
-    }
-    // Método para eliminar las capturas de pantalla después de generar el PDF
+    // Metodo para eliminar las capturas de pantalla después de generar el PDF
     public static void eliminarCapturas() {
         try {
             Files.list(Paths.get(RUTA_CAPTURAS)) // Solo lista archivos, sin incluir la carpeta
@@ -268,7 +296,7 @@ public class BaseTest {
     }
 
     /*metodos de putty*/
-    // 🔹 Método para convertir la primera letra a mayúscula
+    // 🔹 Metodo para convertir la primera letra a mayúscula
     public static String capitalizarPrimeraLetra(String texto) {
         if (texto == null || texto.isEmpty()) {
             return texto;
@@ -276,7 +304,7 @@ public class BaseTest {
         return Character.toUpperCase(texto.charAt(0)) + texto.substring(1);
     }
 
-    // 🔹 Método para escribir texto con caracteres especiales y primera letra en mayúscula
+    // 🔹 Metodo para escribir texto con caracteres especiales y primera letra en mayúscula
     public static void escribirTextoEspecial(Robot robot, String texto) {
         for (int i = 0; i < texto.length(); i++) {
             char c = texto.charAt(i);
@@ -296,7 +324,7 @@ public class BaseTest {
         }
     }
 
-    // 🔹 Método para escribir texto normal
+    // 🔹 Metodo para escribir texto normal
     public static void escribirTexto(Robot robot, String texto) {
         for (char c : texto.toCharArray()) {
             int keyCode = KeyEvent.getExtendedKeyCodeForChar(c);
@@ -308,7 +336,7 @@ public class BaseTest {
         }
     }
 
-    // 🔹 Método especial para escribir "?" en teclado español latinoamericano
+    // 🔹 Metodo especial para escribir "?" en teclado español latinoamericano
     public static void escribirCaracterPregunta(Robot robot) {
         robot.keyPress(KeyEvent.VK_SHIFT);
         robot.keyPress(KeyEvent.VK_QUOTE); // 🔹 Para "?" en teclado LATAM
@@ -316,7 +344,7 @@ public class BaseTest {
         robot.keyRelease(KeyEvent.VK_SHIFT);
     }
 
-    // 🔹 Método para presionar teclas combinadas
+    // 🔹 Metodo para presionar teclas combinadas
     public static void presionarTeclas(Robot robot, int tecla1, int tecla2) {
         robot.keyPress(tecla1);
         robot.keyPress(tecla2);

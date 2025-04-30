@@ -1,4 +1,4 @@
-package resources;
+package page;
 
 
 import com.itextpdf.io.exceptions.IOException;
@@ -27,7 +27,7 @@ import java.util.Date;
 
 public class prueba1 {
     private static final String RUTA_PDF = "C:/git/aut-Enternet/src/main/java/pdf/";
-    private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/src/main/java/pdf/";
+    private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/src/main/java/pdf/capturas/";
 
     public static void main(String[] args) {
         WebDriver driver = new ChromeDriver();
@@ -49,7 +49,7 @@ public class prueba1 {
             System.out.println("PDF generado: " + rutaPdf);
             Thread.sleep(2000);
             // Eliminar capturas después de finalizar
-          //  eliminarCapturas();
+            eliminarCapturas();
 
 
 
