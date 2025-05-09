@@ -74,7 +74,7 @@ Scenario: POS - Agregar Producto por boton Carta
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
     And seleccionamos boton nueva venta
-   # And le asignamos el cliente a quien venderemos "<nombreCliente>"
+    And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And hacemos click en el boton carta y seleccionamos el producto que muestre
     And le modificamos el precio al producto"<precio>"
     And le modificamos la cantidad de producto a comprar "<cantProdC>"

@@ -13,6 +13,7 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import definitions.Commons.BaseTest;
+import definitions.Commons.ReporteUtils;
 import definitions.Commons.Utils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -52,6 +53,7 @@ public class LoginDef {
 // login y seleccion de rol
     @And("Ingreso con el tipo de {string}")
     public void ingresoConElTipoDe(String us)  {
+        long startTime = System.currentTimeMillis();
         By element = By.xpath("//input[@name='_SRUT']");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='_SRUT']")));
@@ -60,16 +62,25 @@ public class LoginDef {
         Utils.desenmarcarObjeto(driver, elemento);
         esperarElementoYMedirTiempo(By.name("BOTPAS"),"Usuario");
 
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        ReporteUtils.tiemposDeCarga.add("Ingreso con el tipo de " + us + " (Tiempo: " + duration + " ms)");
+
     }
 
     @And("ingreso la contrasenia {string}")
     public void ingresoLaContrasenia(String clave) {
+        long startTime = System.currentTimeMillis();
+        By element = By.xpath("//input[@name='_PASSWDPLANO']");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='_PASSWDPLANO']")));
         Utils.enmarcarElemento(driver, elemento);
         elemento.sendKeys(datos.get("clave"));
         Utils.desenmarcarObjeto(driver, elemento);
         esperarElementoYMedirTiempo(By.name("BOTPAS"),"Contraseña");
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        ReporteUtils.tiemposDeCarga.add("Ingreso de clave (Tiempo: " + duration + " ms)" );
     }
 
     @And("luego presiono el boton continuar")
@@ -103,7 +114,7 @@ public class LoginDef {
                 Utils.desenmarcarObjeto(driver, btnInventario);
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td"), "Seleccion de Rol: " +rol+ "");
                 btnInventario.click();
-                cerrarDriver();
+
                 break;
 
             case "Punto de ventas Enternet":
@@ -114,7 +125,17 @@ public class LoginDef {
                 Utils.desenmarcarObjeto(driver, btnPuntoVentas);
                 esperarElementoYMedirTiempo(By.id("_APPICO_00020002"), "Seleccion rol: " +rol );
                 btnPuntoVentas.click();
-                cerrarDriver();
+
+                break;
+            case "Promociones":
+                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebElement btnPromociones = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.id("_APPICO_00050001")));
+                Utils.enmarcarElemento(driver, btnPromociones);
+                BaseTest.tomarCaptura("Administrador Promociones");
+                Utils.desenmarcarObjeto(driver, btnPromociones);
+                esperarElementoYMedirTiempo(By.id("_APPICO_00050001"), "Seleccion rol: " +rol );
+                btnPromociones.click();
+
                 break;
             default:
                 System.out.println("Opción no válida");

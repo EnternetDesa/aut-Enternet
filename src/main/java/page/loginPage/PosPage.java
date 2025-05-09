@@ -952,6 +952,9 @@ public class PosPage {
         BaseTest.tomarCaptura("Producto agregado en Carro");
         cerrarDriver();
     }
+    public static void seleccionarCliente(){
+        //*[@id="vCREARVENTA_ACTION_0001"]
+    }
 
 
 

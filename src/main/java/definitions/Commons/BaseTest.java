@@ -8,6 +8,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
+import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
 import org.apache.commons.io.FileUtils;
@@ -20,24 +21,23 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 
 public class BaseTest {
     // Lista que solo contiene las capturas de la ejecución en curso
     private static ThreadLocal<List<String>> capturasPendientes = ThreadLocal.withInitial(ArrayList::new);
-   // public static List<String> capturasPendientes = new ArrayList<>();
     protected static WebDriver driver;
     public static Map<String, String> datos;
     public static Map<String, String> datosPOS;
+    public static Map<String , Object> datosPromociones;
     public static final String RUTA_PDF = "C:/git/aut-Enternet/reportes/";
     private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/reportes/capturas/";
     public static List<String> tiemposDeCarga = new ArrayList<>();
@@ -47,6 +47,25 @@ public class BaseTest {
     public static String nombreFeature;
     public static String estadoEjecucion = "Passed";
 
+//    public static Map<String, Object> datosPromociones;
+
+    static {
+        cargarDatosPromociones();
+    }
+    public static void cargarDatosPromociones() {
+        try {
+            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosPromociones.json");
+            if (is == null) {
+                throw new RuntimeException("❌ Archivo datosPromociones.json no encontrado en resources.");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            datosPromociones = mapper.readValue(is, new TypeReference<>() {});
+            System.out.println("✅ datosPromociones cargado correctamente.");
+        } catch (Exception e) {
+            System.err.println("❌ Error al cargar datosPromociones: " + e.getMessage());
+            datosPromociones = null; // evitar estado inconsistente
+        }
+    }
 
     @Given("que cargo los datos desde el archivo {string}")
     public void queCargoLosDatosDesdeElArchivo(String archivo) {
@@ -212,7 +231,7 @@ public class BaseTest {
             document.add(new Paragraph("📄 Reporte de pruebas Selenium").setBold().setFontSize(16));
             document.add(new Paragraph("🟢 Estado: " + status));
 
-            // Aquí se agrega el nombre del feature al reporte
+            // nombre del feature
             if (nombreFeature != null && !nombreFeature.isEmpty()) {
                 document.add(new Paragraph("🧪 Feature: " + nombreFeature).setFontSize(12f));
             } else {
@@ -227,25 +246,39 @@ public class BaseTest {
                     if (captura.exists()) {
                         ImageData imageData = ImageDataFactory.create(rutaCaptura);
                         Image image = new Image(imageData).scaleToFit(500, 350);
-                        document.add(new Paragraph("📸 Captura: " + captura.getName()));
-                        document.add(image);
-                        document.add(new Paragraph("\n"));
 
-                        // Agregar los tiempos de carga
-                        if (!tiemposDeCarga.isEmpty()) {
-                            for (String tiempo : tiemposDeCarga) {
-                                document.add(new Paragraph(tiempo));
+                        String nombreCaptura = captura.getName();
+                        String descripcion = nombreCaptura.replaceAll("_[0-9]{8}_[0-9]+\\.png", "");
+
+                        document.add(new Paragraph("📸 Captura: " + nombreCaptura));
+                        document.add(image);
+
+                        // Buscar y mostrar el tiempo correspondiente a la descripción
+                        for (String tiempo : tiemposDeCarga) {
+                            if (tiempo.contains(descripcion)) {
+                                document.add(new Paragraph("🕒 " + tiempo));
+                                break;
                             }
                         }
+
+                        document.add(new Paragraph("\n"));
                     }
                 }
             } else {
                 document.add(new Paragraph("⚠️ No hay capturas disponibles."));
             }
-            // ✅ Limpieza final
-           // capturasPendientes.clear();
-            System.out.println("✅ PDF generado correctamente: " + rutaPdf);
 
+            // Agregar el tiempo total al final del reporte (si hay tiempos registrados)
+            if (!tiemposDeCarga.isEmpty()) {
+                document.add(new Paragraph("🕒 Resumen de tiempos de ejecución:"));
+                for (String tiempo : tiemposDeCarga) {
+                    document.add(new Paragraph(tiempo));
+                }
+            }
+            System.out.println("✅ PDF generado correctamente: " + rutaPdf);
+            // ✅ Limpieza automática de listas para evitar acumulación
+            tiemposDeCarga.clear();
+            capturasPendientes.get().clear();
         } catch (Exception e) {
             System.out.println("❌ Error al generar el PDF: " + e.getMessage());
             estadoEjecucion = "Failed";
