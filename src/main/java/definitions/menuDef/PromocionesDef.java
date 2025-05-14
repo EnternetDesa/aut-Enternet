@@ -100,7 +100,6 @@ public class PromocionesDef {
     @And("en la vista de restriccion agregamos una seleccionando el boton mas")
     public void enLaVistaDeRestriccionAgregamosUnaSeleccionandoElBotonMas() {
         seleccionarSignoMas();
-
     }
 
     @And("ingresamos nombre de restriccion")
@@ -124,8 +123,8 @@ public class PromocionesDef {
 
     @And("seleccionamos el producto de la promocion por descripcion <{string}> o codigo <{string}>")
     public void seleccionamosElProductoDeLaPromocionPorDescripcionOCodigo(String criteria, String value) {
+        seleccionarProductos("description", "Aceitunas", 9999);
 
-        seleccionarProductos( "description", "Aceitunas"); //"Agua Benedictino Gasificada 500 ML, Agua Benedictino Sin Gas 500 ML"
     }
     @And("guardamos los cambios")
     public void guardamosLosCambios() throws InterruptedException {
@@ -139,15 +138,14 @@ public class PromocionesDef {
 
     @And("ingresamos el tipo de descuento que tendra la promocion")
     public void ingresamosElTipoDeDescuentoQueTendraLaPromocion() throws InterruptedException {
-        seleccionarReglaDePromocion("Monto fijo", 2000);
+        String nombreRestriccion = datosPromociones.get("nombreRestriccion");
+        seleccionarReglaDePromocion("Monto fijo", nombreRestriccion, 15 );
     }
 
     @And("visualizamos el resumen de nuestra promocion")
     public void visualizamosElResumenDeNuestraPromocion() {
         // Capturar el mensaje de pantalla
         capturarMensajePantalla("//*[@id=\"span_W0026vDESCUENTOAREALIZAR\"]");
-
-
 
     }
 
@@ -234,29 +232,41 @@ public class PromocionesDef {
     @And("editamos la ubicacion ,en caso de no ingresar una la promocion aplicara para todas las ubicaciones")
     public void editamosLaUbicacionEnCasoDeNoIngresarUnaLaPromocionAplicaraParaTodasLasUbicaciones() throws InterruptedException {
         // Si deseas seleccionar ubicaciones específicas
-        List<String> ubicaciones = Arrays.asList("RUENDE", "TREHUACO");
+        List<String> ubicaciones = Arrays.asList("POSONLINE","TRAUCO");
         seleccionarUbicacionesParaCanje(ubicaciones);
 
         // Si no deseas seleccionar ninguna ubicación (desactivarlo)
         //seleccionarUbicacionesParaCanje(null);
-        cerrarDriver();
-    }
 
-    @And("en la vista de restriccion editamos una agregando otra seleccionando el boton mas")
-    public void enLaVistaDeRestriccionEditamosUnaAgregandoOtraSeleccionandoElBotonMas() {
-        seleccionarSignoMas();
     }
 
     @And("Editamos la categoria de la promocion <{string}>")
-    public void editamosLaCategoriaDeLaPromocion(String arg0) {
+    public void editamosLaCategoriaDeLaPromocion(String arg0) throws InterruptedException {
+        String restriccion = datosPromociones.get("categoriaRestriccion");
+        String restriccion2 = datosPromociones.get("categoriaRestriccion2");
+        List<String> categorias = Arrays.asList(restriccion, restriccion2, "Aguas", "Hielo" );
+        seleccionarCategorias(categorias);
+
     }
 
     @And("Editamos el producto de la promocion por descripcion <{string}> o codigo <{string}>")
     public void editamosElProductoDeLaPromocionPorDescripcionOCodigo(String arg0, String arg1) {
+        //seleccionarProductos( "description", "Aceitunas");
+        // Seleccionar hasta 3 productos que coincidan con la descripción "Chocolate"
+        //  seleccionarProductos("description", "Chocolate", 3);
+
+        // Seleccionar hasta 5 productos que coincidan con el código "12345"
+        //    seleccionarProductos("code", "12345", 5);
+
+        // Seleccionar todos los productos que coincidan con la descripción "Galleta"
+        seleccionarProductos("description", "Agua", 9999);
+
     }
 
     @And("editamos el tipo de descuento que tendra la promocion")
-    public void editamosElTipoDeDescuentoQueTendraLaPromocion() {
+    public void editamosElTipoDeDescuentoQueTendraLaPromocion() throws InterruptedException {
+        String nombreRestriccion = datosPromociones.get("nombreRestriccion");
+        seleccionarReglaDePromocion("Menor precio monto fijo", nombreRestriccion, 1000 );
     }
 
     @Then("nos debe dirigir a la pantalla principal y visualizar nuestra promocion editada")
@@ -265,11 +275,87 @@ public class PromocionesDef {
         boolean encontrada = buscarYEnmarcarPromocion(nombrePromocion);
 
         if (encontrada) {
-            System.out.println("✅ La promoción fue editada y encontrada correctamente.");
+            System.out.println("✅ La promoción fue editada correctamente.");
+        } else {
+            System.out.println("❌ La promoción no fue encontrada.");
+        }
+        cerrarDriver();
+    }
+
+
+    @And("editamos la cantidad minima de productos a llevar")
+    public void editamosLaCantidadMinimaDeProductosALlevar() {
+        ingresarCantidadMinimaDeProductosALlevar();
+    }
+
+    @And("en la vista de restriccion editamos la existente")
+    public void enLaVistaDeRestriccionEditamosLaExistente() throws InterruptedException {
+        clickEnEditarRestriccionExistente();
+    }
+
+    @And("editamos el nombre de restriccion")
+    public void editamosElNombreDeRestriccion() throws InterruptedException {
+        ingresarNombreRestriccion();
+    }
+
+    @And("copiamos una promocion ya existente")
+    public void copiamosUnaPromocionYaExistente() {
+        String nombrePromocion = datosPromociones.get("nombPromo"); // El nombre de la promoción que deseas buscar
+        boolean encontrada = copiarPromocion(nombrePromocion);
+
+        if (encontrada) {
+            System.out.println("✅ La promoción fue encontrada y editada correctamente.");
         } else {
             System.out.println("❌ La promoción no fue encontrada.");
         }
     }
 
+    @And("validar que se despliega mensaje de copia exitosa")
+    public void validarQueSeDespliegaMensajeDeCopiaExitosa() throws InterruptedException {
+        validarMsjDeCopia();
+    }
 
+    @Then("visualizar nuestra promocion copiada")
+    public void visualizarNuestraPromocionCopiada() {
+        String nombrePromocion = datosPromociones.get("nombPromo") + " Copia"; // El nombre de la promoción que deseas buscar
+        boolean encontrada = buscarYEnmarcarPromocion(nombrePromocion);
+
+        if (encontrada) {
+            System.out.println("✅ La promoción fue editada correctamente.");
+        } else {
+            System.out.println("❌ La promoción no fue encontrada.");
+        }
+        cerrarDriver();
+    }
+
+    @And("hacemos click en confirmar la promocion")
+    public void hacemosClickEnConfirmarLaPromocion() {
+        String nombrePromocion= datosPromociones.get("nombPromo") + " Copia";
+        boolean encontrada = confirmarPromocion(nombrePromocion);
+        if (encontrada) {
+            System.out.println("✅ La promoción fue confirmada correctamente.");
+        } else {
+            System.out.println("❌ La promoción no fue encontrada.");
+        }
+    }
+
+    @And("buscamos la promocion que anularemos")
+    public void buscamosLaPromocionQueAnularemos() {
+        //html/body/k2bt-floating-messages/div/div[2]
+    }
+
+    @And("validar que se despliega mensaje de anulacion exitosa")
+    public void validarQueSeDespliegaMensajeDeAnulacionExitosa() {
+    }
+
+    @Then("visualizar nuestra promocion anulada no exista")
+    public void visualizarNuestraPromocionAnuladaNoExista() {
+        String nombrePromocion= datosPromociones.get("nombPromo") + " Copia";
+        boolean encontrada = confirmarPromocion(nombrePromocion);
+        if (encontrada) {
+            System.out.println("✅ La promoción fue confirmada correctamente.");
+        } else {
+            System.out.println("❌ La promoción no fue encontrada.");
+        }
+    }
 }

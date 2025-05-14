@@ -109,7 +109,7 @@ public class PromocionesPage {
 
     public static void escribirFechaConValorJS(String idInput, String fecha) throws InterruptedException {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(idInput)));
 
             ((JavascriptExecutor) driver).executeScript("arguments[0].value = arguments[1];", input, fecha);
@@ -126,7 +126,7 @@ public class PromocionesPage {
 
 public static void ingresoFechaFin() throws InterruptedException {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    WebElement btnTieneFechaTermino = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEVIGENCIAContainer']/div/div/span[1]")));
+    WebElement btnTieneFechaTermino = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEVIGENCIAContainer']/div/div")));
     Utils.enmarcarElemento(driver, btnTieneFechaTermino);
     System.out.println("ℹ Verificando el estado del botón 'Tiene fecha de termino'...");
 
@@ -146,26 +146,27 @@ public static void ingresoFechaFin() throws InterruptedException {
         System.out.println(" Ingresando fecha de término: " + fechaFin);
         escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", fechaFin);
 
-    } else {
-        if ("No".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))) {
-            System.out.println(" La promoción NO tiene fecha de término. Desactivando...");
+    } else if ("No".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))) {
+        if (estaActivado) {
+            System.out.println(" El botón está en 'ON'. Desactivando...");
             btnTieneFechaTermino.click();
             Thread.sleep(500);
+        } else {
+            System.out.println(" El botón ya está en 'OFF'. No se ingresará fecha.");
         }
-        System.out.println("ℹ️ El botón ya está en 'OFF'. No se ingresará fecha.");
     }
 }
 
 public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws InterruptedException {
     if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("canjeaHorarioDet")))) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement btnCanjeHorarioDet = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEHORARIOContainer']/div/div/span[3]")));
         Utils.enmarcarElemento(driver, btnCanjeHorarioDet);
-        System.out.println("ℹ️ Verificando el estado del botón 'Horario de Canjeo'...");
+        System.out.println("ℹVerificando el estado del botón 'Horario de Canjeo'...");
 
         // Verificar si el botón está en "ON" o "OFF" (activo o inactivo)
         String estadoBoton = btnCanjeHorarioDet.getAttribute("class"); // Clase que indica el estado (ON/OFF)
-        System.out.println("🔍 Estado inicial del botón: " + estadoBoton);
+        System.out.println("Estado inicial del botón: " + estadoBoton);
 
         // Verificar si está activado (ON)
         boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
@@ -173,7 +174,7 @@ public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws
         if (estaActivado) {
             System.out.println("✅ El botón ya está en 'ON'. No es necesario hacer clic.");
         } else {
-            System.out.println("🔧 El botón está en 'OFF'. Haciendo clic para activarlo...");
+            System.out.println("El botón está en 'OFF'. Haciendo clic para activarlo...");
             esperarElementoYMedirTiempo(By.xpath("//*[@id='W0026PROMOTIENEHORARIOContainer']/div/div/span[3]"), "Click a botón Horario Canjeo");
             btnCanjeHorarioDet.click();
             Thread.sleep(1000); // Esperar a que se habiliten los campos
@@ -192,7 +193,7 @@ public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws
             System.out.println("✅ Horarios ingresados correctamente: " + desdeRaw + " - " + hastaRaw);
             tomarCaptura("Se agrega hora de Canje");
         } else {
-            throw new RuntimeException("❌ Faltan los valores de 'validaDesde' o 'validaHasta'");
+            throw new RuntimeException("Faltan los valores de 'validaDesde' o 'validaHasta'");
         }
 
     } else {
@@ -212,36 +213,6 @@ public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws
     }
 }
 
-//    public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo() throws InterruptedException {
-//        if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("diasDeCanjePromo")))) {
-//            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//            WebElement btnDiasDeCanjePromo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026PROMOSELECCIONADIASContainer\"]/div/div/span[3]")));
-//
-//            Utils.enmarcarElemento(driver, btnDiasDeCanjePromo);
-//            esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0026PROMOSELECCIONADIASContainer\"]/div/div/span[3]"), "Click a botón Seleccionar Días de Canje");
-//            Utils.desenmarcarObjeto(driver, btnDiasDeCanjePromo);
-//            btnDiasDeCanjePromo.click();
-//            Thread.sleep(1000);
-//
-//            Object diasCanjeRaw = datosPromociones.get("diasCanje");
-//            if (diasCanjeRaw != null) {
-//                String diasCanje = diasCanjeRaw.toString();
-//
-//                if ("todos".equalsIgnoreCase(diasCanje)) {
-//                    seleccionarTodosLosDias();
-//                } else {
-//                    List<String> dias = Arrays.stream(diasCanje.split(","))
-//                            .map(String::trim)
-//                            .collect(Collectors.toList());
-//                    seleccionarDiasEspecificos(dias);
-//                }
-//            } else {
-//                throw new RuntimeException("❌ No se encontró el valor 'diasCanje' en datosPromociones");
-//            }
-//        } else {
-//            System.out.println("ℹ️ La promoción NO se canjea en días específicos");
-//        }
-//    }
 public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo() throws InterruptedException {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     WebElement btnDiasDeCanjePromo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026PROMOSELECCIONADIASContainer\"]/div/div/span[3]")));
@@ -271,13 +242,13 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
                 seleccionarDiasEspecificos(dias);
             }
         } else {
-            throw new RuntimeException("❌ No se encontró el valor 'diasCanje' en datosPromociones");
+            throw new RuntimeException("No se encontró el valor 'diasCanje' en datosPromociones");
         }
 
     } else {
         // Si NO debe estar activado, verificamos si está ON para apagarlo
         if ("No".equalsIgnoreCase(String.valueOf(datosPromociones.get("diasDeCanjePromo")))) {
-            System.out.println("❌ Desactivando el botón 'Días de Canje'.");
+            System.out.println("Desactivando el botón 'Días de Canje'.");
             Utils.enmarcarElemento(driver, btnDiasDeCanjePromo);
             btnDiasDeCanjePromo.click();
             Thread.sleep(1000);
@@ -365,7 +336,7 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
                         if (checkbox.isDisplayed() || checkbox.isEnabled()) {
                             if (checkbox.isSelected()) {
                                 ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
-                                System.out.println("❌ Deseleccionando ubicación visible: " + fila.getText().trim());
+                                System.out.println("Deseleccionando ubicación visible: " + fila.getText().trim());
                             }
                         } else {
                             System.out.println("⚠ Checkbox encontrado pero no es interactuable.");
@@ -438,6 +409,7 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
         Utils.enmarcarElemento(driver, txtnomRestriccion);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vRESTRICTIONNOMBRE\"]"), "ingreso Nombre Restriccion");
         Utils.desenmarcarObjeto(driver, txtnomRestriccion);
+        txtnomRestriccion.clear();
         txtnomRestriccion.sendKeys(String.valueOf(datosPromociones.get("nombreRestriccion")));
         driver.switchTo().defaultContent();
     }
@@ -477,6 +449,7 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
                                 System.out.println("✅ Categoría seleccionada (click normal): " + categoria);
                             } catch (Exception e) {
                                 // Si el click normal falla, usamos JavaScript
+                                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", checkbox);
                                 ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
                                 System.out.println("✅ Categoría seleccionada (click JS): " + categoria);
                             }
@@ -499,70 +472,134 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
 
             categoriaEncontrada = false; // Reset para la siguiente categoría
         }
-
         driver.switchTo().defaultContent();
     }
 
 
-    public static void seleccionarProductos( String criteria, String value) {
-        try {
-            System.out.println("[INFO] Iniciando selección de productos.");
+//    public static void seleccionarProductos( String criteria, String value) {
+//        try {
+//            System.out.println("Iniciando selección de productos.");
+//
+//            // Verificar y cambiar al frame correcto
+//            List<WebElement> frames = driver.findElements(By.tagName("iframe"));
+//            System.out.println("Total frames found: " + frames.size());
+//            driver.switchTo().frame(0);
+//
+//            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//            List<WebElement> rows = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//*[@id='GridproductContainerTbl']/tbody/tr")));
+//
+//            System.out.println("Total rows found: " + rows.size());
+//
+//            int selectedCount = 0;
+//            for (WebElement row : rows) {
+//                System.out.println("Analizando fila...");
+//
+//                String description = row.findElement(By.xpath(".//td[3]")).getText();
+//                String code = row.findElement(By.xpath(".//td[4]")).getText();
+//
+//                System.out.println("Description: " + description);
+//                System.out.println("Code: " + code);
+//
+//                if ((criteria.equalsIgnoreCase("description") && description.contains(value)) ||
+//                        (criteria.equalsIgnoreCase("code") && code.equals(value))) {
+//                    WebElement checkbox = row.findElement(By.xpath(".//input[@type='checkbox']"));
+//                    System.out.println("Checkbox visible: " + checkbox.isDisplayed());
+//                    System.out.println("Checkbox enabled: " + checkbox.isEnabled());
+//
+//                    if (!checkbox.isDisplayed()) {
+//                        System.out.println("Checkbox no visible, desplazando para hacer visible.");
+//                        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkbox);
+//                    }
+//
+//                    if (checkbox.isDisplayed() && checkbox.isEnabled()) {
+//                        checkbox.click();
+//                        System.out.println("Checkbox seleccionado para: " + (criteria.equalsIgnoreCase("description") ? description : code));
+//                        selectedCount++;
+//                    } else {
+//                        System.out.println("Intentando seleccionar checkbox usando JavaScript.");
+//                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+//                        selectedCount++;
+//                    }
+//                }
+//
+//                if (selectedCount >= 2) {
+//                    System.out.println("Dos productos seleccionados. Deteniendo el bucle.");
+//                    break;
+//                }
+//            }
+//        } catch (Exception e) {
+//            System.err.println("Error seleccionando productos: " + e.getMessage());
+//        } finally {
+//            driver.switchTo().defaultContent();
+//            System.out.println("Selección de productos finalizada.");
+//        }
+//
+//    }
+public static void seleccionarProductos(String criteria, String value, int cantidadProductos) {
+    try {
+        System.out.println("Iniciando selección de productos.");
 
-            // Verificar y cambiar al frame correcto
-            List<WebElement> frames = driver.findElements(By.tagName("iframe"));
-            System.out.println("[INFO] Total frames found: " + frames.size());
-            driver.switchTo().frame(0);
+        // Verificar y cambiar al frame correcto
+        List<WebElement> frames = driver.findElements(By.tagName("iframe"));
+        System.out.println("Total frames found: " + frames.size());
+        driver.switchTo().frame(0);
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            List<WebElement> rows = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//*[@id='GridproductContainerTbl']/tbody/tr")));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        List<WebElement> rows = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//*[@id='GridproductContainerTbl']/tbody/tr")));
 
-            System.out.println("[INFO] Total rows found: " + rows.size());
+        System.out.println("Total rows found: " + rows.size());
 
-            int selectedCount = 0;
-            for (WebElement row : rows) {
-                System.out.println("[DEBUG] Analizando fila...");
+        int selectedCount = 0;
+        for (WebElement row : rows) {
+            System.out.println("Analizando fila...");
 
-                String description = row.findElement(By.xpath(".//td[3]")).getText();
-                String code = row.findElement(By.xpath(".//td[4]")).getText();
+            String description = row.findElement(By.xpath(".//td[3]")).getText();
+            String code = row.findElement(By.xpath(".//td[4]")).getText();
 
-                System.out.println("[DEBUG] Description: " + description);
-                System.out.println("[DEBUG] Code: " + code);
+            System.out.println("Description: " + description);
+            System.out.println("Code: " + code);
 
-                if ((criteria.equalsIgnoreCase("description") && description.contains(value)) ||
-                        (criteria.equalsIgnoreCase("code") && code.equals(value))) {
-                    WebElement checkbox = row.findElement(By.xpath(".//input[@type='checkbox']"));
-                    System.out.println("[DEBUG] Checkbox visible: " + checkbox.isDisplayed());
-                    System.out.println("[DEBUG] Checkbox enabled: " + checkbox.isEnabled());
+            if ((criteria.equalsIgnoreCase("description") && description.contains(value)) ||
+                    (criteria.equalsIgnoreCase("code") && code.equals(value))) {
+                WebElement checkbox = row.findElement(By.xpath(".//input[@type='checkbox']"));
 
-                    if (!checkbox.isDisplayed()) {
-                        System.out.println("[INFO] Checkbox no visible, desplazando para hacer visible.");
-                        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkbox);
-                    }
-
-                    if (checkbox.isDisplayed() && checkbox.isEnabled()) {
-                        checkbox.click();
-                        System.out.println("[INFO] Checkbox seleccionado para: " + (criteria.equalsIgnoreCase("description") ? description : code));
-                        selectedCount++;
-                    } else {
-                        System.out.println("[INFO] Intentando seleccionar checkbox usando JavaScript.");
-                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
-                        selectedCount++;
-                    }
+                // Verificar si el checkbox es visible y seleccionable
+                if (!checkbox.isDisplayed()) {
+                    System.out.println("Checkbox no visible, desplazando para hacer visible.");
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkbox);
                 }
 
-                if (selectedCount >= 2) {
-                    System.out.println("[INFO] Dos productos seleccionados. Deteniendo el bucle.");
+                if (checkbox.isDisplayed() && checkbox.isEnabled() && !checkbox.isSelected()) {
+                    checkbox.click();
+                    System.out.println("✅ Checkbox seleccionado para: " + (criteria.equalsIgnoreCase("description") ? description : code));
+                    selectedCount++;
+                } else if (!checkbox.isSelected()) {
+                    System.out.println("Intentando seleccionar checkbox usando JavaScript.");
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+                    selectedCount++;
+                } else {
+                    System.out.println("ℹ️ El producto ya estaba seleccionado.");
+                }
+
+                if (selectedCount >= cantidadProductos) {
+                    System.out.println("✅ Se han seleccionado " + selectedCount + " productos. Deteniendo el bucle.");
                     break;
                 }
             }
-        } catch (Exception e) {
-            System.err.println("[ERROR] Error seleccionando productos: " + e.getMessage());
-        } finally {
-            driver.switchTo().defaultContent();
-            System.out.println("[INFO] Selección de productos finalizada.");
         }
 
+        if (selectedCount == 0) {
+            System.out.println("⚠ No se encontraron productos que coincidan con el criterio.");
+        }
+
+    } catch (Exception e) {
+        System.err.println("❌ Error seleccionando productos: " + e.getMessage());
+    } finally {
+        driver.switchTo().defaultContent();
+        System.out.println("✅ Selección de productos finalizada.");
     }
+}
+
     public static void seleccionarBotonGuardar() throws InterruptedException {
         driver.switchTo().frame(0);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -575,20 +612,19 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
         driver.switchTo().defaultContent();
     }
 
-    public static void seleccionarReglaDePromocion(String criteria, int value) throws InterruptedException {
+    public static void seleccionarReglaDePromocion(String criteria, String nombreRestriccion, int value) throws InterruptedException {
         try {
-            System.out.println("[INFO] Iniciando selección de productos.");
+            System.out.println("Iniciando selección de productos.");
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             List<WebElement> ruleRows = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//tbody//tr//td[2]")));
-
 
             boolean ruleSelected = false;
 
             for (WebElement row : ruleRows) {
                 String ruleText = row.getText().split("\n")[0].trim();
-                System.out.println("[DEBUG] Regla encontrada en la página: '" + ruleText + "'");
-                System.out.println("[DEBUG] Regla esperada: '" + criteria + "'");
+                System.out.println("Regla encontrada en la página: '" + ruleText + "'");
+                System.out.println("Regla esperada: '" + criteria + "'");
 
                 if (ruleText.equalsIgnoreCase(criteria.trim())) {
                     row.click();
@@ -600,20 +636,20 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
                         System.out.println("Seleccionando restricción");
 
                         WebElement restrictionOption = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                                By.xpath("//*[translate(text(),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')='PREPACK']")));
+                                By.xpath("//*[translate(text(),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')='" + nombreRestriccion.toUpperCase() + "']")));
 
                         WebElement parentContainer = restrictionOption.findElement(By.xpath("./ancestor::tr | ./ancestor::div"));
-                        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", parentContainer);
+                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", restrictionOption);
 
                         wait.until(ExpectedConditions.elementToBeClickable(restrictionOption));
 
                         try {
                             restrictionOption.click();
-                            System.out.println("Restricción 'Prepack' aplicada.");
+                            System.out.println("Restricción '" + nombreRestriccion + "' aplicada.");
                         } catch (Exception e) {
                             System.out.println("[WARN] Click normal falló. Intentando con JavaScript.");
                             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", restrictionOption);
-                            System.out.println("Restricción 'Prepack' aplicada con JavaScript.");
+                            System.out.println("Restricción '" + nombreRestriccion + "' aplicada con JavaScript.");
                         }
                     }
                     // Aplicar el descuento
@@ -642,7 +678,7 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
             try {
                 System.out.println("[INFO] Iniciando validación de datos de la promoción.");
 
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
                 // Validar nombre de la promoción
                 WebElement nombre = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Nombre')]/following-sibling::div")));
@@ -698,7 +734,7 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
 
     public static void seleccionarBtnFinalizar() throws InterruptedException {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement btnGuardar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"FINISH_WIZARDMAIN\"]")));
         Utils.enmarcarElemento(driver, btnGuardar);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"FINISH_WIZARDMAIN\"]"), "Seleccionar boton Finalizar");
@@ -710,10 +746,11 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
 
     public static void capturarMensajePantalla(String xpathMensaje) {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             WebElement mensajeElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathMensaje)));
             mensajeCapturado = mensajeElemento.getText().trim();
-            System.out.println("[INFO] Mensaje capturado: " + mensajeCapturado);
+            esperarElementoYMedirTiempo(By.xpath(xpathMensaje),"Mensaje de descuento a realizar");
+            System.out.println(" Mensaje capturado: " + mensajeCapturado);
         } catch (Exception e) {
             System.err.println("[ERROR] No se pudo capturar el mensaje de pantalla: " + e.getMessage());
             mensajeCapturado = "";
@@ -725,11 +762,10 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
         return mensajeCapturado;
     }
 
-
     public static boolean buscarYEnmarcarPromocion(String nombrePromocion) {
 
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             List<WebElement> promociones = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//table//tr//td[3]")));
 
             for (WebElement promo : promociones) {
@@ -821,11 +857,6 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
         }
     }
 
-
-
-
-
-
     public static boolean eliminarPromocion(String nombrePromocion) {
         driver.switchTo().frame(0);
         try {
@@ -858,28 +889,68 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
         }
     }
     public static boolean copiarPromocion(String nombrePromocion) {
-        driver.switchTo().frame(0);
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            List<WebElement> promociones = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//table//tr")));
 
-            for (WebElement promo : promociones) {
-                String nombreActual = promo.findElement(By.xpath(".//td[1]")).getText().trim();
-                if (nombreActual.equalsIgnoreCase(nombrePromocion)) {
-                    WebElement btnCopiar = promo.findElement(By.xpath(".//td//i[contains(@class, 'fa-copy')]"));
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+            // Verificar si hay un iframe y cambiar a él
+            if (driver.findElements(By.tagName("iframe")).size() > 0) {
+                driver.switchTo().frame(0);
+                System.out.println("[INFO] Cambiado al iframe para editar la promoción.");
+            }
+
+            // Esperar que la tabla esté visible y cargada
+            WebElement tabla = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
+
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", tabla);
+            System.out.println("Tabla de promociones encontrada.");
+
+            // Obtener todas las filas visibles
+            List<WebElement> filas = tabla.findElements(By.xpath(".//tr[td]"));
+            System.out.println("[DEBUG] Total de filas encontradas: " + filas.size());
+
+            boolean encontrado = false;
+            for (WebElement fila : filas) {
+                String textoFila = fila.getText().trim();
+                System.out.println("Contenido de la fila: " + textoFila);
+
+                if (textoFila.contains(nombrePromocion)) {
+                    // Enmarcar la fila para asegurarnos de que es la correcta
+                    Utils.enmarcarElemento(driver, fila);
+                    System.out.println("Promoción '" + nombrePromocion + "' encontrada.");
+                    Utils.desenmarcarObjeto(driver, fila);
+
+                    // Buscar el botón de editar (ícono de lápiz) dentro de la misma fila
+                    WebElement btnCopiar = fila.findElement(By.xpath(".//td[14]"));
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", btnCopiar);
                     Utils.enmarcarElemento(driver, btnCopiar);
+                    esperarElementoYMedirTiempo(By.xpath(".//td[14]"), "click copiar promocion");
                     btnCopiar.click();
-                    System.out.println("[INFO] Promoción '" + nombrePromocion + "' seleccionada para copiar.");
-                    return true;
+                    // Utils.desenmarcarObjeto(driver, fila);
+                    System.out.println("[INFO] Se hizo clic en el botón de copiar.");
+
+
+                    // Esperar a que la página de edición se cargue
+//                    WebElement inputNombre = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026vPROMODESCRIPCION\"]")));
+//                    inputNombre.clear();
+//                    inputNombre.sendKeys(datosPromociones.get("nombPromoEditado")+"");
+//                    tomarCaptura("edicion de promocion");
+                    encontrado = true;
+                    break;
                 }
             }
-            System.err.println("[ERROR] No se encontró la promoción para copiar: " + nombrePromocion);
-            return false;
-        } catch (Exception e) {
-            System.err.println("[ERROR] Error al intentar copiar la promoción: " + e.getMessage());
-            return false;
-        } finally {
+
+            if (!encontrado) {
+                System.err.println("[ERROR] No se encontró la promoción: " + nombrePromocion);
+            }
+
+            // Salir del iframe si estábamos dentro de uno
             driver.switchTo().defaultContent();
+            return encontrado;
+
+        } catch (Exception e) {
+            System.err.println("[ERROR] Error al copiar la promoción: " + e.getMessage());
+            return false;
         }
     }
     public static boolean verPromocion(String nombrePromocion) {
@@ -950,6 +1021,71 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
 
         System.out.println("===== FIN PRUEBA DE ACCIONES PARA LA PROMOCIÓN: " + nombrePromocion + " =====");
     }
+    public static boolean confirmarPromocion(String nombrePromocion){
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+            // Verificar si hay un iframe y cambiar a él
+            if (driver.findElements(By.tagName("iframe")).size() > 0) {
+                driver.switchTo().frame(0);
+                System.out.println("[INFO] Cambiado al iframe para editar la promoción.");
+            }
+
+            // Esperar que la tabla esté visible y cargada
+            WebElement tabla = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
+
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", tabla);
+            System.out.println("Tabla de promociones encontrada.");
+
+            // Obtener todas las filas visibles
+            List<WebElement> filas = tabla.findElements(By.xpath(".//tr[td]"));
+            System.out.println("[DEBUG] Total de filas encontradas: " + filas.size());
+
+            boolean encontrado = false;
+            for (WebElement fila : filas) {
+                String textoFila = fila.getText().trim();
+                System.out.println("Contenido de la fila: " + textoFila);
+
+                if (textoFila.contains(nombrePromocion)) {
+                    // Enmarcar la fila para asegurarnos de que es la correcta
+                    Utils.enmarcarElemento(driver, fila);
+                    System.out.println("Promoción '" + nombrePromocion + "' encontrada.");
+                    Utils.desenmarcarObjeto(driver, fila);
+
+                    // Buscar el botón de editar (ícono de lápiz) dentro de la misma fila
+                    WebElement btnConfirmar = fila.findElement(By.xpath(".//td[13]"));
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", btnConfirmar);
+                    Utils.enmarcarElemento(driver, btnConfirmar);
+                    esperarElementoYMedirTiempo(By.xpath(".//td[13]"), "click copiar promocion");
+                    btnConfirmar.click();
+
+                    System.out.println("[INFO] Se hizo clic en el botón de copiar.");
+
+
+                    // Esperar a que la página de edición se cargue
+//                    WebElement inputNombre = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026vPROMODESCRIPCION\"]")));
+//                    inputNombre.clear();
+//                    inputNombre.sendKeys(datosPromociones.get("nombPromoEditado")+"");
+                    tomarCaptura("confirmacion de promocion copiada");
+                    Utils.desenmarcarObjeto(driver, fila);
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                System.err.println("[ERROR] No se encontró la promoción: " + nombrePromocion);
+            }
+
+            // Salir del iframe si estábamos dentro de uno
+            driver.switchTo().defaultContent();
+            return encontrado;
+
+        } catch (Exception e) {
+            System.err.println("[ERROR] Error al copiar la promoción: " + e.getMessage());
+            return false;
+        }
+    }
     public static boolean buscarPromocionEnLista(String nombrePromocion) {
         driver.switchTo().frame(0);
         try {
@@ -970,6 +1106,27 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
             driver.switchTo().defaultContent();
         }
     }
+    public static void clickEnEditarRestriccionExistente() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement btnEditarRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026GridwizardrestrictionsdtContainerRow_0001\"]/td[5]/p/i")));
+        Utils.enmarcarElemento(driver, btnEditarRestriccion);
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0026GridwizardrestrictionsdtContainerRow_0001\"]/td[5]/p/i"), "Editar restriccion");
+        tomarCaptura("Administrador Promociones");
+        Utils.desenmarcarObjeto(driver, btnEditarRestriccion);
+        btnEditarRestriccion.click();
+    }
+    public static void validarMsjDeCopia() throws InterruptedException {
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement btnEditarRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/k2bt-floating-messages[2]/div/div")));
+        Utils.enmarcarElemento(driver, btnEditarRestriccion);
+        esperarElementoYMedirTiempo(By.xpath("/html/body/k2bt-floating-messages[2]/div/div"), "Copia Exitosa");
+        tomarCaptura("Copia Exitosa");
+        Utils.desenmarcarObjeto(driver, btnEditarRestriccion);
+        btnEditarRestriccion.click();
+    }
+
+
 
 
 

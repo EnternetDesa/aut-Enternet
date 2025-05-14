@@ -1,8 +1,8 @@
 {
     "nombEmp": "1175",
-    "nombPromo": "PalCarrete2",
-    "nombPromoEditado": "duo Carrete",
-    "fechaInicio": "24/05/25",
+    "nombPromo": "duo Carrete",
+    "nombPromoEditado": "pal Picoteo",
+    "fechaInicio": "28/05/25",
     "tieneFechaFin": "No",
     "fechaFin": "06/05/26",
     "canjeaHorarioDet": "No",
@@ -11,14 +11,14 @@
     "diasDeCanjePromo": "No",
     "diasCanje": "todos",
     "tieneUbicacion": "Si",
-    "nombreRestriccion": "picoteo",
+    "nombreRestriccion": "hora del break",
     "cantidadMinProd": "3",
     "categoriaRestriccion": "Jugos",
     "categoriaRestriccion2": "Coctel y Snack",
     "descProducto":"Agua Benedictino Gasificada 500 Ml.",
     "codPromo": "7804625210041",
     "tipoDeRegla": "Monto fijo",
-    "tipoDeRestriccion": "picoteo",
+    "tipoDeRestriccion": "hora del break",
     "descuento": "350"
 
 
