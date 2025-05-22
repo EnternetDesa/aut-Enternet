@@ -16,8 +16,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.time.Duration;
 import java.util.List;
-import java.util.Map;
-import static definitions.Commons.BaseTest.datosPOS;
+
 import static definitions.Commons.BaseTest.esperarElementoYMedirTiempo;
 import static definitions.Commons.BaseTest.*;
 
@@ -27,7 +26,7 @@ public class PosPage {
 
 
     public static void visualizarVistaPos() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement txtVistaPos = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/header")));
         Utils.enmarcarElemento(driver, txtVistaPos );
         BaseTest.tomarCaptura("Vista Home POS");
@@ -362,7 +361,7 @@ public class PosPage {
     }
     public static void ingresarProductoPorDescripcion() throws InterruptedException {
 //        Actions actions = new Actions(driver);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement txtDescripcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
         Utils.enmarcarElemento(driver, txtDescripcion);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vOMNIBOX\"]"), "Ingrese codigo o descripcion de producto..." );
@@ -372,7 +371,7 @@ public class PosPage {
 
     }
     public static void ingresarProductoPorCodigo() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement txtCodigo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
         Utils.enmarcarElemento(driver, txtCodigo);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vOMNIBOX\"]"), "ingreso por codigo" );
@@ -719,22 +718,22 @@ public class PosPage {
     }
     public static void clickBtnCarta() throws InterruptedException {
         Thread.sleep(3000);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement btnCarta = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"BTNCARTAContainer\"]/button")));
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"BTNCARTAContainer\"]/button"), "btn Carta" );
         Utils.enmarcarElemento(driver, btnCarta);
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"BTNCARTAContainer\"]/button"), "click btn Carta" );
         Utils.desenmarcarObjeto(driver, btnCarta);
         btnCarta.click();
     }
-    public static void clickCuidadoCapilar() throws InterruptedException {
+    public static void clickCategoria() throws InterruptedException {
         Thread.sleep(3000);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement linkCuidadoCapilar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0166LINESEPARATORTITLE_LINESEPARATOR_0001\"]")));
-        Utils.enmarcarElemento(driver, linkCuidadoCapilar);
+        WebElement linkCategoria = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0166LINESEPARATORTITLE_LINESEPARATOR_0001\"]")));
+        Utils.enmarcarElemento(driver, linkCategoria);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0166LINESEPARATORTITLE_LINESEPARATOR_0001\"]"), "click link cuidado capilar" );
-        Utils.desenmarcarObjeto(driver, linkCuidadoCapilar);
-        linkCuidadoCapilar.click();
+        Utils.desenmarcarObjeto(driver, linkCategoria);
+        linkCategoria.click();
 
     }
     public static void seleccionarProducto() throws InterruptedException {

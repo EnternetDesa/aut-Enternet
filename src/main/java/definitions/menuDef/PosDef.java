@@ -1,6 +1,7 @@
 package definitions.menuDef;
 
 import definitions.Commons.BaseTest;
+import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -9,13 +10,11 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.WebDriver;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.InputStream;
 import java.util.Map;
 
 import static definitions.Commons.BaseTest.cerrarDriver;
-import static definitions.Commons.BaseTest.datosPOS;
-import static definitions.Commons.BaseTest.estadoEjecucion;
 import static page.loginPage.PosPage.*;
 
 public class PosDef {
@@ -25,14 +24,18 @@ public class PosDef {
 
     @Given("que ingreso los datos desde el archivo datosPos {string}")
     public void queIngresoLosDatosDesdeElArchivoDatosPos(String arg0) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            datosPOS = objectMapper.readValue(new File("C:/git/aut-Enternet/src/main/java/resources/datosPOS.json"), Map.class);
 
-            System.out.println(STR."✅ Datos cargados desde JSON: \{datosPOS}");
-        } catch (IOException e) {
-            e.printStackTrace();
-            estadoEjecucion = "Failed";
+        try {
+            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosPOS.json");
+            if (is == null) {
+                throw new RuntimeException("❌ Archivo datosPOS.json no encontrado en resources.");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            datosPOS = mapper.readValue(is, new TypeReference<>() {});
+            System.out.println("✅ datosPOS cargado correctamente.");
+        } catch (Exception e) {
+            System.err.println(STR."❌ Error al cargar datosPOS: \{e.getMessage()}");
+            datosPOS = null; // evitar estado inconsistente
         }
     }
 
@@ -49,7 +52,7 @@ public class PosDef {
 
     @And("selecciono el menu de Pos {string}")
     public void seleccionoElMenuDePos(String menuP) throws InterruptedException {
-        seleccionMenuPos(BaseTest.datosPOS.get("menuPOS"));
+        seleccionMenuPos(datosPOS.get("menuPOS"));
     }
 
     @And("luego el submenu de Pos {string}")
@@ -169,7 +172,7 @@ public class PosDef {
     @And("hacemos click en el boton carta y seleccionamos el producto que muestre")
     public void hacemosClickEnElBotonCartaYSeleccionamosElProductoQueMuestre() throws InterruptedException {
         clickBtnCarta();
-        clickCuidadoCapilar();
+        clickCategoria();
         seleccionarProducto();
     }
 
@@ -179,9 +182,9 @@ public class PosDef {
     }
 
     @And("le modificamos la cantidad de producto a comprar {string}")
-    public void
-    leModificamosLaCantidadDeProductoAComprar(String arg0) throws InterruptedException {
+    public void leModificamosLaCantidadDeProductoAComprar(String arg0) throws InterruptedException {
         modificarCantidadProducto();
+        cerrarDriver();
     }
 
     @And("seleccionamos el boton buscar")

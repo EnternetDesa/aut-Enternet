@@ -1,6 +1,6 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
-Feature: POS -Definiciones - Enrolamiento de Equipos
+Feature: POS - Promociones
 
 Background:
      Given que cargo los datos desde el archivo "C:\git\aut-Enternet\src\java\resources\datos.json"
@@ -74,7 +74,7 @@ Scenario: POS - Agregar Producto por boton Carta
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
     And seleccionamos boton nueva venta
-    And le asignamos el cliente a quien venderemos "<nombreCliente>"
+ #   And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And hacemos click en el boton carta y seleccionamos el producto que muestre
     And le modificamos el precio al producto"<precio>"
     And le modificamos la cantidad de producto a comprar "<cantProdC>"

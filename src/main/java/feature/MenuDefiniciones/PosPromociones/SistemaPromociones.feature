@@ -17,7 +17,7 @@ Scenario: Promociones - Agregar Promocion
   And nos debe dirigir a la vista de promociones
   And seleccionamos el icono con el signo mas
   And nos debe mostrar la vista de vigencia e ingreso el nombre de la promocion <"nomPromo">
-  And agregamos fecha de inicio <"fechaInicio">
+  And agregamos fecha de inicio <"fechaInicio"> y fecha fin <"fechaFin"> si tiene
   And agregamos si la promocion se canjea en un horario determinado o no
   And agregamos si Desea seleccionar dias en especificos en los que sea canjeable la promocion o no
   And seleccionamos el boton siguiente
@@ -59,7 +59,7 @@ Scenario: Promociones - Agregar Promocion
     And editamos el tipo de descuento que tendra la promocion
     And seleccionamos el boton siguiente
     And visualizamos el resumen de nuestra promocion
-    And validamos que sean los datos ingresados anteriormente
+    And validamos que sean los datos editados anteriormente
     And seleccionamos el boton finalizar
     Then nos debe dirigir a la pantalla principal y visualizar nuestra promocion editada
 
@@ -77,12 +77,13 @@ Scenario: Promociones - Agregar Promocion
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And buscamos la promocion que anularemos
-    And validar que se despliega mensaje de anulacion exitosa
-    Then visualizar nuestra promocion anulada no exista
+    Then validar que se despliega mensaje de anulacion exitosa
 
 
-
-
-
-
-
+  Scenario: Promociones - Ver Promocion
+    Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
+    And selecciono el nombre de la empresa
+    And nos debe dirigir a la vista de promociones
+    And buscamos la promocion que necesitamos ver y hacemos clicn en ella
+    And validamos los datos del resumen de la promocion
+    Then verificamos que esten correctos

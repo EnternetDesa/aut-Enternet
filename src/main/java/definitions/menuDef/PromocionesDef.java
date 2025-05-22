@@ -15,16 +15,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static definitions.Commons.BaseTest.*;
 import static page.menuPage.PromocionesPage.*;
+import static page.menuPage.PromocionesPage.capturarMensajePantalla;
+import static page.menuPage.PromocionesPage.obtenerMensajeCapturado;
+import static page.menuPage.PromocionesPage.validacionDeDatos;
 
 public class PromocionesDef {
 
     public static Map<String, String> datosPromociones;
-
 
 
     @Given("que ingreso los datos desde el archivo datosPromociones {string}")
@@ -67,13 +70,17 @@ public class PromocionesDef {
         ingresarNombrePromocion();
     }
 
-    @And("agregamos fecha de inicio <{string}>")
-    public void agregamosFechaDeInicio(String fechaInicio, String fechaFin) throws InterruptedException {
+
+    @And("agregamos fecha de inicio <{string}> y fecha fin <{string}> si tiene")
+    public void agregamosFechaDeInicioYFechaFinSiTiene(String fechaInicio, String fechaFin) throws InterruptedException {
         fechaInicio = datosPromociones.get("fechaInicio");
         escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", fechaInicio);
+
+        if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))){
         ingresoFechaFin();
         fechaFin = datosPromociones.get("fechaFin");
         escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", fechaFin);
+        }
     }
 
     @And("agregamos si la promocion se canjea en un horario determinado o no")
@@ -83,6 +90,12 @@ public class PromocionesDef {
 
     @And("agregamos si Desea seleccionar dias en especificos en los que sea canjeable la promocion o no")
     public void agregamosSiDeseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromocionONo() throws InterruptedException {
+
+        // Configurar los datos de promoción (cambiar según tu contexto)
+        Map<String, Object> datosPromociones = new HashMap<>();
+        datosPromociones.put("diasDeCanjePromo", datosPromociones.get("diasDeCanjePromo")); // Activar días de canje
+        datosPromociones.put("diasCanje", "todos"); // Días específicos
+
         deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo();
     }
 
@@ -93,8 +106,19 @@ public class PromocionesDef {
 
     @And("ingresamos una ubicacion ,en caso de no ingresar la promocion aplicara para todas las ubicaciones")
     public void ingresamosUnaUbicacionEnCasoDeNoIngresarLaPromocionAplicaraParaTodasLasUbicaciones() throws InterruptedException {
-      seleccionarUbicacionesParaCanje(Arrays.asList("POSONLINE", "TRAUCO"));
 
+        List<String> ubicaciones = Arrays.asList("POSONLINE","TRAUCO");
+
+        try {
+            if (ubicaciones != null && !ubicaciones.isEmpty()) {
+                System.out.println("✅ Ingresando ubicaciones: " + ubicaciones);
+            } else {
+                System.out.println("ℹ️ No se ingresaron ubicaciones, se desactivará el botón.");
+            }
+            seleccionarUbicacionesParaCanje(ubicaciones);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @And("en la vista de restriccion agregamos una seleccionando el boton mas")
@@ -153,14 +177,39 @@ public class PromocionesDef {
     public void validamosQueSeanLosDatosIngresadosAnteriormente() {
         String fechaInicio = datosPromociones.get("fechaInicio");
         String fechaFin = datosPromociones.get("fechaFin");
-       String horaIni = datosPromociones.get("validaDesde");
+        String horaIni = datosPromociones.get("validaDesde");
         String horaFin = datosPromociones.get("validaHasta");
         String restriccion = datosPromociones.get("nombPromo");
-
+        String horaCanje = capturarMensajePantalla("//*[@id=\"span_W0026vHORARIO\"]");
+        String diasCanje = capturarMensajePantalla("//*[@id=\"span_W0026vDIASDECANGE\"]");
+        String productosRest = capturarMensajePantalla("//*[@id=\"span_W0026vPRODUCTOS_0001\"]");
 
         // Usar el mensaje capturado más adelante
         String mensaje = obtenerMensajeCapturado();
-      //  System.out.println("[INFO] El mensaje capturado es: " + mensaje);
+        validacionDeDatos(
+                restriccion,
+                fechaInicio,
+                fechaFin,
+                horaCanje,
+                diasCanje,
+                mensaje ,
+                restriccion,
+                productosRest
+             //   "Aceitunas Negras En Rodajas Excelencia 1700 Gr., Aceitunas Rellenas Pimiento Verdes Excelencia 1700 Gr."
+        );
+    }
+    @And("validamos que sean los datos editados anteriormente")
+    public void validamosQueSeanLosDatosEditadosAnteriormente() {
+        String fechaInicio = datosPromociones.get("fechaInicio");
+        String fechaFin = datosPromociones.get("fechaFin");
+        String horaIni = datosPromociones.get("validaDesde");
+        String horaFin = datosPromociones.get("validaHasta");
+        String restriccion = datosPromociones.get("nombPromoEditado");
+
+        // Usar el mensaje capturado más adelante
+        String mensaje = obtenerMensajeCapturado();
+        //String msjHorario = obtenerMensajeCapturado();
+        //  System.out.println("[INFO] El mensaje capturado es: " + mensaje);
         validacionDeDatos(
                 restriccion,
                 fechaInicio,
@@ -171,7 +220,6 @@ public class PromocionesDef {
                 restriccion,
                 "Aceitunas Negras En Rodajas Excelencia 1700 Gr., Aceitunas Rellenas Pimiento Verdes Excelencia 1700 Gr."
         );
-
 
     }
 
@@ -212,8 +260,17 @@ public class PromocionesDef {
     @And("editamos con una nueva fecha de inicio <{string}>")
     public void editamosConUnaNuevaFechaDeInicio(String fechaInicio) throws InterruptedException {
         fechaInicio = datosPromociones.get("fechaInicio");
+//        escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", fechaInicio);
+//        ingresoFechaFin();
+
+        fechaInicio = datosPromociones.get("fechaInicio");
         escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", fechaInicio);
-        ingresoFechaFin();
+
+        if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))){
+            ingresoFechaFin();
+          String fechaFin = datosPromociones.get("fechaFin");
+            escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", fechaFin);
+        }
     }
     @And("editamos si la promocion se canjea en un horario determinado o no")
     public void editamosSiLaPromocionSeCanjeaEnUnHorarioDeterminadoONo() throws InterruptedException {
@@ -223,8 +280,11 @@ public class PromocionesDef {
 
     @And("editamos si Desea seleccionar dias en especificos en los que sea canjeable la promocion o no")
     public void editamosSiDeseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromocionONo() throws InterruptedException {
-       // datosPromociones.put("diasDeCanjePromo", "Si");
-       // datosPromociones.put("diasCanje", "Lunes, Miércoles, Viernes");
+        datosPromociones.put("diasDeCanjePromo", "No");
+//        datosPromociones.put("diasCanje", "Lunes, Miércoles");
+        Map<String, Object> datosPromociones = new HashMap<>();
+        datosPromociones.put("diasCanje", "Lunes, Miércoles");
+
         deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo();
 
     }
@@ -232,11 +292,20 @@ public class PromocionesDef {
     @And("editamos la ubicacion ,en caso de no ingresar una la promocion aplicara para todas las ubicaciones")
     public void editamosLaUbicacionEnCasoDeNoIngresarUnaLaPromocionAplicaraParaTodasLasUbicaciones() throws InterruptedException {
         // Si deseas seleccionar ubicaciones específicas
-        List<String> ubicaciones = Arrays.asList("POSONLINE","TRAUCO");
-        seleccionarUbicacionesParaCanje(ubicaciones);
 
-        // Si no deseas seleccionar ninguna ubicación (desactivarlo)
-        //seleccionarUbicacionesParaCanje(null);
+        List<String> ubicaciones = Arrays.asList("POSONLINE","TRAUCO");
+
+        try {
+            if (ubicaciones != null && !ubicaciones.isEmpty()) {
+                System.out.println("✅ Ingresando ubicaciones: " + ubicaciones);
+            } else {
+                System.out.println("ℹ️ No se ingresaron ubicaciones, se desactivará el botón.");
+            }
+            seleccionarUbicacionesParaCanje(ubicaciones);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -279,6 +348,7 @@ public class PromocionesDef {
         } else {
             System.out.println("❌ La promoción no fue encontrada.");
         }
+
         cerrarDriver();
     }
 
@@ -341,21 +411,70 @@ public class PromocionesDef {
 
     @And("buscamos la promocion que anularemos")
     public void buscamosLaPromocionQueAnularemos() {
-        //html/body/k2bt-floating-messages/div/div[2]
+
+        String nombrePromocion= datosPromociones.get("nombPromo") + " Copia";
+        boolean encontrada = eliminarPromocion(nombrePromocion);
+        if (!encontrada) {
+            System.out.println("❌  La promoción fue eliminada correctamente.");
+        } else {
+            System.out.println("✅ La promoción fue eliminada correctamente.");
+
+        }
     }
 
     @And("validar que se despliega mensaje de anulacion exitosa")
-    public void validarQueSeDespliegaMensajeDeAnulacionExitosa() {
+    public void validarQueSeDespliegaMensajeDeAnulacionExitosa() throws InterruptedException {
+        //html/body/k2bt-floating-messages/div/div[2]
+        validarMsjDeCopia();
+        cerrarDriver();
     }
 
-    @Then("visualizar nuestra promocion anulada no exista")
-    public void visualizarNuestraPromocionAnuladaNoExista() {
-        String nombrePromocion= datosPromociones.get("nombPromo") + " Copia";
-        boolean encontrada = confirmarPromocion(nombrePromocion);
-        if (encontrada) {
-            System.out.println("✅ La promoción fue confirmada correctamente.");
-        } else {
-            System.out.println("❌ La promoción no fue encontrada.");
-        }
+    @And("buscamos la promocion que necesitamos ver y hacemos clicn en ella")
+    public void buscamosLaPromocionQueNecesitamosVerYHacemosClicnEnElla() {
+        String nombrePromocion= datosPromociones.get("nombPromo") ;
+
+        verPromocion(nombrePromocion);
+
+//        if (!encontrada) {
+//            System.out.println("❌  La promoción fue  correctamente.");
+//        } else {
+//            System.out.println("✅ La promoción fue eliminada correctamente.");
+//
+//        }
+
     }
+
+    @And("validamos los datos del resumen de la promocion")
+    public void validamosLosDatosDelResumenDeLaPromocion() throws InterruptedException {
+        //driver.switchTo().frame(0);
+        Thread.sleep(2000);
+        String mensaje = capturarMensajePantallaDesdeFrame("//*[@id=\"span_W0016vDESCUENTOAREALIZAR\"]", 0);
+
+        //driver.switchTo().defaultContent();
+        tomarCaptura("Validacion de datos promocion");
+        String nombrePromo = datosPromociones.get("nombPromo");
+        String fechaInicio = datosPromociones.get("fechaInicio");
+        String fechaFin = datosPromociones.get("fechaFin");
+        String horaIni = datosPromociones.get("validaDesde");
+        String horaFin = datosPromociones.get("validaHasta");
+        String nombreRestriccion = datosPromociones.get("nombreRestriccion");
+
+        validacionDeDatos(nombrePromo,
+                fechaInicio,
+                fechaFin,
+                horaIni,
+                "Lunes, Martes, Miércoles, Jueves, Viernes, Sábado, Domingo, Festivo, Víspera de festivo",
+                mensaje,
+                nombreRestriccion,
+                "Aceitunas Negras En Rodajas Excelencia 1700 Gr., Aceitunas Rellenas Pimiento Verdes Excelencia 1700 Gr., Aceitunas Sevillana Don Juan 340 Gr.");
+
+    }
+
+    @Then("verificamos que esten correctos")
+    public void verificamosQueEstenCorrectos() {
+        cerrarDriver();
+    }
+
+
+
 }

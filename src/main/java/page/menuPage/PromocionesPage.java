@@ -2,18 +2,13 @@ package page.menuPage;
 
 import definitions.Commons.BaseTest;
 import definitions.Commons.Utils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static definitions.Commons.BaseTest.*;
@@ -134,17 +129,20 @@ public static void ingresoFechaFin() throws InterruptedException {
     System.out.println(" Estado inicial del botón: " + estadoBoton);
 
     boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
+   // boolean estaActivado = estadoBoton.contains("bootstrap-switch-handle-on bootstrap-switch-success on") || estadoBoton.contains("active");
 
     if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))) {
         if (!estaActivado) {
             System.out.println(" El botón está en 'OFF'. Activando...");
             btnTieneFechaTermino.click();
             Thread.sleep(1000);
+            Utils.desenmarcarObjeto(driver, btnTieneFechaTermino);
         }
 
         String fechaFin = String.valueOf(datosPromociones.get("fechaFin"));
         System.out.println(" Ingresando fecha de término: " + fechaFin);
         escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", fechaFin);
+
 
     } else if ("No".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))) {
         if (estaActivado) {
@@ -158,28 +156,29 @@ public static void ingresoFechaFin() throws InterruptedException {
 }
 
 public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws InterruptedException {
-    if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("canjeaHorarioDet")))) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        WebElement btnCanjeHorarioDet = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEHORARIOContainer']/div/div/span[3]")));
-        Utils.enmarcarElemento(driver, btnCanjeHorarioDet);
-        System.out.println("ℹVerificando el estado del botón 'Horario de Canjeo'...");
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    WebElement btnCanjeHorarioDet = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEHORARIOContainer']/div/div")));
+//    Utils.enmarcarElemento(driver, btnCanjeHorarioDet);
+//    Utils.desenmarcarObjeto(driver, btnCanjeHorarioDet);
+    System.out.println("ℹVerificando el estado del botón 'Horario de Canjeo'...");
+    String estadoBoton = btnCanjeHorarioDet.getAttribute("class");
+    System.out.println("Estado inicial del botón: " + estadoBoton);
 
-        // Verificar si el botón está en "ON" o "OFF" (activo o inactivo)
-        String estadoBoton = btnCanjeHorarioDet.getAttribute("class"); // Clase que indica el estado (ON/OFF)
-        System.out.println("Estado inicial del botón: " + estadoBoton);
+    boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
 
-        // Verificar si está activado (ON)
-        boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
+    String valorCanjeaHorarioDet = String.valueOf(datosPromociones.get("canjeaHorarioDet"));
 
-        if (estaActivado) {
-            System.out.println("✅ El botón ya está en 'ON'. No es necesario hacer clic.");
-        } else {
+    if ("Si".equalsIgnoreCase(valorCanjeaHorarioDet)) {
+        // Si debe estar activado y no lo está, activarlo
+        if (!estaActivado) {
             System.out.println("El botón está en 'OFF'. Haciendo clic para activarlo...");
-            esperarElementoYMedirTiempo(By.xpath("//*[@id='W0026PROMOTIENEHORARIOContainer']/div/div/span[3]"), "Click a botón Horario Canjeo");
             btnCanjeHorarioDet.click();
-            Thread.sleep(1000); // Esperar a que se habiliten los campos
+            Thread.sleep(1000);
+        } else {
+            System.out.println("✅ El botón ya está en 'ON'. No es necesario hacer clic.");
         }
 
+        // Ingresar horarios
         WebElement txtValidaDesde = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026vPROMOINICIOHORAMINUTO']")));
         WebElement txtValidaHasta = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026vPROMOTERMINOHORAMINUTO']")));
 
@@ -187,7 +186,6 @@ public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws
         Object hastaRaw = datosPromociones.get("validaHasta");
 
         if (desdeRaw != null && hastaRaw != null) {
-            // Forzar con JS si sendKeys no funciona
             ((JavascriptExecutor) driver).executeScript("arguments[0].value=arguments[1];", txtValidaDesde, desdeRaw.toString());
             ((JavascriptExecutor) driver).executeScript("arguments[0].value=arguments[1];", txtValidaHasta, hastaRaw.toString());
             System.out.println("✅ Horarios ingresados correctamente: " + desdeRaw + " - " + hastaRaw);
@@ -196,60 +194,71 @@ public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws
             throw new RuntimeException("Faltan los valores de 'validaDesde' o 'validaHasta'");
         }
 
-    } else {
-        // Si está en "ON" pero no debe estar, lo cambiamos a "OFF"
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement btnCanjeHorarioDet = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEHORARIOContainer']/div/div/span[3]")));
-        String estadoBoton = btnCanjeHorarioDet.getAttribute("class");
-
-        if ("No".equalsIgnoreCase(String.valueOf(datosPromociones.get("canjeaHorarioDet")))) {
+    } else if ("No".equalsIgnoreCase(valorCanjeaHorarioDet)) {
+        // Si NO debe estar activado y está activado, apagarlo
+        if (estaActivado) {
             System.out.println("🔧 La promoción NO debe canjearse en horario determinado. Cambiando a 'OFF'...");
             btnCanjeHorarioDet.click();
             tomarCaptura("La promo NO tiene hora de Canje");
             Thread.sleep(500);
         } else {
-            System.out.println("ℹ️ El botón ya está en 'OFF'.");
+            System.out.println("ℹ️ El botón ya está en 'OFF'. No es necesario hacer clic.");
         }
+    } else {
+        System.out.println("⚠️ Valor desconocido para 'canjeaHorarioDet': " + valorCanjeaHorarioDet);
     }
 }
 
-public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo() throws InterruptedException {
+
+    public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo() throws InterruptedException {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    WebElement btnDiasDeCanjePromo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026PROMOSELECCIONADIASContainer\"]/div/div/span[3]")));
+    WebElement btnDiasDeCanjePromo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026PROMOSELECCIONADIASContainer\"]/div")));
 
     // Verificar el estado del botón (ON/OFF)
     String estadoBoton = btnDiasDeCanjePromo.getAttribute("class");
     boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
+    System.out.println(" Estado inicial del botón 'Días de Canje': " + (estaActivado ? "ON" : "OFF"));
 
     if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("diasDeCanjePromo")))) {
         if (!estaActivado) {
-            // Si está en OFF y necesita estar en ON, hacemos clic para activarlo
-            System.out.println("✅ Activando el botón 'Días de Canje'.");
-            Utils.enmarcarElemento(driver, btnDiasDeCanjePromo);
-            btnDiasDeCanjePromo.click();
-            Thread.sleep(1000);
+//            System.out.println("✅ Activando el botón 'Días de Canje'.");
+            try {
+//                Utils.enmarcarElemento(driver, btnDiasDeCanjePromo);
+                btnDiasDeCanjePromo.click();
+//                Utils.desenmarcarObjeto(driver, btnDiasDeCanjePromo);
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                System.out.println("⚠ Click normal falló. Intentando con JavaScript.");
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btnDiasDeCanjePromo);
+                Thread.sleep(1000);
+            }
         }
 
         Object diasCanjeRaw = datosPromociones.get("diasCanje");
         if (diasCanjeRaw != null) {
-            String diasCanje = diasCanjeRaw.toString();
+            String diasCanje = diasCanjeRaw.toString().trim();
+            System.out.println("📅 Días especificados: " + diasCanje);
+
             if ("todos".equalsIgnoreCase(diasCanje)) {
                 seleccionarTodosLosDias();
             } else {
-                List<String> dias = Arrays.stream(diasCanje.split(","))
+                List<String> diasDeseados = Arrays.stream(diasCanje.split(","))
                         .map(String::trim)
                         .collect(Collectors.toList());
-                seleccionarDiasEspecificos(dias);
+                seleccionarDiasEspecificos(diasDeseados);
             }
-        } else {
-            throw new RuntimeException("No se encontró el valor 'diasCanje' en datosPromociones");
-        }
+            Thread.sleep(500);
+            ((JavascriptExecutor) driver).executeScript(
+                    "document.body.click();"
+            );
 
-    } else {
-        // Si NO debe estar activado, verificamos si está ON para apagarlo
-        if ("No".equalsIgnoreCase(String.valueOf(datosPromociones.get("diasDeCanjePromo")))) {
-            System.out.println("Desactivando el botón 'Días de Canje'.");
-            Utils.enmarcarElemento(driver, btnDiasDeCanjePromo);
+        } else {
+            throw new RuntimeException("❌ No se encontró el valor 'diasCanje' en datosPromociones");
+        }
+    } else if ("No".equalsIgnoreCase(String.valueOf(datosPromociones.get("diasDeCanjePromo")))){
+        if (estaActivado) {
+//            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btnDiasDeCanjePromo);
+            System.out.println("❌ Desactivando el botón 'Días de Canje'.");
             btnDiasDeCanjePromo.click();
             Thread.sleep(1000);
         } else {
@@ -258,43 +267,58 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
     }
 }
 
-    public static void seleccionarDiasEspecificos(List<String> dias) throws InterruptedException {
-        WebElement dropdown = driver.findElement(By.xpath("//*[@id=\"W0026COLDIASSEMANAContainer\"]/k2bt-enhancedcombo/div/div/div[1]/div"));
-        dropdown.click();
-        Thread.sleep(500);
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        for (String dia : dias) {
-            try {
-                WebElement checkbox = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[normalize-space()='" + dia + "']/preceding-sibling::input")));
-
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkbox);
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
-                System.out.println(STR."✅ Día seleccionado: \{dia}");
-            } catch (Exception e) {
-                System.out.println(STR."❌ No se encontró o no se pudo hacer clic en el día: \{dia}");
-            }
-        }
-
-        dropdown.click(); // Cierra el dropdown si es necesario
-        tomarCaptura("Dias de Promocion");
-    }
-
     public static void seleccionarTodosLosDias() throws InterruptedException {
-        WebElement dropdown = driver.findElement(By.xpath("//*[@id=\"W0026COLDIASSEMANAContainer\"]/k2bt-enhancedcombo/div/div/div[1]/div"));
-        dropdown.click();
-        Thread.sleep(500);
+        WebElement dropdown = driver.findElement(By.xpath("//*[@id='W0026COLDIASSEMANAContainer']/k2bt-enhancedcombo/div/div/div[1]/div"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", dropdown);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement seleccionarTodos = wait.until(ExpectedConditions.elementToBeClickable(
-        By.xpath("//span[contains(text(),'Seleccionar todos')]")));
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", seleccionarTodos);
+        WebElement seleccionarTodos = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'Seleccionar todos')]")));
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", seleccionarTodos);
+
         System.out.println("✅ Todos los días seleccionados.");
         tomarCaptura("Dias de Promocion");
     }
 
+    public static void seleccionarDiasEspecificos(List<String> diasDeseados) throws InterruptedException {
+        WebElement dropdown = driver.findElement(By.xpath("//*[@id='W0026COLDIASSEMANAContainer']/k2bt-enhancedcombo/div/div/div[1]/div"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", dropdown);
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement menuDias = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026COLDIASSEMANAContainer']/k2bt-enhancedcombo/div/div/div[2]/div[2]")));
+
+        // Mapa para días y sus checkboxes
+        Map<String, WebElement> diasMap = new HashMap<>();
+
+        List<WebElement> labels = menuDias.findElements(By.xpath(".//label"));
+        for (WebElement label : labels) {
+            try {
+                String labelText = label.getText().trim();
+                WebElement checkbox = label.findElement(By.xpath("./preceding-sibling::input[@type='checkbox']"));
+                diasMap.put(labelText, checkbox);
+            } catch (Exception e) {
+                System.err.println("⚠ No se pudo procesar el día: " + e.getMessage());
+            }
+        }
+
+        // Seleccionar o desmarcar según corresponda
+        for (Map.Entry<String, WebElement> entry : diasMap.entrySet()) {
+            String dia = entry.getKey();
+            WebElement checkbox = entry.getValue();
+            boolean estaSeleccionado = checkbox.isSelected();
+
+            if (diasDeseados.contains(dia) && !estaSeleccionado) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+                System.out.println("✅ Día seleccionado: " + dia);
+            } else if (!diasDeseados.contains(dia) && estaSeleccionado) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+                System.out.println("❌ Día desmarcado: " + dia);
+            }
+        }
+
+        // Cerrar menú desplegable
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", dropdown);
+        tomarCaptura("Dias de Promocion");
+    }
 
     public static void seleccionarBtnSiguiente() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -307,51 +331,146 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
 
     }
 
-    public static void seleccionarUbicacionesParaCanje(List<String> ubicacionesDeseadas) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement btnUbicacion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026PROMOSELECCIONAUBICACIONESContainer\"]/div/div/span[3]")));
+//    public static void seleccionarUbicacionesParaCanje(List<String> ubicacionesDeseadas) throws InterruptedException {
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//        WebElement btnUbicacion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026PROMOSELECCIONAUBICACIONESContainer\"]/div/div")));
+//
+//        // Verificar el estado del botón (ON/OFF)
+//        String estadoBoton = btnUbicacion.getAttribute("class");
+//        boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
+//
+//        // Si se desean ubicaciones específicas
+//        if (ubicacionesDeseadas != null && !ubicacionesDeseadas.isEmpty()) {
+//            // Esperar que se cargue el listado
+//            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
+//
+//            // Obtener solo las filas visibles (ubicaciones)
+//            List<WebElement> filas = driver.findElements(By.xpath("//table//tr[td and not(contains(@style, 'display: none'))]"));
+//            System.out.println(" Total de ubicaciones visibles encontradas: " + filas.size());
+//
+//            // Primero deseleccionar las ubicaciones seleccionadas (solo las visibles)
+//            for (WebElement fila : filas) {
+//                try {
+//                    List<WebElement> checkboxes = fila.findElements(By.xpath(".//input[@type='checkbox']"));
+//
+//                    if (checkboxes.size() > 0) {
+//                        WebElement checkbox = checkboxes.get(0);
+//
+//                        // Verificar que sea visible e interactuable
+//                        if (checkbox.isDisplayed() || checkbox.isEnabled()) {
+//                            if (checkbox.isSelected()) {
+//                                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+//                                System.out.println("Deseleccionando ubicación visible: " + fila.getText().trim());
+//                            }
+//                        } else {
+//                            System.out.println("⚠ Checkbox encontrado pero no es interactuable.");
+//                        }
+//                    } else {
+//                        System.out.println("⚠ No se encontró checkbox en esta fila visible.");
+//                    }
+//                } catch (NoSuchElementException e) {
+//                    System.out.println("⚠ Error al intentar deseleccionar: " + e.getMessage());
+//                } catch (Exception e) {
+//                    System.out.println("⚠ Error inesperado al deseleccionar: " + e.getMessage());
+//                }
+//            }
+//
+//            // Seleccionar las ubicaciones deseadas (solo si están visibles)
+//            for (String ubicacion : ubicacionesDeseadas) {
+//                boolean ubicacionSeleccionada = false;
+//                for (WebElement fila : filas) {
+//                    String nombreUbicacion = fila.getText().trim();
+//                    if (nombreUbicacion.contains(ubicacion)) {
+//                        try {
+//                            WebElement checkbox = fila.findElement(By.xpath(".//input[@type='checkbox']"));
+//                            if (!checkbox.isSelected()) {
+//                                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+//                                System.out.println("✅ Ubicación visible seleccionada: " + ubicacion);
+//                                tomarCaptura("Seleccion Ubicacion: " );
+//                            }
+//                            ubicacionSeleccionada = true;
+//                            break; // ✅ Sale del bucle tan pronto selecciona la ubicación
+//                        } catch (Exception e) {
+//                            System.err.println("⚠ Error al seleccionar la ubicación: " + ubicacion);
+//                            throw e;
+//                        }
+//                    }
+//                }
+//
+//                if (!ubicacionSeleccionada) {
+//                    System.err.println("❌ Ubicación no encontrada entre las visibles: " + ubicacion);
+//                }
+//            }
+//
+//        } else {
+//            // Si no se desean ubicaciones específicas
+//            if (estaActivado) {
+//                System.out.println("❌ Desactivando el botón 'Ubicaciones'.");
+//                Utils.enmarcarElemento(driver, btnUbicacion);
+//                btnUbicacion.click();
+//                Thread.sleep(1000);
+//            } else {
+//                System.out.println("ℹ️ El botón 'Ubicaciones' ya está en OFF.");
+//            }
+//        }
+//        // ✅ Continuar con el resto del código después de salir del bucle
+//        System.out.println("✅ Proceso de selección de ubicaciones finalizado.");
+//    }
+public static void clickElementoRobusto(By locator) throws InterruptedException {
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    try {
+        WebElement elemento = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", elemento);
+        Thread.sleep(500);
 
-        // Verificar el estado del botón (ON/OFF)
+        try {
+            elemento.click();
+            System.out.println("✅ Click realizado con método normal en: " + locator.toString());
+        } catch (Exception e) {
+            System.out.println("⚠ Click normal falló en: " + locator.toString() + ". Intentando con JavaScript...");
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", elemento);
+            System.out.println("✅ Click realizado con JavaScript en: " + locator.toString());
+        }
+    } catch (TimeoutException e) {
+        System.err.println("❌ No se encontró o no es clickeable el elemento: " + locator.toString());
+        throw e;
+    }
+}
+
+
+    public static void seleccionarUbicacionesParaCanje(List<String> ubicacionesDeseadas) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        By btnUbicacionLocator = By.xpath("//*[@id=\"W0026PROMOSELECCIONAUBICACIONESContainer\"]/div/div");
+
+        // Hacer click en el botón para activar el listado de ubicaciones
+        clickElementoRobusto(btnUbicacionLocator);
+        Thread.sleep(1000); // esperar a que cargue el listado
+
+        // Obtener el estado del botón para saber si está activado o no (por si quieres usarlo después)
+        WebElement btnUbicacion = driver.findElement(btnUbicacionLocator);
         String estadoBoton = btnUbicacion.getAttribute("class");
         boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
 
-        // Si se desean ubicaciones específicas
         if (ubicacionesDeseadas != null && !ubicacionesDeseadas.isEmpty()) {
-            // Esperar que se cargue el listado
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
 
-            // Obtener solo las filas visibles (ubicaciones)
             List<WebElement> filas = driver.findElements(By.xpath("//table//tr[td and not(contains(@style, 'display: none'))]"));
             System.out.println(" Total de ubicaciones visibles encontradas: " + filas.size());
 
-            // Primero deseleccionar las ubicaciones seleccionadas (solo las visibles)
-            for (WebElement fila : filas) {
-                try {
-                    List<WebElement> checkboxes = fila.findElements(By.xpath(".//input[@type='checkbox']"));
+            // Deseleccionar ubicaciones visibles seleccionadas
+//            for (WebElement fila : filas) {
+//                try {
+//                    WebElement checkbox = fila.findElement(By.xpath(".//input[@type='checkbox']"));
+//                    if (checkbox.isDisplayed() && checkbox.isEnabled() && checkbox.isSelected()) {
+//                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+//                        System.out.println("Deseleccionando ubicación visible: " + fila.getText().trim());
+//                    }
+//                } catch (Exception e) {
+//                    System.out.println("⚠ Error al intentar deseleccionar: " + e.getMessage());
+//                }
+//            }
 
-                    if (checkboxes.size() > 0) {
-                        WebElement checkbox = checkboxes.get(0);
-
-                        // Verificar que sea visible e interactuable
-                        if (checkbox.isDisplayed() || checkbox.isEnabled()) {
-                            if (checkbox.isSelected()) {
-                                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
-                                System.out.println("Deseleccionando ubicación visible: " + fila.getText().trim());
-                            }
-                        } else {
-                            System.out.println("⚠ Checkbox encontrado pero no es interactuable.");
-                        }
-                    } else {
-                        System.out.println("⚠ No se encontró checkbox en esta fila visible.");
-                    }
-                } catch (NoSuchElementException e) {
-                    System.out.println("⚠ Error al intentar deseleccionar: " + e.getMessage());
-                } catch (Exception e) {
-                    System.out.println("⚠ Error inesperado al deseleccionar: " + e.getMessage());
-                }
-            }
-
-            // Seleccionar las ubicaciones deseadas (solo si están visibles)
+            // Seleccionar las ubicaciones deseadas
             for (String ubicacion : ubicacionesDeseadas) {
                 boolean ubicacionSeleccionada = false;
                 for (WebElement fila : filas) {
@@ -365,33 +484,30 @@ public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo(
                                 tomarCaptura("Seleccion Ubicacion: " );
                             }
                             ubicacionSeleccionada = true;
-                            break; // ✅ Sale del bucle tan pronto selecciona la ubicación
+                            break;
                         } catch (Exception e) {
                             System.err.println("⚠ Error al seleccionar la ubicación: " + ubicacion);
                             throw e;
                         }
                     }
                 }
-
                 if (!ubicacionSeleccionada) {
                     System.err.println("❌ Ubicación no encontrada entre las visibles: " + ubicacion);
                 }
             }
-
         } else {
-            // Si no se desean ubicaciones específicas
+            // Si no se desean ubicaciones específicas, y el botón está activado, desactivarlo
             if (estaActivado) {
                 System.out.println("❌ Desactivando el botón 'Ubicaciones'.");
-                Utils.enmarcarElemento(driver, btnUbicacion);
-                btnUbicacion.click();
+                clickElementoRobusto(btnUbicacionLocator);
                 Thread.sleep(1000);
             } else {
                 System.out.println("ℹ️ El botón 'Ubicaciones' ya está en OFF.");
             }
         }
-        // ✅ Continuar con el resto del código después de salir del bucle
         System.out.println("✅ Proceso de selección de ubicaciones finalizado.");
     }
+
 
     public static void seleccionarSignoMas(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -608,6 +724,7 @@ public static void seleccionarProductos(String criteria, String value, int canti
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"GUARDAR\"]"), "Seleccionar boton guar");
         Utils.desenmarcarObjeto(driver, btnGuardar);
         tomarCaptura("Se agrega restriccion");
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnGuardar);
         btnGuardar.click();
         driver.switchTo().defaultContent();
     }
@@ -616,7 +733,7 @@ public static void seleccionarProductos(String criteria, String value, int canti
         try {
             System.out.println("Iniciando selección de productos.");
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             List<WebElement> ruleRows = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//tbody//tr//td[2]")));
 
             boolean ruleSelected = false;
@@ -735,27 +852,45 @@ public static void seleccionarProductos(String criteria, String value, int canti
     public static void seleccionarBtnFinalizar() throws InterruptedException {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        WebElement btnGuardar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"FINISH_WIZARDMAIN\"]")));
-        Utils.enmarcarElemento(driver, btnGuardar);
+        WebElement btnFinalizar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"FINISH_WIZARDMAIN\"]")));
+        Utils.enmarcarElemento(driver, btnFinalizar);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"FINISH_WIZARDMAIN\"]"), "Seleccionar boton Finalizar");
-        Utils.desenmarcarObjeto(driver, btnGuardar);
+        Utils.desenmarcarObjeto(driver, btnFinalizar);
         tomarCaptura("Se Finaliza promocion");
-        btnGuardar.click();
+        btnFinalizar.click();
     }
     private static String mensajeCapturado = ""; // Variable global para guardar el mensaje capturado
 
-    public static void capturarMensajePantalla(String xpathMensaje) {
+    public static String capturarMensajePantalla(String xpathMensaje) {
+       String mensaje = "";
         try {
+
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             WebElement mensajeElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathMensaje)));
-            mensajeCapturado = mensajeElemento.getText().trim();
-            esperarElementoYMedirTiempo(By.xpath(xpathMensaje),"Mensaje de descuento a realizar");
-            System.out.println(" Mensaje capturado: " + mensajeCapturado);
+            mensaje = mensajeElemento.getText().trim();
+            System.out.println("📩 Mensaje capturado" + mensaje);
         } catch (Exception e) {
-            System.err.println("[ERROR] No se pudo capturar el mensaje de pantalla: " + e.getMessage());
-            mensajeCapturado = "";
+            System.err.println("❌ No se pudo capturar el mensaje " + e.getMessage());
         }
+
+        return mensaje;
     }
+    public static String capturarMensajePantallaDesdeFrame(String xpathMensaje, int frameIndex) {
+        String mensaje = "";
+        try {
+            driver.switchTo().frame(frameIndex);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            WebElement mensajeElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathMensaje)));
+            mensaje = mensajeElemento.getText().trim();
+            System.out.println("📩 Mensaje capturado desde frame " + frameIndex + ": " + mensaje);
+        } catch (Exception e) {
+            System.err.println("❌ No se pudo capturar el mensaje desde frame " + frameIndex + ": " + e.getMessage());
+        } finally {
+            driver.switchTo().defaultContent();
+        }
+        return mensaje;
+    }
+
 
     // Metodo para obtener el mensaje capturado
     public static String obtenerMensajeCapturado() {
@@ -858,34 +993,60 @@ public static void seleccionarProductos(String criteria, String value, int canti
     }
 
     public static boolean eliminarPromocion(String nombrePromocion) {
-        driver.switchTo().frame(0);
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            List<WebElement> promociones = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//table//tr")));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-            for (WebElement promo : promociones) {
-                String nombreActual = promo.findElement(By.xpath(".//td[1]")).getText().trim();
-                if (nombreActual.equalsIgnoreCase(nombrePromocion)) {
-                    WebElement btnEliminar = promo.findElement(By.xpath(".//td//i[contains(@class, 'fa-trash')]"));
-                    Utils.enmarcarElemento(driver, btnEliminar);
-                    btnEliminar.click();
-                    System.out.println("[INFO] Promoción '" + nombrePromocion + "' seleccionada para eliminar.");
+            // Verificar si hay un iframe y cambiar a él
+            if (driver.findElements(By.tagName("iframe")).size() > 0) {
+                driver.switchTo().frame(0);
+                System.out.println("[INFO] Cambiado al iframe para editar la promoción.");
+            }
 
-                    // Confirmar eliminación si aparece una ventana emergente
-                    WebDriverWait popupWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-                    popupWait.until(ExpectedConditions.alertIsPresent());
-                    driver.switchTo().alert().accept();
-                    System.out.println("[INFO] Promoción eliminada.");
-                    return true;
+            // Esperar que la tabla esté visible y cargada
+            WebElement tabla = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
+
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", tabla);
+            System.out.println("Tabla de promociones encontrada.");
+
+            // Obtener todas las filas visibles
+            List<WebElement> filas = tabla.findElements(By.xpath(".//tr[td]"));
+            System.out.println("[DEBUG] Total de filas encontradas: " + filas.size());
+
+            boolean encontrado = false;
+            for (WebElement fila : filas) {
+                String textoFila = fila.getText().trim();
+                System.out.println("Contenido de la fila: " + textoFila);
+
+                if (textoFila.contains(nombrePromocion)) {
+                    // Enmarcar la fila para asegurarnos de que es la correcta
+                    Utils.enmarcarElemento(driver, fila);
+                    System.out.println("Promoción '" + nombrePromocion + "' encontrada.");
+                    Utils.desenmarcarObjeto(driver, fila);
+
+                    // Buscar el botón de editar (ícono de lápiz) dentro de la misma fila
+                    WebElement btnAnular = fila.findElement(By.xpath(".//td[16]"));
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", btnAnular);
+                    Utils.enmarcarElemento(driver, btnAnular);
+                    esperarElementoYMedirTiempo(By.xpath(".//td[16]"), " anular promocion");
+                    btnAnular.click();
+                    // Utils.desenmarcarObjeto(driver, fila);
+                    System.out.println("[INFO] Se hizo clic en el botón de eliminar.");
+                    encontrado = true;
+                    break;
                 }
             }
-            System.err.println("[ERROR] No se encontró la promoción para eliminar: " + nombrePromocion);
-            return false;
-        } catch (Exception e) {
-            System.err.println("[ERROR] Error al intentar eliminar la promoción: " + e.getMessage());
-            return false;
-        } finally {
+
+            if (!encontrado) {
+                System.err.println("[ERROR] No se encontró la promoción: " + nombrePromocion);
+            }
+
+            // Salir del iframe si estábamos dentro de uno
             driver.switchTo().defaultContent();
+            return encontrado;
+
+        } catch (Exception e) {
+            System.err.println("[ERROR] Error al eliminar promoción: " + e.getMessage());
+            return false;
         }
     }
     public static boolean copiarPromocion(String nombrePromocion) {
@@ -929,12 +1090,6 @@ public static void seleccionarProductos(String criteria, String value, int canti
                     // Utils.desenmarcarObjeto(driver, fila);
                     System.out.println("[INFO] Se hizo clic en el botón de copiar.");
 
-
-                    // Esperar a que la página de edición se cargue
-//                    WebElement inputNombre = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026vPROMODESCRIPCION\"]")));
-//                    inputNombre.clear();
-//                    inputNombre.sendKeys(datosPromociones.get("nombPromoEditado")+"");
-//                    tomarCaptura("edicion de promocion");
                     encontrado = true;
                     break;
                 }
@@ -954,28 +1109,84 @@ public static void seleccionarProductos(String criteria, String value, int canti
         }
     }
     public static boolean verPromocion(String nombrePromocion) {
-        driver.switchTo().frame(0);
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            List<WebElement> promociones = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//table//tr")));
+//
+//        try {
+//            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//            List<WebElement> promociones = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//table//tr")));
+//
+//            for (WebElement promo : promociones) {
+//                String nombreActual = promo.findElement(By.xpath(".//td[17]")).getText().trim();
+//                if (nombreActual.equalsIgnoreCase(nombrePromocion)) {
+//                    WebElement btnVer = promo.findElement(By.xpath(".//td//i[contains(@class, 'fa-eye')]"));
+//                    Utils.enmarcarElemento(driver, btnVer);
+//                    btnVer.click();
+//                    System.out.println("[INFO] Promoción '" + nombrePromocion + "' seleccionada para ver.");
+//                    return true;
+//                }
+//            }
+//            System.err.println("[ERROR] No se encontró la promoción para ver: " + nombrePromocion);
+//            return false;
+//        } catch (Exception e) {
+//            System.err.println("[ERROR] Error al intentar ver la promoción: " + e.getMessage());
+//            return false;
+//        } finally {
+//
+//        }
 
-            for (WebElement promo : promociones) {
-                String nombreActual = promo.findElement(By.xpath(".//td[1]")).getText().trim();
-                if (nombreActual.equalsIgnoreCase(nombrePromocion)) {
-                    WebElement btnVer = promo.findElement(By.xpath(".//td//i[contains(@class, 'fa-eye')]"));
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+            // Verificar si hay un iframe y cambiar a él
+            if (driver.findElements(By.tagName("iframe")).size() > 0) {
+                driver.switchTo().frame(0);
+                System.out.println("[INFO] Cambiado al iframe para editar la promoción.");
+            }
+
+            // Esperar que la tabla esté visible y cargada
+            WebElement tabla = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
+
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", tabla);
+            System.out.println("Tabla de promociones encontrada.");
+
+            // Obtener todas las filas visibles
+            List<WebElement> filas = tabla.findElements(By.xpath(".//tr[td]"));
+            System.out.println("[DEBUG] Total de filas encontradas: " + filas.size());
+
+            boolean encontrado = false;
+            for (WebElement fila : filas) {
+                String textoFila = fila.getText().trim();
+                System.out.println("Contenido de la fila: " + textoFila);
+
+                if (textoFila.contains(nombrePromocion)) {
+                    // Enmarcar la fila para asegurarnos de que es la correcta
+                    Utils.enmarcarElemento(driver, fila);
+                    System.out.println("Promoción '" + nombrePromocion + "' encontrada.");
+                    Utils.desenmarcarObjeto(driver, fila);
+
+                    // Buscar el botón de editar (ícono de lápiz) dentro de la misma fila
+                    WebElement btnVer = fila.findElement(By.xpath(".//td[17]"));
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", btnVer);
                     Utils.enmarcarElemento(driver, btnVer);
+                    esperarElementoYMedirTiempo(By.xpath(".//td[17]"), "click ver promocion");
                     btnVer.click();
-                    System.out.println("[INFO] Promoción '" + nombrePromocion + "' seleccionada para ver.");
-                    return true;
+                    System.out.println("[INFO] Se hizo clic en el botón de ver.");
+
+                    encontrado = true;
+                    break;
                 }
             }
-            System.err.println("[ERROR] No se encontró la promoción para ver: " + nombrePromocion);
-            return false;
-        } catch (Exception e) {
-            System.err.println("[ERROR] Error al intentar ver la promoción: " + e.getMessage());
-            return false;
-        } finally {
+
+            if (!encontrado) {
+                System.err.println("[ERROR] No se encontró la promoción: " + nombrePromocion);
+            }
+
+            // Salir del iframe si estábamos dentro de uno
             driver.switchTo().defaultContent();
+            return encontrado;
+
+        } catch (Exception e) {
+            System.err.println("[ERROR] Error al copiar la promoción: " + e.getMessage());
+            return false;
         }
     }
     public static void probarAccionesPromocion(String nombrePromocion) {
@@ -1120,8 +1331,8 @@ public static void seleccionarProductos(String criteria, String value, int canti
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement btnEditarRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/k2bt-floating-messages[2]/div/div")));
         Utils.enmarcarElemento(driver, btnEditarRestriccion);
-        esperarElementoYMedirTiempo(By.xpath("/html/body/k2bt-floating-messages[2]/div/div"), "Copia Exitosa");
-        tomarCaptura("Copia Exitosa");
+        esperarElementoYMedirTiempo(By.xpath("/html/body/k2bt-floating-messages[2]/div/div"), "Mensaje Exitoso");
+        tomarCaptura("Exitosa");
         Utils.desenmarcarObjeto(driver, btnEditarRestriccion);
         btnEditarRestriccion.click();
     }
