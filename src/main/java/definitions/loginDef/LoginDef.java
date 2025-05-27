@@ -55,7 +55,7 @@ public class LoginDef {
     public void ingresoConElTipoDe(String us)  {
         long startTime = System.currentTimeMillis();
         By element = By.xpath("//input[@name='_SRUT']");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='_SRUT']")));
         Utils.enmarcarElemento(driver, elemento);
         elemento.sendKeys(datos.get("user"));
@@ -81,6 +81,7 @@ public class LoginDef {
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
         ReporteUtils.tiemposDeCarga.add("Ingreso de clave (Tiempo: " + duration + " ms)" );
+
     }
 
     @And("luego presiono el boton continuar")
@@ -141,8 +142,7 @@ public class LoginDef {
                 System.out.println("Opción no válida");
         }
 
-
-        }
+    }
 
     @And("en la vista del warning selecciono enviar de todas formas")
     public void enLaVistaDelWarningSeleccionoEnviarDeTodasFormas() throws IOException, InterruptedException {

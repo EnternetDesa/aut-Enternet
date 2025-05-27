@@ -26,5 +26,6 @@
     "dimensiones" : "20 * 15",
     "estadoE" : "Entregado",
     "traTributario" : "Exento",
-    "codEspecial": "COMB95"
+    "codEspecial": "COMB95",
+    "tipoDePago": "Fiado"
 }

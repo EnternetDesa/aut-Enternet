@@ -30,7 +30,7 @@ Scenario: POS - Agregar Producto por Buscador
     And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And Ingresamos la descripcion o codigo de un producto y apretamos enter
     And ingresamos la cantidad de producto que llevaremos
-    And seleccionamos el tipo de pago que ocuparemos e ingresamos los datos para el pago
+    And seleccionamos el tipo de pago <"tipoDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
     And seleccionamos tipo de emision
    #Then nos debe de mostrar los productos de esa categoria

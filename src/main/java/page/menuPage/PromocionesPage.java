@@ -122,7 +122,7 @@ public class PromocionesPage {
 public static void ingresoFechaFin() throws InterruptedException {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     WebElement btnTieneFechaTermino = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEVIGENCIAContainer']/div/div")));
-    Utils.enmarcarElemento(driver, btnTieneFechaTermino);
+   // Utils.enmarcarElemento(driver, btnTieneFechaTermino);
     System.out.println("ℹ Verificando el estado del botón 'Tiene fecha de termino'...");
 
     String estadoBoton = btnTieneFechaTermino.getAttribute("class");
@@ -136,7 +136,7 @@ public static void ingresoFechaFin() throws InterruptedException {
             System.out.println(" El botón está en 'OFF'. Activando...");
             btnTieneFechaTermino.click();
             Thread.sleep(1000);
-            Utils.desenmarcarObjeto(driver, btnTieneFechaTermino);
+         //   Utils.desenmarcarObjeto(driver, btnTieneFechaTermino);
         }
 
         String fechaFin = String.valueOf(datosPromociones.get("fechaFin"));
@@ -158,8 +158,6 @@ public static void ingresoFechaFin() throws InterruptedException {
 public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws InterruptedException {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     WebElement btnCanjeHorarioDet = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEHORARIOContainer']/div/div")));
-//    Utils.enmarcarElemento(driver, btnCanjeHorarioDet);
-//    Utils.desenmarcarObjeto(driver, btnCanjeHorarioDet);
     System.out.println("ℹVerificando el estado del botón 'Horario de Canjeo'...");
     String estadoBoton = btnCanjeHorarioDet.getAttribute("class");
     System.out.println("Estado inicial del botón: " + estadoBoton);
@@ -211,7 +209,7 @@ public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws
 
 
     public static void deseaSeleccionarDiasEnEspecificosEnLosQueSeaCanjeableLaPromo() throws InterruptedException {
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     WebElement btnDiasDeCanjePromo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026PROMOSELECCIONADIASContainer\"]/div")));
 
     // Verificar el estado del botón (ON/OFF)
@@ -242,15 +240,11 @@ public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws
             if ("todos".equalsIgnoreCase(diasCanje)) {
                 seleccionarTodosLosDias();
             } else {
-                List<String> diasDeseados = Arrays.stream(diasCanje.split(","))
-                        .map(String::trim)
-                        .collect(Collectors.toList());
+                List<String> diasDeseados = Arrays.stream(diasCanje.split(",")).map(String::trim).collect(Collectors.toList());
                 seleccionarDiasEspecificos(diasDeseados);
             }
             Thread.sleep(500);
-            ((JavascriptExecutor) driver).executeScript(
-                    "document.body.click();"
-            );
+            ((JavascriptExecutor) driver).executeScript("document.body.click();");
 
         } else {
             throw new RuntimeException("❌ No se encontró el valor 'diasCanje' en datosPromociones");
@@ -438,75 +432,79 @@ public static void clickElementoRobusto(By locator) throws InterruptedException 
 }
 
 
-    public static void seleccionarUbicacionesParaCanje(List<String> ubicacionesDeseadas) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        By btnUbicacionLocator = By.xpath("//*[@id=\"W0026PROMOSELECCIONAUBICACIONESContainer\"]/div/div");
+//
+public static void seleccionarUbicacionesParaCanje(List<String> ubicacionesDeseadas, boolean deseaDeseleccionar) throws InterruptedException {
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    By btnUbicacionLocator = By.xpath("//*[@id=\"W0026PROMOSELECCIONAUBICACIONESContainer\"]/div/div");
 
-        // Hacer click en el botón para activar el listado de ubicaciones
-        clickElementoRobusto(btnUbicacionLocator);
-        Thread.sleep(1000); // esperar a que cargue el listado
+    // Hacer click en el botón para activar el listado de ubicaciones
+    clickElementoRobusto(btnUbicacionLocator);
+    Thread.sleep(1000); // esperar a que cargue el listado
 
-        // Obtener el estado del botón para saber si está activado o no (por si quieres usarlo después)
-        WebElement btnUbicacion = driver.findElement(btnUbicacionLocator);
-        String estadoBoton = btnUbicacion.getAttribute("class");
-        boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
+    // Obtener el estado del botón
+    WebElement btnUbicacion = driver.findElement(btnUbicacionLocator);
+    String estadoBoton = btnUbicacion.getAttribute("class");
+    boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
 
-        if (ubicacionesDeseadas != null && !ubicacionesDeseadas.isEmpty()) {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
+    if (ubicacionesDeseadas != null && !ubicacionesDeseadas.isEmpty()) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
 
-            List<WebElement> filas = driver.findElements(By.xpath("//table//tr[td and not(contains(@style, 'display: none'))]"));
-            System.out.println(" Total de ubicaciones visibles encontradas: " + filas.size());
+        List<WebElement> filas = driver.findElements(By.xpath("//table//tr[td and not(contains(@style, 'display: none'))]"));
+        System.out.println(" Total de ubicaciones visibles encontradas: " + filas.size());
 
-            // Deseleccionar ubicaciones visibles seleccionadas
-//            for (WebElement fila : filas) {
-//                try {
-//                    WebElement checkbox = fila.findElement(By.xpath(".//input[@type='checkbox']"));
-//                    if (checkbox.isDisplayed() && checkbox.isEnabled() && checkbox.isSelected()) {
-//                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
-//                        System.out.println("Deseleccionando ubicación visible: " + fila.getText().trim());
-//                    }
-//                } catch (Exception e) {
-//                    System.out.println("⚠ Error al intentar deseleccionar: " + e.getMessage());
-//                }
-//            }
-
-            // Seleccionar las ubicaciones deseadas
-            for (String ubicacion : ubicacionesDeseadas) {
-                boolean ubicacionSeleccionada = false;
-                for (WebElement fila : filas) {
-                    String nombreUbicacion = fila.getText().trim();
-                    if (nombreUbicacion.contains(ubicacion)) {
-                        try {
-                            WebElement checkbox = fila.findElement(By.xpath(".//input[@type='checkbox']"));
-                            if (!checkbox.isSelected()) {
-                                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
-                                System.out.println("✅ Ubicación visible seleccionada: " + ubicacion);
-                                tomarCaptura("Seleccion Ubicacion: " );
-                            }
-                            ubicacionSeleccionada = true;
-                            break;
-                        } catch (Exception e) {
-                            System.err.println("⚠ Error al seleccionar la ubicación: " + ubicacion);
-                            throw e;
-                        }
+        // Solo deselecciona si así se indicó
+        if (deseaDeseleccionar) {
+            for (WebElement fila : filas) {
+                try {
+                    WebElement checkbox = fila.findElement(By.xpath(".//input[@type='checkbox']"));
+                    if (checkbox.isDisplayed() && checkbox.isEnabled() && checkbox.isSelected()) {
+                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+                        System.out.println("Deseleccionando ubicación visible: " + fila.getText().trim());
                     }
+                } catch (Exception e) {
+                    System.out.println("⚠ Error al intentar deseleccionar: " + e.getMessage());
                 }
-                if (!ubicacionSeleccionada) {
-                    System.err.println("❌ Ubicación no encontrada entre las visibles: " + ubicacion);
-                }
-            }
-        } else {
-            // Si no se desean ubicaciones específicas, y el botón está activado, desactivarlo
-            if (estaActivado) {
-                System.out.println("❌ Desactivando el botón 'Ubicaciones'.");
-                clickElementoRobusto(btnUbicacionLocator);
-                Thread.sleep(1000);
-            } else {
-                System.out.println("ℹ️ El botón 'Ubicaciones' ya está en OFF.");
             }
         }
-        System.out.println("✅ Proceso de selección de ubicaciones finalizado.");
+
+        // Seleccionar las ubicaciones deseadas
+        for (String ubicacion : ubicacionesDeseadas) {
+            boolean ubicacionSeleccionada = false;
+            for (WebElement fila : filas) {
+                String nombreUbicacion = fila.getText().trim();
+                if (nombreUbicacion.contains(ubicacion)) {
+                    try {
+                        WebElement checkbox = fila.findElement(By.xpath(".//input[@type='checkbox']"));
+                        if (!checkbox.isSelected()) {
+                            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
+                            System.out.println("✅ Ubicación visible seleccionada: " + ubicacion);
+                        }
+                        ubicacionSeleccionada = true;
+                        break;
+                    } catch (Exception e) {
+                        System.err.println("⚠ Error al seleccionar la ubicación: " + ubicacion);
+                        throw e;
+                    }
+                }
+            }
+            if (!ubicacionSeleccionada) {
+                System.err.println("❌ Ubicación no encontrada entre las visibles: " + ubicacion);
+            }
+        }
+    } else {
+        // Si no se desean ubicaciones específicas
+        if (estaActivado) {
+            System.out.println("❌ Desactivando el botón 'Ubicaciones'.");
+            clickElementoRobusto(btnUbicacionLocator);
+            Thread.sleep(1000);
+        } else {
+            System.out.println("ℹ️ El botón 'Ubicaciones' ya está en OFF.");
+        }
     }
+    //tomarCaptura("Seleccion Ubicacion: ");
+    System.out.println("✅ Proceso de selección de ubicaciones finalizado.");
+}
+
 
 
     public static void seleccionarSignoMas(){
@@ -727,9 +725,11 @@ public static void seleccionarProductos(String criteria, String value, int canti
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnGuardar);
         btnGuardar.click();
         driver.switchTo().defaultContent();
+
     }
 
     public static void seleccionarReglaDePromocion(String criteria, String nombreRestriccion, int value) throws InterruptedException {
+        Thread.sleep(2000);
         try {
             System.out.println("Iniciando selección de productos.");
 
@@ -823,12 +823,16 @@ public static void seleccionarProductos(String criteria, String value, int canti
                 validarTexto(descuentoRealizar.getText(), descuento, "Descuento a realizar");
 
                 // Validar nombre de la restricción
-                WebElement nombreRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table//tr/td[1]")));
-                System.out.println("[INFO] Restricción: " + nombreRestriccion.getText());
+
+              //  WebElement nombreRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table//tr/td[1]")));
+                WebElement nombreRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"span_W0026vCATEGORIAS_0001\"]")));
+                System.out.println("[INFO] Restricción Categorias: " + nombreRestriccion.getText());
                 validarTexto(nombreRestriccion.getText(), restriccion, "Restricción");
 
                 // Validar productos de la restricción
-                WebElement productosRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table//tr/td[3]")));
+
+//                WebElement productosRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table//tr/td[3]")));
+                WebElement productosRestriccion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"span_W0026vPRODUCTOS_0001\"]")));
                 System.out.println("[INFO] Productos: " + productosRestriccion.getText());
                 validarTexto(productosRestriccion.getText(), productos, "Productos");
 
@@ -862,19 +866,19 @@ public static void seleccionarProductos(String criteria, String value, int canti
     private static String mensajeCapturado = ""; // Variable global para guardar el mensaje capturado
 
     public static String capturarMensajePantalla(String xpathMensaje) {
-       String mensaje = "";
-        try {
+         String mensaje = "";
+         try {
+               WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+               WebElement mensajeElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathMensaje)));
+               mensaje = mensajeElemento.getText().trim();
+               System.out.println("📩 Mensaje capturado: " + mensaje);
+         } catch (Exception e) {
+               System.err.println("❌ No se pudo capturar el mensaje: " + e.getMessage());
+         }
+           return mensaje;
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-            WebElement mensajeElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathMensaje)));
-            mensaje = mensajeElemento.getText().trim();
-            System.out.println("📩 Mensaje capturado" + mensaje);
-        } catch (Exception e) {
-            System.err.println("❌ No se pudo capturar el mensaje " + e.getMessage());
-        }
-
-        return mensaje;
     }
+
     public static String capturarMensajePantallaDesdeFrame(String xpathMensaje, int frameIndex) {
         String mensaje = "";
         try {
@@ -952,7 +956,8 @@ public static void seleccionarProductos(String criteria, String value, int canti
                 String textoFila = fila.getText().trim();
                 System.out.println("Contenido de la fila: " + textoFila);
 
-                if (textoFila.contains(nombrePromocion)) {
+                if (textoFila.equalsIgnoreCase(nombrePromocion)){
+//                if (textoFila.contains(nombrePromocion)) {
                     // Enmarcar la fila para asegurarnos de que es la correcta
                     Utils.enmarcarElemento(driver, fila);
                     System.out.println("Promoción '" + nombrePromocion + "' encontrada.");

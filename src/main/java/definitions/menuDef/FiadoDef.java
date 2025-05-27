@@ -5,42 +5,99 @@ import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import org.openqa.selenium.WebDriver;
 
 import java.util.Map;
-import java.awt.*;
 
 import java.io.InputStream;
-import java.util.Map;
 
-import static definitions.Commons.BaseTest.cerrarDriver;
-import static page.loginPage.PosPage.*;
-import static page.menuPage.FiadoPage.seleccionarMenuFiado;
+import static definitions.Commons.BaseTest.*;
+import static page.menuPage.FiadoPage.*;
+import static page.menuPage.PromocionesPage.buscarYEnmarcarPromocion;
+import static page.menuPage.PromocionesPage.editarPromocion;
+
 
 public class FiadoDef {
-    WebDriver driver = BaseTest.getDriver();
-    public static Map<String, String> datosPOS;
 
-    @Given("que ingreso los datos desde el archivo datosFiado {string}")
-    public void queIngresoLosDatosDesdeElArchivoDatosFiado(String arg0) {
-
-        try {
-            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosFiado.json");
-            if (is == null) {
-                throw new RuntimeException("❌ Archivo datosFiado.json no encontrado en resources.");
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            datosPOS = mapper.readValue(is, new TypeReference<>() {});
-            System.out.println("✅ datosPOS cargado correctamente.");
-        } catch (Exception e) {
-            System.err.println(STR."❌ Error al cargar datosPOS: \{e.getMessage()}");
-            datosPOS = null; // evitar estado inconsistente
-        }
-    }
-
+    public static Map<String, String> datosFiado;
 
     @And("hacemos click en menu izquierdo y en la opcion fiado")
     public void hacemosClickEnMenuIzquierdoYEnLaOpcionFiado() throws InterruptedException {
+        //cerrarMsjAlerta();
         seleccionarMenuFiado();
+    }
+
+    @And("seleccionamos boton agregar cliente")
+    public void seleccionamosBotonAgregarCliente() throws InterruptedException {
+
+        clickBtnAgregarCliente();
+    }
+
+    @And("ingresamos el rut del cliente {string}")
+    public void ingresamosElRutDelCliente(String arg0) {
+        ingresarRutCliente();
+
+    }
+
+    @And("seleccionamos el boton confirmar")
+    public void seleccionamosElBotonConfirmar() throws InterruptedException {
+        clickBtnConfirmar();
+    }
+
+    @And("mos mostrara un pop de estas seguro , debemos aceptar")
+    public void mosMostraraUnPopDeEstasSeguroDebemosAceptar() throws InterruptedException {
+        clickAceptarPopUp();
+    }
+
+    @And("en informacion general ingresamos el valor del credito a otorgar {string}")
+    public void enInformacionGeneralIngresamosElValorDelCreditoAOtorgar(String arg0)  {
+        seleccionarEstado();
+        ingresarCreditoParaElFiado();
+    }
+
+    @And("seleccionamos el boton actualizar")
+    public void seleccionamosElBotonActualizar() throws InterruptedException {
+        seleccionarBtnActualizar();
+    }
+
+    @And("seleccionar boton volver")
+    public void seleccionarBotonVolver() throws InterruptedException {
+        clickBtnVolver();
+
+    }
+
+    @And("validamos que se haya creado correctamente")
+    public void validamosQueSeHayaCreadoCorrectamente() {
+
+        String nombreClienteFiado = datosFiado.get("rutCliente"); //
+        boolean encontrada = buscarYEnmarcarPromocion(nombreClienteFiado);
+
+        if (encontrada) {
+            System.out.println("✅ El cliente fue encontrado correctamente.");
+        } else {
+            System.out.println("❌ El cliente no fue encontrado.");
+        }
+
+    }
+
+    @And("hacemos click en menu opcion modulo de ventas")
+    public void hacemosClickEnMenuOpcionModuloDeVentas() throws InterruptedException {
+        ingresarModuloVEntas();
+       // cerrarDriver();
+    }
+
+    @And("seleccionamos boton descargar cliente y luego exportar")
+    public void seleccionamosBotonDescargarClienteYLuegoExportar() throws InterruptedException {
+        clickDescargarTablaYExportar();
+        cerrarDriver();
+
+    }
+
+    @And("abrimos el documento")
+    public void abrimosElDocumento() throws InterruptedException {
+        abrirArchivoYTomarCaptura();
+        Thread.sleep(2000);
+        tomarCaptura("excell");
+        cerrarDriver();
+
     }
 }

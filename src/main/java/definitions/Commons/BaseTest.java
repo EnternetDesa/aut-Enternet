@@ -38,6 +38,7 @@ public class BaseTest {
     public static Map<String, String> datos;
     public static Map<String, String> datosPOS;
     public static Map<String , Object> datosPromociones;
+    public static Map<String , Object> datosFiado;
     public static final String RUTA_PDF = "C:/git/aut-Enternet/reportes/";
     private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/reportes/capturas/";
     public static List<String> tiemposDeCarga = new ArrayList<>();
@@ -64,6 +65,22 @@ public class BaseTest {
         } catch (Exception e) {
             System.err.println("❌ Error al cargar datosPromociones: " + e.getMessage());
             datosPromociones = null; // evitar estado inconsistente
+        }
+    }
+    @Given("que ingreso los datos desde el archivo datosFiado {string}")
+    public void queIngresoLosDatosDesdeElArchivoDatosFiado(String arg0) {
+
+        try {
+            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosFiado.json");
+            if (is == null) {
+                throw new RuntimeException("❌ Archivo datosFiado.json no encontrado en resources.");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            datosFiado = mapper.readValue(is, new TypeReference<>() {});
+            System.out.println("✅ datosFiado cargado correctamente.");
+        } catch (Exception e) {
+            System.err.println(STR."❌ Error al cargar datosFiado: \{e.getMessage()}");
+            datosFiado = null; // evitar estado inconsistente
         }
     }
 

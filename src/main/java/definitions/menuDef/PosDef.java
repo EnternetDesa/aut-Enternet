@@ -75,7 +75,6 @@ public class PosDef {
     @And("seleccionamos el boton copiar")
     public void seleccionamosElBotonCopiar() throws InterruptedException {
         seleccionBtnCopiar();
-
     }
 
     @And("luego pegamos la url en un nuevo navegador")
@@ -131,9 +130,9 @@ public class PosDef {
     @And("ingresamos la cantidad de producto que llevaremos")
     public void ingresamosLaCantidadDeProductoQueLlevaremos() {
         ingresarCantidadDeProducto();
-        cerrarDriver();
+
     }
-    @And("seleccionamos el tipo de pago que ocuparemos e ingresamos los datos para el pago")
+    @And("seleccionamos el tipo de pago <{string}> que ocuparemos e ingresamos los datos para el pago")
     public void seleccionamosElTipoDePagoQueOcuparemosEIngresamosLosDatosParaElPago(String tipoPago) throws InterruptedException {
         ingresarTipoDePago(tipoPago);
         ingresoDeDatosParaElPago();
@@ -291,6 +290,7 @@ public class PosDef {
         visualizarProductoAgreadoCarroCompras();
 
     }
+
 
 
 }

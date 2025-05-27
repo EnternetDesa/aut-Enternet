@@ -207,7 +207,7 @@ public class PosPage {
     public static void seleccionBtnCopiar() throws InterruptedException {
         Thread.sleep(2000);
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement btnCopiarQR = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"COPIAR\"]")));
         Utils.enmarcarElemento(driver, btnCopiarQR);
         BaseTest.tomarCaptura("btn copiar QR");
@@ -231,7 +231,7 @@ public class PosPage {
                 driver.switchTo().window(handle);
             }
             // Simula pegar una URL copiada (como si estuviera en el portapapeles)
-            String urlCopiada = "https://qa2.enternet.cl/AndesPOS2407/servlet/com.andes.pos.contextoacceso.locallogininitenc?MjAyNS0wNC0xMUgxMy0zM1m4VRWQJuIpaMMtsvp5E2q2FAMJbNtpjghOBJ9UZULHDkIU14M7JuIZcvF1v60MPr2v7GcENulf82pfxFT52dA%3D";  // Simulamos tener esta URL copiada
+            String urlCopiada = "https://qa.enternet.cl/AndesPOS2407/servlet/com.andes.pos.contextoacceso.locallogininitenc?MjAyNS0wNS0yM0gxMS01Mb8V5RN%2F6%2FgURn4DfXhtm1iLWUpUBwvUNJyFRL%2BrUyN7HhEnwaDc8imqe%2FDFwvUoLpRB0UOs0lx1QJhKMmyVop8%3D";  // Simulamos tener esta URL copiada
             driver.get(urlCopiada);
 
         } catch (Exception e) {
@@ -239,9 +239,7 @@ public class PosPage {
         } finally {
             // Cierra el navegador después de unos segundos
             try { Thread.sleep(5000); } catch (InterruptedException ignored) {}
-
         }
-
 
     }
     public static void clickBtnIrALogin() throws InterruptedException, AWTException {
@@ -270,7 +268,7 @@ public class PosPage {
         esperarElementoYMedirTiempo(By.id("vTIPODEPERFIL"), "Tipo De Perfil" );
 
         Select select = new Select(chbTipoPerfil);
-        select.selectByIndex(4); //cajera admin
+        select.selectByIndex(3); //cajera admin
         Utils.desenmarcarObjeto(driver, chbTipoPerfil);
 
     }
@@ -455,6 +453,18 @@ public class PosPage {
                 Utils.desenmarcarObjeto(driver, btnCheque);
                 btnPagos3.click();
                 btnCheque.click();
+                break;
+            case "Fiado":
+                WebDriverWait wait7 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebElement btnPagos4;
+                btnPagos4 = wait7.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"ACTIONGROUPUC_ACTIONGROUPContainer\"]/div/div[1]/span")));
+                WebElement btnFiado = wait7.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"PAGOCHEQUE\"]")));
+                Utils.enmarcarElemento(driver, btnFiado);
+                BaseTest.tomarCaptura(STR."Metodo de pago \{tipoPago}");
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"PAGOCHEQUE\"]"), STR."El metodo de pago escojido es: \{tipoPago}");
+                Utils.desenmarcarObjeto(driver, btnFiado);
+                btnPagos4.click();
+                btnFiado.click();
                 break;
             default:
                 System.out.println("Opción no válida");
