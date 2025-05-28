@@ -30,7 +30,7 @@ Scenario: POS - Agregar Producto por Buscador
     And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And Ingresamos la descripcion o codigo de un producto y apretamos enter
     And ingresamos la cantidad de producto que llevaremos
-    And seleccionamos el tipo de pago <"tipoDePago"> que ocuparemos e ingresamos los datos para el pago
+    And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
     And seleccionamos tipo de emision
    #Then nos debe de mostrar los productos de esa categoria
@@ -70,11 +70,11 @@ Scenario: POS - Agregar Producto por boton Carta
     And luego pegamos la url en un nuevo navegador
     And ingresamos el tipo de perfil
     And ingresamos el modulo IDL
-    And ingresamos el rut "<user>" y contrasenia "<clave>"
+    And ingresamos el rut "<userPOS>" y contrasenia "<clavePOS>"
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
     And seleccionamos boton nueva venta
- #   And le asignamos el cliente a quien venderemos "<nombreCliente>"
+    And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And hacemos click en el boton carta y seleccionamos el producto que muestre
     And le modificamos el precio al producto"<precio>"
     And le modificamos la cantidad de producto a comprar "<cantProdC>"

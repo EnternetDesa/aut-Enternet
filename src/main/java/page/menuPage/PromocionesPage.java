@@ -264,11 +264,9 @@ public static void seleccionarSiLaPromocionSeCanjeaEnHorarioDeterminado() throws
     public static void seleccionarTodosLosDias() throws InterruptedException {
         WebElement dropdown = driver.findElement(By.xpath("//*[@id='W0026COLDIASSEMANAContainer']/k2bt-enhancedcombo/div/div/div[1]/div"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", dropdown);
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement seleccionarTodos = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'Seleccionar todos')]")));
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", seleccionarTodos);
-
         System.out.println("✅ Todos los días seleccionados.");
         tomarCaptura("Dias de Promocion");
     }

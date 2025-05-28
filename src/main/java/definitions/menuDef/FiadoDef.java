@@ -94,7 +94,7 @@ public class FiadoDef {
 
     @And("abrimos el documento")
     public void abrimosElDocumento() throws InterruptedException {
-        abrirArchivoYTomarCaptura();
+        //abrirArchivoYTomarCaptura();
         Thread.sleep(2000);
         tomarCaptura("excell");
         cerrarDriver();

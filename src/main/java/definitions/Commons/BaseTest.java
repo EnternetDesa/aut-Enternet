@@ -48,7 +48,7 @@ public class BaseTest {
     public static String nombreFeature;
     public static String estadoEjecucion = "Passed";
 
-//    public static Map<String, Object> datosPromociones;
+
 
     static {
         cargarDatosPromociones();

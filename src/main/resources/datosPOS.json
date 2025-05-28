@@ -1,11 +1,12 @@
 {
-    "user": "183475444",
-    "clave": "carito.123",
+    "userPOS": "171223369",
+    "clavePOS": "carito.123",
     "rol": "Punto de ventas Enternet",
     "menuPOS": "Definiciones",
     "subMenuP": "Enrolamiento De Equipos",
     "tipoPerfil": "CAJERAADMINISTRATIVA",
     "moduloIDL": "CAJA",
+    "cajeroPos": "Carlos",
     "tipoPago": "Transferencia",
     "descProd": "COMBUSTIBLE 95",
     "codProd": "7802950572452",
@@ -27,5 +28,7 @@
     "estadoE" : "Entregado",
     "traTributario" : "Exento",
     "codEspecial": "COMB95",
-    "tipoDePago": "Fiado"
+    "formaDePago": "Tarjeta",
+    "tipoDePago": "Fiado",
+    "rutClienteFiado": "203344473"
 }

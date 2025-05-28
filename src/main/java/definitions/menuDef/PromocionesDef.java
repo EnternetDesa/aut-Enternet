@@ -6,14 +6,8 @@ import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +16,6 @@ import java.util.Map;
 import static definitions.Commons.BaseTest.*;
 import static page.menuPage.PromocionesPage.*;
 import static page.menuPage.PromocionesPage.capturarMensajePantalla;
-import static page.menuPage.PromocionesPage.obtenerMensajeCapturado;
 import static page.menuPage.PromocionesPage.validacionDeDatos;
 
 public class PromocionesDef {

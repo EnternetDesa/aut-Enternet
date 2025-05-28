@@ -7,10 +7,10 @@ Feature: POS - Fiado
     And Ingreso con el tipo de "user"
     And ingreso la contrasenia "clave"
     And luego presiono el boton continuar
- #   And visualizo la vista de seleccion de rol
- #   And selecciono la opcion "rol"
- #   And en la vista del warning selecciono enviar de todas formas
- #   And debe de mostrar la vista de Pos
+    And visualizo la vista de seleccion de rol
+    And selecciono la opcion "rol"
+    And en la vista del warning selecciono enviar de todas formas
+    And debe de mostrar la vista de Pos
 
   Scenario: Pos Fiado - Agregar Cliente
     Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
@@ -42,7 +42,8 @@ Feature: POS - Fiado
     And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And Ingresamos la descripcion o codigo de un producto y apretamos enter
     And ingresamos la cantidad de producto que llevaremos
-    And seleccionamos el tipo de pago <"tipoDePago"> que ocuparemos e ingresamos los datos para el pago
+  #  And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
+    And seleccionamos la forma de pago <"formaDePago"> y el tipo de pago <"tipoDePago"> que ocuparemos
     And seleccionar boton guardar
     And seleccionamos tipo de emision
    ## And firmamos la emision de factura o boleta

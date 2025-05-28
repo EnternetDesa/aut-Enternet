@@ -21,7 +21,7 @@ import java.awt.Toolkit;
 import java.awt.Robot;
 
 import static definitions.Commons.BaseTest.*;
-;
+
 
 public class FiadoPage {
     public static WebDriver driver = BaseTest.getDriver();
@@ -219,46 +219,46 @@ public class FiadoPage {
         linkExportar.click();
     }
 
-    public static void abrirArchivoYTomarCaptura() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Selecciona un archivo para abrir");
-
-        int seleccion = fileChooser.showOpenDialog(null);
-
-        if (seleccion == JFileChooser.APPROVE_OPTION) {
-//            File archivoSeleccionado = fileChooser.getSelectedFile();
-            File archivoSeleccionado = new File("C:\\Users\\alexi\\Downloads\\ExportWWClienteFiado-0140e025-f270-46e4-be6c-cace9a72d795.xlsx");
-            if (archivoSeleccionado.exists()) {
-                try {
-                    // Abre el archivo con la app predeterminada
-                    Desktop.getDesktop().open(archivoSeleccionado);
-                    System.out.println("✅ Archivo abierto: " + archivoSeleccionado.getAbsolutePath());
-
-                    // Espera a que se abra la app
-                    Thread.sleep(3000);
-
-                    // Captura de pantalla
-                    Robot robot = new Robot();
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    Rectangle screenRect = new Rectangle(screenSize);
-                    BufferedImage captura = robot.createScreenCapture(screenRect);
-
-                    // Guardar la imagen
-                    String rutaCaptura = "captura_pantalla.png";
-                    ImageIO.write(captura, "png", new File(rutaCaptura));
-                    System.out.println("📸 Captura guardada como: " + rutaCaptura);
-
-                } catch (IOException | InterruptedException | AWTException e) {
-                    System.err.println("❌ Error: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            } else {
-                System.err.println("❌ El archivo no existe.");
-            }
-        } else {
-            System.out.println("ℹ️ Selección cancelada por el usuario.");
-        }
-    }
+//    public static void abrirArchivoYTomarCaptura() {
+//        JFileChooser fileChooser = new JFileChooser();
+//        fileChooser.setDialogTitle("Selecciona un archivo para abrir");
+//
+//        int seleccion = fileChooser.showOpenDialog(null);
+//
+//        if (seleccion == JFileChooser.APPROVE_OPTION) {
+////            File archivoSeleccionado = fileChooser.getSelectedFile();
+//            File archivoSeleccionado = new File("C:\\Users\\alexi\\Downloads\\ExportWWClienteFiado-0140e025-f270-46e4-be6c-cace9a72d795.xlsx");
+//            if (archivoSeleccionado.exists()) {
+//                try {
+//                    // Abre el archivo con la app predeterminada
+//                    Desktop.getDesktop().open(archivoSeleccionado);
+//                    System.out.println("✅ Archivo abierto: " + archivoSeleccionado.getAbsolutePath());
+//
+//                    // Espera a que se abra la app
+//                    Thread.sleep(3000);
+//
+//                    // Captura de pantalla
+//                    Robot robot = new Robot();
+//                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//                    Rectangle screenRect = new Rectangle(screenSize);
+//                    BufferedImage captura = robot.createScreenCapture(screenRect);
+//
+//                    // Guardar la imagen
+//                    String rutaCaptura = "captura_pantalla.png";
+//                    ImageIO.write(captura, "png", new File(rutaCaptura));
+//                    System.out.println("📸 Captura guardada como: " + rutaCaptura);
+//
+//                } catch (IOException | InterruptedException | AWTException e) {
+//                    System.err.println("❌ Error: " + e.getMessage());
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                System.err.println("❌ El archivo no existe.");
+//            }
+//        } else {
+//            System.out.println("ℹ️ Selección cancelada por el usuario.");
+//        }
+//    }
 
 
 }
