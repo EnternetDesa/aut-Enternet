@@ -8,7 +8,7 @@
     "moduloIDL": "CAJA",
     "cajeroPos": "Carlos",
     "tipoPago": "Transferencia",
-    "descProd": "COMBUSTIBLE 95",
+    "descProd": "Vino Memorias 2018 750 ml",
     "codProd": "7802950572452",
     "nombreCliente": "ppppp pppppppp, pp",
     "MontoPago": "",
@@ -30,5 +30,6 @@
     "codEspecial": "COMB95",
     "formaDePago": "Tarjeta",
     "tipoDePago": "Fiado",
-    "rutClienteFiado": "203344473"
+    "rutClienteFiado": "203344473",
+    "tipoEmision": "Boleta"
 }

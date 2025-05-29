@@ -159,25 +159,27 @@ public class PosDef {
     @And("seleccionamos boton nueva venta")
     public void seleccionamosBotonNuevaVenta() throws InterruptedException {
         clickBtnNuevaVenta();
-        buscarClienteYSeleccionarPorRut();
+
     }
 
     @And("le asignamos el cliente a quien venderemos {string}")
     public void leAsignamosElClienteAQuienVenderemos(String nombreCliente) throws InterruptedException {
-        ingresarRutcliente(); //203344473
-        clickBtnCliente();
-        seleccionCliente();
+        buscarClienteYSeleccionarPorRut(); //poner que si se depliega antes la lista de clientes seleccione
+       // ingresarRutcliente(); //203344473
+       // clickBtnCliente();
+      //  seleccionCliente();
     }
 
     @And("Ingresamos la descripcion o codigo de un producto y apretamos enter")
     public void ingresamosLaDescripcionOCodigoDeUnProductoYApretamosEnter() throws InterruptedException {
         ingresarProductoPorDescripcion();
-        ingresarProductoPorCodigo();
-        clickBtnEnter();
+        seleccionarNombreProducto();
+       // ingresarProductoPorCodigo();
+      //  clickBtnEnter();
     }
 
     @And("ingresamos la cantidad de producto que llevaremos")
-    public void ingresamosLaCantidadDeProductoQueLlevaremos() {
+    public void ingresamosLaCantidadDeProductoQueLlevaremos() throws InterruptedException {
         ingresarCantidadDeProducto();
 
     }
@@ -185,7 +187,7 @@ public class PosDef {
     public void seleccionamosLaFormaDePagoQueOcuparemosEIngresamosLosDatosParaElPago(String args0) throws InterruptedException {
         ingresarFormaDePago();
         ingresarTipoDePago();
-        ingresoDeDatosParaElPago();
+      //  ingresoDeDatosParaElPago();
     }
 
     @And("seleccionar boton guardar")
@@ -345,5 +347,10 @@ public class PosDef {
     public void seleccionamosLaFormaDePagoYElTipoDePagoQueOcuparemos(String formaDePago, String tipoDePAgo) throws InterruptedException {
         ingresarFormaDePago();
         ingresoDeDatosParaElPago();
+    }
+
+    @Then("seleccionar boton imprimir")
+    public void seleccionarBotonImprimir() throws InterruptedException {
+        seleccionarBtnImprimir();
     }
 }
