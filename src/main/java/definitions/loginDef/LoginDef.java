@@ -13,6 +13,7 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import definitions.Commons.BaseTest;
+import definitions.Commons.DatosGlobales;
 import definitions.Commons.ReporteUtils;
 import definitions.Commons.Utils;
 import io.cucumber.java.en.And;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 
 import static definitions.Commons.BaseTest.*;
 import static definitions.Commons.BaseTest.esperarElementoYMedirTiempo;
@@ -54,14 +56,21 @@ public class LoginDef {
     @And("Ingreso con el tipo de {string}")
     public void ingresoConElTipoDe(String us)  {
         long startTime = System.currentTimeMillis();
+
+        // Usamos el mapa activo cargado dinámicamente
+        Map<String, String> datos = DatosGlobales.datosActuales;
+
+        if (datos == null || !datos.containsKey("user")) {
+            throw new IllegalArgumentException("El archivo cargado no contiene el campo 'user'");
+        }
+
         By element = By.xpath("//input[@name='_SRUT']");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
-        WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='_SRUT']")));
+        WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(element));
         Utils.enmarcarElemento(driver, elemento);
         elemento.sendKeys(datos.get("user"));
         Utils.desenmarcarObjeto(driver, elemento);
-        esperarElementoYMedirTiempo(By.name("BOTPAS"),"Usuario");
-
+        esperarElementoYMedirTiempo(By.name("BOTPAS"), "Usuario");
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
         ReporteUtils.tiemposDeCarga.add("Ingreso con el tipo de " + us + " (Tiempo: " + duration + " ms)");
@@ -70,17 +79,28 @@ public class LoginDef {
 
     @And("ingreso la contrasenia {string}")
     public void ingresoLaContrasenia(String clave) {
-        long startTime = System.currentTimeMillis();
-        By element = By.xpath("//input[@name='_PASSWDPLANO']");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='_PASSWDPLANO']")));
-        Utils.enmarcarElemento(driver, elemento);
-        elemento.sendKeys(datos.get("clave"));
-        Utils.desenmarcarObjeto(driver, elemento);
-        esperarElementoYMedirTiempo(By.name("BOTPAS"),"Contraseña");
-        long endTime = System.currentTimeMillis();
-        long duration = endTime - startTime;
-        ReporteUtils.tiemposDeCarga.add("Ingreso de clave (Tiempo: " + duration + " ms)" );
+//        long startTime = System.currentTimeMillis();
+//        By element = By.xpath("//input[@name='_PASSWDPLANO']");
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//        WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='_PASSWDPLANO']")));
+//        Utils.enmarcarElemento(driver, elemento);
+//        elemento.sendKeys(datos.get("clave"));
+//        Utils.desenmarcarObjeto(driver, elemento);
+//        esperarElementoYMedirTiempo(By.name("BOTPAS"),"Contraseña");
+//        long endTime = System.currentTimeMillis();
+//        long duration = endTime - startTime;
+//        ReporteUtils.tiemposDeCarga.add("Ingreso de clave (Tiempo: " + duration + " ms)" );
+        Map<String, String> datos = DatosGlobales.datosActuales;
+
+        if (datos == null || !datos.containsKey("clave")) {
+            throw new IllegalArgumentException("El archivo cargado no contiene el campo 'clave'");
+        }
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+        WebElement inputClave = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='_PASSWDPLANO']")));
+        Utils.enmarcarElemento(driver, inputClave);
+        inputClave.sendKeys(datos.get("clave"));
+        Utils.desenmarcarObjeto(driver, inputClave);
 
     }
 
@@ -102,47 +122,104 @@ public class LoginDef {
 
     }
 
-    @And("selecciono la opcion {string}")
-    public void seleccionoLaOpcion(String rol) throws InterruptedException, IOException {
+//    @And("selecciono la opcion {string}")
+//    public void seleccionoLaOpcion(String rol) throws InterruptedException, IOException {
+//
+//        rol = datos.get("rol");
+//        switch (rol) {
+//            case "Inventario":
+//                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//                WebElement btnInventario = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td")));
+//                Utils.enmarcarElemento(driver, btnInventario);
+//                tomarCaptura("Inventario");
+//                Utils.desenmarcarObjeto(driver, btnInventario);
+//                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td"), "Seleccion de Rol: " +rol+ "");
+//                btnInventario.click();
+//
+//                break;
+//
+//            case "Punto de ventas Enternet":
+//                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+//                WebElement btnPuntoVentas = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.id("_APPICO_00020002")));
+//                Utils.enmarcarElemento(driver, btnPuntoVentas);
+//                tomarCaptura("POS Administrador Certificador");
+//                Utils.desenmarcarObjeto(driver, btnPuntoVentas);
+//                esperarElementoYMedirTiempo(By.id("_APPICO_00020002"), "Seleccion rol: " +rol );
+//                btnPuntoVentas.click();
+//
+//                break;
+//            case "Promociones":
+//                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+//                WebElement btnPromociones = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.id("_APPICO_00050001")));
+//                Utils.enmarcarElemento(driver, btnPromociones);
+//                tomarCaptura("Administrador Promociones");
+//                Utils.desenmarcarObjeto(driver, btnPromociones);
+//                esperarElementoYMedirTiempo(By.id("_APPICO_00050001"), "Seleccion rol: " +rol );
+//                btnPromociones.click();
+//
+//                break;
+//            default:
+//                System.out.println("Opción no válida");
+//        }
+//
+//    }
+@And("selecciono la opcion {string}")
+public void seleccionoLaOpcion(String rol) throws InterruptedException, IOException {
+    Map<String, String> datos = DatosGlobales.datosActuales;
 
-        rol = datos.get("rol");
-        switch (rol) {
-            case "Inventario":
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-                WebElement btnInventario = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td")));
-                Utils.enmarcarElemento(driver, btnInventario);
-                BaseTest.tomarCaptura("inventario");
-                Utils.desenmarcarObjeto(driver, btnInventario);
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td"), "Seleccion de Rol: " +rol+ "");
-                btnInventario.click();
-
-                break;
-
-            case "Punto de ventas Enternet":
-                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
-                WebElement btnPuntoVentas = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.id("_APPICO_00020002")));
-                Utils.enmarcarElemento(driver, btnPuntoVentas);
-                BaseTest.tomarCaptura("POS Administrador Certificador");
-                Utils.desenmarcarObjeto(driver, btnPuntoVentas);
-                esperarElementoYMedirTiempo(By.id("_APPICO_00020002"), "Seleccion rol: " +rol );
-                btnPuntoVentas.click();
-
-                break;
-            case "Promociones":
-                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
-                WebElement btnPromociones = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.id("_APPICO_00050001")));
-                Utils.enmarcarElemento(driver, btnPromociones);
-                BaseTest.tomarCaptura("Administrador Promociones");
-                Utils.desenmarcarObjeto(driver, btnPromociones);
-                esperarElementoYMedirTiempo(By.id("_APPICO_00050001"), "Seleccion rol: " +rol );
-                btnPromociones.click();
-
-                break;
-            default:
-                System.out.println("Opción no válida");
-        }
-
+    if (datos == null || !datos.containsKey("rol")) {
+        throw new IllegalArgumentException("El archivo cargado no contiene el campo 'rol'");
     }
+
+    // Sobrescribimos el parámetro con el valor real desde el JSON
+    rol = datos.get("rol");
+
+    switch (rol) {
+        case "Inventario":
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement btnInventario = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td")
+            ));
+            Utils.enmarcarElemento(driver, btnInventario);
+            tomarCaptura("Inventario");
+            Utils.desenmarcarObjeto(driver, btnInventario);
+            esperarElementoYMedirTiempo(
+                    By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td"),
+                    "Seleccion de Rol: " + rol
+            );
+            btnInventario.click();
+            break;
+
+        case "Punto de ventas Enternet":
+            WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement btnPuntoVentas = wait2.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.id("_APPICO_00020002")));
+            Utils.enmarcarElemento(driver, btnPuntoVentas);
+            tomarCaptura("POS Administrador Certificador");
+            Utils.desenmarcarObjeto(driver, btnPuntoVentas);
+            esperarElementoYMedirTiempo(
+                    By.id("_APPICO_00020002"),"Seleccion rol: " + rol
+            );
+            btnPuntoVentas.click();
+            break;
+
+        case "Promociones":
+            WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement btnPromociones = wait3.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.id("_APPICO_00050001")));
+            Utils.enmarcarElemento(driver, btnPromociones);
+            tomarCaptura("Administrador Promociones");
+            Utils.desenmarcarObjeto(driver, btnPromociones);
+            esperarElementoYMedirTiempo(
+                    By.id("_APPICO_00050001"),"Seleccion rol: " + rol);
+            btnPromociones.click();
+            break;
+
+        default:
+            throw new IllegalArgumentException("Opción de rol no válida: " + rol);
+    }
+}
+
 
     @And("en la vista del warning selecciono enviar de todas formas")
     public void enLaVistaDelWarningSeleccionoEnviarDeTodasFormas() throws IOException, InterruptedException {
@@ -160,19 +237,20 @@ public class LoginDef {
     @And("debe de mostrar la vista de stock")
     public void debeDeMostrarLaVistaDeStock() {
     }
-    @Given("que estoy en home de stock")
-    public void queEstoyEnHomeDeStock() {
+    @Given("estoy en home de stock")
+    public void estoyEnHomeDeStock() {
         // ----------------------Menu
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 //        long startTime = System.nanoTime(); // Inicio de medición
         WebElement btnMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/header/div[1]/i")));
+        esperarElementoYMedirTiempo(By.name("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/header/div[1]/i"),"Home stock");
 //        long endTime = System.nanoTime(); // Fin de medición
         Utils.enmarcarElemento(driver, btnMenu );
         btnMenu.click();
 //        long duration = (endTime - startTime) / 1_000_000; // Convertir a milisegundos
 //        System.out.println("⏳ Tiempo de espera hasta que vista Stock esté visible: " + duration + " ms");
         Utils.desenmarcarObjeto(driver, btnMenu);
-        esperarElementoYMedirTiempo(By.name("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/header/div[1]/i"),"Home stock");
+
     }
 
     @And("selecciono el menu de {string}")
@@ -181,7 +259,7 @@ public class LoginDef {
         menu = datos.get("menu");
         switch (menu) {
             case "Movimientos":
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnMovimientos = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[2]/a")));
                 Utils.enmarcarElemento(driver, btnMovimientos );
                 BaseTest.tomarCaptura("Menu Movimientos");
@@ -192,7 +270,7 @@ public class LoginDef {
 
             case "Procesos":
 
-                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnProcesos = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/a")));
                 Utils.enmarcarElemento(driver, btnProcesos );
                 //takeScreenshot("screenshot_");
@@ -204,7 +282,7 @@ public class LoginDef {
 
             case "Reportes":
 
-                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnReportes = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[4]/a")));
                 Utils.enmarcarElemento(driver, btnReportes );
                // takeScreenshot("screenshot_");
@@ -215,7 +293,7 @@ public class LoginDef {
                 break;
             case "Definiciones":
 
-                WebDriverWait wait4 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait4 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnDefiniciones = wait4.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/a")));
                 Utils.enmarcarElemento(driver, btnDefiniciones );
                 //takeScreenshot("screenshot_");
@@ -226,7 +304,7 @@ public class LoginDef {
                 break;
 
             case "Configuracion":
-                WebDriverWait wait5 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait5 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnConfiguraciones = wait5.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/a")));
                 Utils.enmarcarElemento(driver, btnConfiguraciones );
                 BaseTest.tomarCaptura("Menu Configuracion");
@@ -244,11 +322,11 @@ public class LoginDef {
     public void luegoElSubmenuDe(String subMenuD) throws InterruptedException, IOException {
 
         //aqui ---
-        subMenuD = datos.get("subMenuD");
+        subMenuD = datos.get("subMenu");
         switch (subMenuD) {
             //movimientos
             case "Ingresar recepcion":
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnIngresarRecepcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[2]/ul/li[1]/a")));
                 Utils.enmarcarElemento(driver, btnIngresarRecepcion );
                 BaseTest.tomarCaptura("Ingreso Recepcion");
@@ -258,7 +336,7 @@ public class LoginDef {
                 break;
 
             case "Salidas de Inventario":
-                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnSalidaInventario = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[2]/ul/li[2]/a")));
                 Utils.enmarcarElemento(driver, btnSalidaInventario );
                 BaseTest.tomarCaptura("Salidas de Inventario");
@@ -268,82 +346,82 @@ public class LoginDef {
                 break;
 
             case "Mermas Altas y Traslados":
-                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnMermas = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[2]/ul/li[3]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[]/ul/li[3]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnMermas );
                 BaseTest.tomarCaptura("Mermas Altas y Traslados");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[]/ul/li[3]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnMermas);
                 btnMermas.click();
                 break;
 
             case "Listar Movimientos":
 
-                WebDriverWait wait4 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait4 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnListarMov = wait4.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[2]/ul/li[4]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[2]/ul/li[4]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnListarMov );
                 BaseTest.tomarCaptura("Listar Movimientos");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[2]/ul/li[4]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnListarMov);
                 btnListarMov.click();
                 break;
 
             //Procesos
             case "Transformaciones Aplicadas":
-                WebDriverWait wait5 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait5 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnTransfAplicadas = wait5.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[1]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[1]/a"),"El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnTransfAplicadas );
                 BaseTest.tomarCaptura("Transformaciones Aplicadas");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[1]/a"),"El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnTransfAplicadas);
                 btnTransfAplicadas.click();
                 break;
 
             case "Toma de Inventario":
 
-                WebDriverWait wait6 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait6 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnTomaInventario = wait6.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[2]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[2]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnTomaInventario);
                 BaseTest.tomarCaptura("Toma de Inventario");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[2]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnTomaInventario);
                 btnTomaInventario.click();
                 break;
             case "Toma Simplificada":
-                WebDriverWait wait7 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait7 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnTomaSimplificada = wait7.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[3]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[3]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnTomaSimplificada );
 //                takeScreenshot("screenshot_");
                 BaseTest.tomarCaptura("Toma Simplificada");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[3]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnTomaSimplificada);
                 btnTomaSimplificada.click();
                 break;
 
             //Reportes
             case "Reporte de Margen":
-                WebDriverWait wait8 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait8 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnReporteMargen = wait8.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[4]/ul/li/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[4]/ul/li/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnReporteMargen );
                 BaseTest.tomarCaptura("Reporte de Margen");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[4]/ul/li/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnReporteMargen);
                 btnReporteMargen.click();
                 break;
 
             //Definiciones
             case "Items":
-                WebDriverWait wait9 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait9 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnItems = wait9.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[1]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[1]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnItems );
                 BaseTest.tomarCaptura("Items");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[1]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnItems);
                 btnItems.click();
                 break;
 
             case "Proveedores":
-                WebDriverWait wait10 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait10 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnProveedores = wait10.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[2]/a")));
                 Utils.enmarcarElemento(driver, btnProveedores );
                 BaseTest.tomarCaptura("Proveedores");
@@ -353,82 +431,82 @@ public class LoginDef {
                 break;
 
             case "Transformaciones":
-                WebDriverWait wait11 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait11 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnTransformaciones = wait11.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[3]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[3]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnTransformaciones );
                 BaseTest.tomarCaptura("Transformaciones");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[3]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnTransformaciones);
                 btnTransformaciones.click();
                 break;
 
             case "Lotes":
-                WebDriverWait wait12 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait12 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnLotes = wait12.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[4]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[4]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnLotes );
                 BaseTest.tomarCaptura("Lotes");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[4]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnLotes);
                 btnLotes.click();
                 break;
 
             case "Reglas de stock critico":
-                WebDriverWait wait13 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait13 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnStockCritico = wait13.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[5]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[5]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnStockCritico );
                 BaseTest.tomarCaptura("Reglas de stock critico");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[5]/ul/li[5]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnStockCritico);
                 btnStockCritico.click();
                 break;
 
             //Configuraciones
             case "Ubicaciones":
-                WebDriverWait wait14 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait14 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnUbicaciones = wait14.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[1]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[1]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnUbicaciones );
                 BaseTest.tomarCaptura("Ubicaciones");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[1]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnUbicaciones);
                 btnUbicaciones.click();
                 break;
 
             case "Categorias":
-                WebDriverWait wait15 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait15 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnCategorias = wait15.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[2]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[2]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnCategorias );
                 BaseTest.tomarCaptura("Categorias");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[2]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnCategorias);
                 btnCategorias.click();
                 break;
 
             case "Tipos de Documentos":
-                WebDriverWait wait16 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait16 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnTipoDocumento = wait16.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[3]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[3]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnTipoDocumento );
                 BaseTest.tomarCaptura("Tipos de Documentos");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[3]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnTipoDocumento);
                 btnTipoDocumento.click();
                 break;
 
             case "Tipos de Codigo Inventario":
-                WebDriverWait wait17 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait17 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnTipoCodigoInv = wait17.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[4]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[4]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnTipoCodigoInv );
                 BaseTest.tomarCaptura("Tipos de Codigo Inventario");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[4]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnTipoCodigoInv);
                 btnTipoCodigoInv.click();
                 break;
 
             case "Procesos Administrador":
-                WebDriverWait wait18 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait18 = new WebDriverWait(driver, Duration.ofSeconds(15));
                 WebElement btnProcesosAdmin = wait18.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[5]/a")));
+                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[5]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.enmarcarElemento(driver, btnProcesosAdmin );
                 BaseTest.tomarCaptura("Procesos Administrador");
-                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[6]/ul/li[5]/a"), "El sub-menu seleccionado es: "+subMenuD+"");
                 Utils.desenmarcarObjeto(driver, btnProcesosAdmin);
                 btnProcesosAdmin.click();
                 break;
@@ -442,11 +520,11 @@ public class LoginDef {
     @When("este en recepcion y haga click en digitar documento")
     public void esteEnRecepcionYHagaClickEnDigitarDocumento() throws IOException, InterruptedException {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement btnDigitarDoc = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"CREARRECEPCION\"]")));
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"CREARRECEPCION\"]"), "Recepcion");
         Utils.enmarcarElemento(driver, btnDigitarDoc );
         BaseTest.tomarCaptura("Vista Recepcion");
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"CREARRECEPCION\"]"), "Recepcion");
         Utils.desenmarcarObjeto(driver, btnDigitarDoc);
         btnDigitarDoc.click();
 

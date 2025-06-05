@@ -20,6 +20,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -67,6 +68,18 @@ public class BaseTest {
             datosPromociones = null; // evitar estado inconsistente
         }
     }
+    public class JsonUtils {
+        public static Map<String, String> leerJsonComoMapa(String ruta) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readValue(new File(ruta), new TypeReference<Map<String, String>>() {});
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new HashMap<>();
+            }
+        }
+    }
+
     @Given("que ingreso los datos desde el archivo datosFiado {string}")
     public void queIngresoLosDatosDesdeElArchivoDatosFiado(String arg0) {
 
@@ -83,18 +96,26 @@ public class BaseTest {
             datosFiado = null; // evitar estado inconsistente
         }
     }
+    public static <T> T cargarJsonDesdeResource(String nombreArchivo, TypeReference<T> tipo) {
+        try (InputStream is = BaseTest.class.getClassLoader().getResourceAsStream(nombreArchivo)) {
+            if (is == null) throw new RuntimeException("❌ Archivo " + nombreArchivo + " no encontrado.");
+            return new ObjectMapper().readValue(is, tipo);
+        } catch (IOException e) {
+            System.err.println("❌ Error al cargar " + nombreArchivo + ": " + e.getMessage());
+            return null;
+        }
+    }
 
     @Given("que cargo los datos desde el archivo {string}")
     public void queCargoLosDatosDesdeElArchivo(String archivo) {
-        ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                datos = objectMapper.readValue(new File("C:/git/aut-Enternet/src/main/resources/datos.json"), Map.class);
+        try {
+            DatosGlobales.datos = cargarJsonComoMapa(archivo);
+            System.out.println("✅ Datos cargados desde: " + archivo);
+        } catch (IOException e) {
+            throw new RuntimeException("❌ Error al cargar datos desde: " + archivo, e);
+        }
 
-                System.out.println("✅ Datos cargados desde JSON: " + datos);
-            } catch (IOException e) {
-                e.printStackTrace();
-                estadoEjecucion = "Failed";
-            }
+        //System.out.println("ℹDatos actuales disponibles: " + DatosGlobales.datosActuales);
     }
 
 
@@ -209,22 +230,6 @@ public class BaseTest {
       }
   }
 
-    //    public static String esperarElementoYMedirTiempo( By locator, String descripcion) {
-//
-//        long inicio = System.currentTimeMillis();
-//        try {
-//            new WebDriverWait(driver, Duration.ofSeconds(10))
-//                    .until(ExpectedConditions.visibilityOfElementLocated(locator));
-//            long fin = System.currentTimeMillis();
-//            String mensaje = descripcion + " apareció en " + (fin - inicio) + " ms";
-//            mensajes.add(mensaje);
-//            return mensaje;
-//        } catch (TimeoutException e) {
-//            String mensaje = "⚠️ No apareció " + descripcion;
-//            mensajes.add(mensaje);
-//            return mensaje;
-//        }
-//    } FUNCIONA OK EN CASO DE NO FUNCIONAR LA NUEVA VOLVER A ESTA-------
     public static String esperarElementoYMedirTiempo( By locator, String descripcion) {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -245,16 +250,16 @@ public class BaseTest {
 
     public static void generarPDFConCapturas(String rutaPdf, String fechaHora, String nombreFeature, String status) {
         try {
-            document.add(new Paragraph("📄 Reporte de pruebas Selenium").setBold().setFontSize(16));
-            document.add(new Paragraph("🟢 Estado: " + status));
+            document.add(new Paragraph("Reporte de pruebas Selenium").setBold().setFontSize(16));
+            document.add(new Paragraph("Estado: " + status));
 
             // nombre del feature
             if (nombreFeature != null && !nombreFeature.isEmpty()) {
-                document.add(new Paragraph("🧪 Feature: " + nombreFeature).setFontSize(12f));
+                document.add(new Paragraph("Feature: " + nombreFeature).setFontSize(12f));
             } else {
-                document.add(new Paragraph("🧪 Feature: No disponible").setFontSize(12f));
+                document.add(new Paragraph("Feature: No disponible").setFontSize(12f));
             }
-            document.add(new Paragraph("🕒 Fecha: " + fechaHora).setTextAlignment(TextAlignment.LEFT));
+            document.add(new Paragraph("Fecha: " + fechaHora).setTextAlignment(TextAlignment.LEFT));
 
 
             if (!capturasPendientes.get().isEmpty()) {
@@ -282,12 +287,12 @@ public class BaseTest {
                     }
                 }
             } else {
-                document.add(new Paragraph("⚠️ No hay capturas disponibles."));
+                document.add(new Paragraph("No hay capturas disponibles."));
             }
 
             // Agregar el tiempo total al final del reporte (si hay tiempos registrados)
             if (!tiemposDeCarga.isEmpty()) {
-                document.add(new Paragraph("🕒 Resumen de tiempos de ejecución:"));
+                document.add(new Paragraph("Resumen de tiempos de ejecución:"));
                 for (String tiempo : tiemposDeCarga) {
                     document.add(new Paragraph(tiempo));
                 }
@@ -320,7 +325,7 @@ public class BaseTest {
             pdfDocument = new PdfDocument(writer);
             document = new Document(pdfDocument);
 
-            System.out.println("📄 Documento PDF inicializado: " + ruta);
+            System.out.println("Documento PDF inicializado: " + ruta);
         } catch (Exception e) {
             System.out.println("❌ No se pudo inicializar el PDF: " + e.getMessage());
             estadoEjecucion = "Failed";
@@ -450,6 +455,59 @@ public class BaseTest {
         System.out.println("⏳ Tiempo de espera agotado. No se encontró el archivo.");
         return false;
     }
+    // Método para obtener el siguiente número consecutivo para el PDF
+    public static int obtenerSiguienteNumero(String carpeta) {
+        File dir = new File(carpeta);
+        if (!dir.exists()) {
+            dir.mkdirs();
+            return 1;
+        }
+
+        File[] archivos = dir.listFiles((d, name) -> name.endsWith(".pdf"));
+        if (archivos == null || archivos.length == 0) {
+            return 1;
+        }
+
+        return Arrays.stream(archivos)
+                .map(File::getName)
+                .map(name -> name.replaceAll("\\D+", ""))
+                .filter(num -> !num.isEmpty())
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0) + 1;
+    }
+
+
+
+    public static Map<String, String> cargarJsonComoMapa(String nombreArchivo) throws IOException {
+
+//        ObjectMapper mapper = new ObjectMapper();
+//        File file = new File("C:/git/aut-Enternet/src/main/resources/" + nombreArchivo);
+//        return mapper.readValue(file, new TypeReference<Map<String, String>>() {});
+        ObjectMapper mapper = new ObjectMapper();
+        File archivoJson = new File("C:/git/aut-Enternet/src/main/resources/" +nombreArchivo);
+
+        if (!archivoJson.exists()) {
+            throw new FileNotFoundException("❌ No se encontró el archivo JSON en: " + nombreArchivo);
+        }
+
+        return mapper.readValue(archivoJson, new TypeReference<Map<String, String>>() {});
+
+    }
+    public static Map<String, String> leerDatosDesdeJSON(String nombreArchivo) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(
+                    new File("src/test/resources/datos/" + nombreArchivo),
+                    new TypeReference<Map<String, String>>() {}
+            );
+        } catch (Exception e) {
+            System.err.println("❌ Error leyendo el archivo JSON: " + e.getMessage());
+            return null;
+        }
+    }
+
+
 
 
 

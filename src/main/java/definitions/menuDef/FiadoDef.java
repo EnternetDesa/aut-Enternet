@@ -62,7 +62,6 @@ public class FiadoDef {
     @And("seleccionar boton volver")
     public void seleccionarBotonVolver() throws InterruptedException {
         clickBtnVolver();
-
     }
 
     @And("validamos que se haya creado correctamente")

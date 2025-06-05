@@ -22,8 +22,9 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 
-import static page.prueba1.eliminarCapturas;
-import static page.prueba1.obtenerSiguienteNumero;
+import static definitions.Commons.BaseTest.eliminarCapturas;
+
+import static definitions.Commons.BaseTest.obtenerSiguienteNumero;
 
 public class CapturasStepDefinitions {
     private WebDriver driver;

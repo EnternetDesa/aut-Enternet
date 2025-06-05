@@ -1,7 +1,10 @@
 {
-    "user": "171223369",
+    "user": "183475444",
     "clave": "carito.123",
     "rol": "Punto de ventas Enternet",
+    "userPOS": "171223369",
+    "menuPOS": "Definiciones",
+    "subMenu": "Items",
     "rutCliente": "203344473",
     "montoCredito": "100000",
     "estado": "Activo"

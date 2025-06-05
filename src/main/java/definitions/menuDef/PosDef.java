@@ -159,15 +159,14 @@ public class PosDef {
     @And("seleccionamos boton nueva venta")
     public void seleccionamosBotonNuevaVenta() throws InterruptedException {
         clickBtnNuevaVenta();
-
     }
 
     @And("le asignamos el cliente a quien venderemos {string}")
     public void leAsignamosElClienteAQuienVenderemos(String nombreCliente) throws InterruptedException {
-        buscarClienteYSeleccionarPorRut(); //poner que si se depliega antes la lista de clientes seleccione
-       // ingresarRutcliente(); //203344473
-       // clickBtnCliente();
-      //  seleccionCliente();
+   //     buscarClienteYSeleccionarPorRut(); //poner que si se depliega antes la lista de clientes seleccione
+        clickBtnCliente();  //clickbtnCliente
+        ingresarRutcliente(); //203344473
+        seleccionCliente(); //hace click en nombe cliente
     }
 
     @And("Ingresamos la descripcion o codigo de un producto y apretamos enter")

@@ -3,7 +3,7 @@
 Feature: POS -Definiciones - Ingresar Datos Transportista
 
   Background:
-    Given que cargo los datos desde el archivo "C:\git\aut-Enternet\src\java\resources\datos.json"
+    Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
     And Ingreso con el tipo de "user"
     And ingreso la contrasenia "clave"
     And luego presiono el boton continuar
@@ -13,7 +13,7 @@ Feature: POS -Definiciones - Ingresar Datos Transportista
     And debe de mostrar la vista de Pos
 
   Scenario: POS - Agregar Datos Transportista
-    Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
+  #  Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
     And estoy en home de Pos
     And selecciono el menu de Pos "<menuPOS>"
     And luego el submenu de Pos "<subMenuP>"

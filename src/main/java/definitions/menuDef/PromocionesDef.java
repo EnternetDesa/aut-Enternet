@@ -1,6 +1,7 @@
 package definitions.menuDef;
 
 import definitions.Commons.BaseTest;
+import definitions.Commons.DatosGlobales;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
@@ -23,21 +24,21 @@ public class PromocionesDef {
     public static Map<String, String> datosPromociones;
 
 
-    @Given("que ingreso los datos desde el archivo datosPromociones {string}")
-    public void queIngresoLosDatosDesdeElArchivoDatosPromociones(String arg0) {
-        try {
-            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosPromociones.json");
-            if (is == null) {
-                throw new RuntimeException("❌ Archivo datosPromociones.json no encontrado en resources.");
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            datosPromociones = mapper.readValue(is, new TypeReference<>() {});
-            System.out.println("✅ datosPromociones cargado correctamente.");
-        } catch (Exception e) {
-            System.err.println(STR."❌ Error al cargar datosPromociones: \{e.getMessage()}");
-            datosPromociones = null; // evitar estado inconsistente
-        }
-    }
+//    @Given("que ingreso los datos desde el archivo datosPromociones {string}")
+//    public void queIngresoLosDatosDesdeElArchivoDatosPromociones(String arg0) {
+//        try {
+//            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosPromociones.json");
+//            if (is == null) {
+//                throw new RuntimeException("❌ Archivo datosPromociones.json no encontrado en resources.");
+//            }
+//            ObjectMapper mapper = new ObjectMapper();
+//            datosPromociones = mapper.readValue(is, new TypeReference<>() {});
+//            System.out.println("✅ datosPromociones cargado correctamente.");
+//        } catch (Exception e) {
+//            System.err.println(STR."❌ Error al cargar datosPromociones: \{e.getMessage()}");
+//            datosPromociones = null; // evitar estado inconsistente
+//        }
+//    }
     @And("debe de mostrar la vista del Administrador de Promociones")
     public void debeDeMostrarLaVistaDelAdministradorDePromociones() throws IOException, InterruptedException {
         visualizarHomePromociones();
@@ -45,7 +46,7 @@ public class PromocionesDef {
 
     @And("selecciono el nombre de la empresa")
     public void seleccionoElNombreDeLaEmpresa() throws InterruptedException {
-        seleccionEmpresa(datosPromociones.get("nombEmp"));
+        seleccionEmpresa();
     }
 
     @And("nos debe dirigir a la vista de promociones")
@@ -66,13 +67,20 @@ public class PromocionesDef {
 
     @And("agregamos fecha de inicio <{string}> y fecha fin <{string}> si tiene")
     public void agregamosFechaDeInicioYFechaFinSiTiene(String fechaInicio, String fechaFin) throws InterruptedException {
-        fechaInicio = datosPromociones.get("fechaInicio");
-        escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", fechaInicio);
+//        fechaInicio = datosPromociones.get("fechaInicio");
+//        escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", fechaInicio);
+//
+//        if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))){
+//        ingresoFechaFin();
+//        fechaFin = datosPromociones.get("fechaFin");
+//        escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", fechaFin);
+//        }
 
-        if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))){
-        ingresoFechaFin();
-        fechaFin = datosPromociones.get("fechaFin");
-        escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", fechaFin);
+        escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", datosPromociones.get("fechaInicio"));
+
+        if ("Si".equalsIgnoreCase(datosPromociones.get("tieneFechaFin"))) {
+            ingresoFechaFin();
+            escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", datosPromociones.get("fechaFin"));
         }
     }
 
@@ -424,49 +432,77 @@ public class PromocionesDef {
 
     @And("buscamos la promocion que necesitamos ver y hacemos clicn en ella")
     public void buscamosLaPromocionQueNecesitamosVerYHacemosClicnEnElla() {
-        String nombrePromocion= datosPromociones.get("nombPromo") ;
+        Map<String, String> datos = DatosGlobales.datos;
+
+        if (datos == null) {
+            throw new IllegalStateException("❌ Los datos no han sido cargados antes de llamar a verPromocion().");
+        }
+
+        String nombrePromocion = datos.get("nombPromo");
+
+        if (nombrePromocion == null || nombrePromocion.isBlank()) {
+            throw new IllegalArgumentException("❌ El campo 'nombPromo' no fue encontrado o está vacío en el JSON.");
+        }
 
         verPromocion(nombrePromocion);
 
-//        if (!encontrada) {
-//            System.out.println("❌  La promoción fue  correctamente.");
-//        } else {
-//            System.out.println("✅ La promoción fue eliminada correctamente.");
-//
-//        }
-
     }
+
+    private void validarClavesRequeridas(String... claves) {
+        if (DatosGlobales.datos == null) {
+            throw new IllegalStateException("❌ Los datos no han sido cargados. Asegúrate de llamar primero al step que carga los datos.");
+        }
+
+        for (String clave : claves) {
+            if (!DatosGlobales.datos.containsKey(clave) || DatosGlobales.datos.get(clave) == null) {
+                throw new RuntimeException("❌ La clave '" + clave + "' está ausente o es nula en los datos cargados.");
+            }
+        }
+    }
+
 
     @And("validamos los datos del resumen de la promocion")
     public void validamosLosDatosDelResumenDeLaPromocion() throws InterruptedException {
-        //driver.switchTo().frame(0);
         Thread.sleep(2000);
+
+        // Validar que todos los datos requeridos existen
+        validarClavesRequeridas(
+                "nombPromo", "fechaInicio", "fechaFin",
+                "validaDesde", "validaHasta", "nombreRestriccion"
+        );
+
+        // Captura mensaje desde frame
         String mensaje = capturarMensajePantallaDesdeFrame("//*[@id=\"span_W0016vDESCUENTOAREALIZAR\"]", 0);
-
-        //driver.switchTo().defaultContent();
         tomarCaptura("Validacion de datos promocion");
-        String nombrePromo = datosPromociones.get("nombPromo");
-        String fechaInicio = datosPromociones.get("fechaInicio");
-        String fechaFin = datosPromociones.get("fechaFin");
-        String horaIni = datosPromociones.get("validaDesde");
-        String horaFin = datosPromociones.get("validaHasta");
-        String nombreRestriccion = datosPromociones.get("nombreRestriccion");
 
-        validacionDeDatos(nombrePromo,
+        // Obtener los datos con seguridad
+        String nombrePromo = DatosGlobales.datos.get("nombPromo").toString();
+        String fechaInicio = DatosGlobales.datos.get("fechaInicio").toString();
+        String fechaFin = DatosGlobales.datos.get("fechaFin").toString();
+        String horaIni = DatosGlobales.datos.get("validaDesde").toString();
+        String horaFin = DatosGlobales.datos.get("validaHasta").toString();
+        String nombreRestriccion = DatosGlobales.datos.get("nombreRestriccion").toString();
+
+        // Ejecutar validación final
+        validacionDeDatos(
+                nombrePromo,
                 fechaInicio,
                 fechaFin,
                 horaIni,
                 "Lunes, Martes, Miércoles, Jueves, Viernes, Sábado, Domingo, Festivo, Víspera de festivo",
                 mensaje,
                 nombreRestriccion,
-                "Aceitunas Negras En Rodajas Excelencia 1700 Gr., Aceitunas Rellenas Pimiento Verdes Excelencia 1700 Gr., Aceitunas Sevillana Don Juan 340 Gr.");
-
+                "Aceitunas Negras En Rodajas Excelencia 1700 Gr., Aceitunas Rellenas Pimiento Verdes Excelencia 1700 Gr., Aceitunas Sevillana Don Juan 340 Gr."
+        );
     }
+
 
     @Then("verificamos que esten correctos")
     public void verificamosQueEstenCorrectos() {
         cerrarDriver();
     }
+
+
 
 
 

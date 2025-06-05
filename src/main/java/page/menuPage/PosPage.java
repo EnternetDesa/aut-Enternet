@@ -26,15 +26,15 @@ public class PosPage {
 
 
     public static void visualizarVistaPos() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtVistaPos = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/header")));
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/header"), "Vista de Pos ");
         Utils.enmarcarElemento(driver, txtVistaPos );
         BaseTest.tomarCaptura("Vista Home POS");
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/header"), "Vista de Pos ");
         Utils.desenmarcarObjeto(driver, txtVistaPos);
     }
     public static void seleccionOpcioPOS(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/form/div[2]/div[2]/div/div/div/div/div[1]/div/header/span")));
         Utils.enmarcarElemento(driver, btnMenu );
         // BaseTest.tomarCaptura("Menu Configuracion");
@@ -47,7 +47,7 @@ public class PosPage {
 
         switch (menuP) {
             case "Configuracion":
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnConfiguracion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[1]/a")));
                 Utils.enmarcarElemento(driver, btnConfiguracion );
                 BaseTest.tomarCaptura("Menu Configuracion");
@@ -57,7 +57,7 @@ public class PosPage {
                 break;
 
             case "Gestion":
-                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnGestion = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[2]/a")));
                 Utils.enmarcarElemento(driver, btnGestion );
                 //takeScreenshot("screenshot_");
@@ -68,7 +68,7 @@ public class PosPage {
                 break;
 
             case "Definiciones":
-                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnDefiniciones = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/a")));
                 Utils.enmarcarElemento(driver, btnDefiniciones );
                 BaseTest.tomarCaptura("Menu Definiciones");
@@ -84,7 +84,7 @@ public class PosPage {
         Thread.sleep(3000);
         switch (subMenuP) {
             case "Usuarios":
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkUsuarios = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[1]/a")));
                 Utils.enmarcarElemento(driver, linkUsuarios);
                 BaseTest.tomarCaptura("Usuarios");
@@ -94,7 +94,7 @@ public class PosPage {
                 break;
 
             case "Asignacion de Perfiles":
-                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkAsigPerfiles = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[2]/a")));
                 Utils.enmarcarElemento(driver, linkAsigPerfiles);
                 //takeScreenshot("screenshot_");
@@ -105,7 +105,7 @@ public class PosPage {
                 break;
 
             case "Enrolamiento De Equipos":
-                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkEnrolamiento = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[3]/a")));
                 Utils.enmarcarElemento(driver, linkEnrolamiento);
                 BaseTest.tomarCaptura("Enrolamiento de Equipos");
@@ -115,7 +115,7 @@ public class PosPage {
                 break;
 
             case "Clientes":
-                WebDriverWait wait4 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait4 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkCliente = wait4.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[4]/a")));
                 Utils.enmarcarElemento(driver, linkCliente);
                 BaseTest.tomarCaptura("Clientes");
@@ -124,7 +124,7 @@ public class PosPage {
                 linkCliente.click();
 
             case "Productos":
-                WebDriverWait wait5 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait5 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkProductos = wait5.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[5]/a")));
                 Utils.enmarcarElemento(driver, linkProductos);
                 BaseTest.tomarCaptura("Productos");
@@ -134,7 +134,7 @@ public class PosPage {
                 break;
 
             case "Balanzas":
-                WebDriverWait wait6 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait6 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkBalanzas = wait6.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[6]/a")));
                 Utils.enmarcarElemento(driver, linkBalanzas);
                 BaseTest.tomarCaptura("Balanzas");
@@ -144,7 +144,7 @@ public class PosPage {
                 break;
 
             case "Lista de Precios":
-                WebDriverWait wait7 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait7 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement LinkListaDePrecios = wait7.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[7]/a")));
                 Utils.enmarcarElemento(driver, LinkListaDePrecios);
                 BaseTest.tomarCaptura("Lista de Precios");
@@ -154,7 +154,7 @@ public class PosPage {
                 break;
 
             case "Grupo Selector":
-                WebDriverWait wait8 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait8 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkGrupoSelector = wait8.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[8]/a")));
                 Utils.enmarcarElemento(driver, linkGrupoSelector);
                 BaseTest.tomarCaptura("Grupo Selector");
@@ -164,7 +164,7 @@ public class PosPage {
                 break;
 
             case "Categoria Precio":
-                WebDriverWait wait9 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait9 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkCatPrecio = wait9.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[9]/a")));
                 Utils.enmarcarElemento(driver, linkCatPrecio);
                 BaseTest.tomarCaptura("Categoria Precio");
@@ -174,7 +174,7 @@ public class PosPage {
                 break;
 
             case "Autoriza Este Terminal":
-                WebDriverWait wait10 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait10 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement linkAutTerminal = wait10.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SECTION1_MPAGE\"]/div[1]/div/div[1]/nav/ul/li[3]/ul/li[10]/a")));
                 Utils.enmarcarElemento(driver, linkAutTerminal);
                 BaseTest.tomarCaptura("Autoriza Este Terminal");
@@ -187,7 +187,7 @@ public class PosPage {
         }
     }
     public static void visualizarVistaEnrolamientoTerminales() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtEnrolamiento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"Grid1ContainerTbl\"]")));
         Utils.enmarcarElemento(driver, txtEnrolamiento);
         BaseTest.tomarCaptura("Vista Enrolamiento");
@@ -195,7 +195,7 @@ public class PosPage {
         Utils.desenmarcarObjeto(driver, txtEnrolamiento);
     }
     public static void seleccionQR() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement linkCodQR = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vLINKACCESO_0014\"]")));
         Utils.enmarcarElemento(driver, linkCodQR);
         BaseTest.tomarCaptura("codigo QR");
@@ -206,7 +206,7 @@ public class PosPage {
     public static void seleccionBtnCopiar() throws InterruptedException {
         Thread.sleep(2000);
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnCopiarQR = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"COPIAR\"]")));
         Utils.enmarcarElemento(driver, btnCopiarQR);
         BaseTest.tomarCaptura("btn copiar QR");
@@ -217,7 +217,7 @@ public class PosPage {
     }
     public static void abrirnuevaPestania(){
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
             // Usa Actions para abrir una nueva pestaña
             Actions action = new Actions(driver);
             action.keyDown(Keys.CONTROL).sendKeys("t").keyUp(Keys.CONTROL).perform();
@@ -243,7 +243,7 @@ public class PosPage {
 
     }
     public static void clickBtnIrALogin() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"IRALOGIN\"]"), "Ir a Login" );
         WebElement chbTipoPerfil = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"IRALOGIN\"]")));
         Utils.enmarcarElemento(driver, chbTipoPerfil);
@@ -271,7 +271,7 @@ public class PosPage {
 
     }
     public static void seleccionarModuloIDL() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement chbModulo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vMODULOIDL\"]")));
         Utils.enmarcarElemento(driver, chbModulo);
         // BaseTest.tomarCaptura("codigo QR");
@@ -288,7 +288,7 @@ public class PosPage {
             throw new IllegalArgumentException("❌ 'rutPos' no puede ser null o vacío");
         }
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vRUT\"]"), "Vista Enrolamiento");
         WebElement txtRut = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vRUT\"]")));
         Utils.enmarcarElemento(driver, txtRut);
@@ -299,12 +299,12 @@ public class PosPage {
 
     }
     public static void ingresarClave(){
-        String clavePos = PosDef.datosPOS.get("clavePOS");
+        String clavePos = PosDef.datosPOS.get("clave");
         if (clavePos == null || clavePos.trim().isEmpty()) {
             throw new IllegalArgumentException("❌ 'clavePos' no puede ser null o vacío");
         }
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vPASSWORD\"]"), "Vista Ingreso Clave");
         WebElement txtClave = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vPASSWORD\"]")));
         Utils.enmarcarElemento(driver, txtClave);
@@ -313,14 +313,15 @@ public class PosPage {
         txtClave.sendKeys(clavePos);
     }
     public static void seleccionarBtnIngresar() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"CONFIRMAR\"]"), "Ingresar" );
         WebElement btnIngresar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"CONFIRMAR\"]")));
         Utils.enmarcarElemento(driver, btnIngresar);
         tomarCaptura("Ingresar");
         Utils.desenmarcarObjeto(driver, btnIngresar);
-        btnIngresar.click();
         Thread.sleep(2000);
+        btnIngresar.click();
+
     }
 //    public static void seleccionarCajaConNuestroNombre() throws InterruptedException {
 //        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -338,7 +339,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         throw new IllegalArgumentException("❌ 'cajeroPos' no puede ser null o vacío");
     }
     System.out.println("🔍 Buscando el cajero con nombre: " + nombreCajero);
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     // Busca cualquier elemento tipo <span> que contenga exactamente ese nombre
     String xpathDinamico = String.format("//span[contains(text(),'%s')]", nombreCajero);
     esperarElementoYMedirTiempo(By.xpath(xpathDinamico), "Seleccion Caja para: " + nombreCajero);
@@ -349,7 +350,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     caja.click();
 }
     public static void clickBtnNuevaVenta() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnNuevaVenta = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NUEVAVENTAContainer\"]/button")));
         Utils.enmarcarElemento(driver, btnNuevaVenta);
         BaseTest.tomarCaptura("+ Nueva Venta");
@@ -363,9 +364,9 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         if (rutClienteFiado == null || rutClienteFiado.trim().isEmpty()) {
             throw new IllegalArgumentException("❌ 'rutClienteFiado' no puede ser null o vacío");
         }
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vGENERICFILTER_GRID\"]"), "Seleccion de Cliente para iniciar venta");
-        WebElement txtCliente = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vGENERICFILTER_GRID\"]")));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vGENERICFILTER_GRIDCLIENTE\"]"), "Seleccion de Cliente para iniciar venta");
+        WebElement txtCliente = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vGENERICFILTER_GRIDCLIENTE\"]")));
         Utils.enmarcarElemento(driver, txtCliente);
         Utils.desenmarcarObjeto(driver, txtCliente);
         txtCliente.clear();
@@ -374,7 +375,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void clickBtnCliente() throws InterruptedException {
         Thread.sleep(3000);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnCliente = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SELECCIONACLIENTEContainer\"]/button")));
         Utils.enmarcarElemento(driver, btnCliente);
        // BaseTest.tomarCaptura("+ Nueva Venta");
@@ -404,7 +405,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     public static void ingresarProductoPorDescripcion() throws InterruptedException {
 //        Actions actions = new Actions(driver);
         String prodDesc =PosDef.datosPOS.get("descProd");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtDescripcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
         Utils.enmarcarElemento(driver, txtDescripcion);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vOMNIBOX\"]"), "Ingrese codigo o descripcion de producto..." );
@@ -414,7 +415,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
 
     }
     public static void seleccionarNombreProducto(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         String xpathBotonProducto = String.format("//td[3]"); //*[@id="span_W0166vPRODUCTODESCRIPCION_0001"]/a
 
         WebElement botonProducto = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathBotonProducto)));
@@ -423,7 +424,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         botonProducto.click();
     }
     public static void ingresarProductoPorCodigo() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtCodigo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
         Utils.enmarcarElemento(driver, txtCodigo);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vOMNIBOX\"]"), "ingreso por codigo" );
@@ -432,7 +433,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         BaseTest.tomarCaptura("ingreso por codigo");
     }
     public static void clickBtnEnter() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnEnter = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"BTNBUSCAPRODUCTOContainer\"]/button")));
         Utils.enmarcarElemento(driver, btnEnter);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"BTNBUSCAPRODUCTOContainer\"]/button"), "Click Enter" );
@@ -442,7 +443,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static  void ingresarCantidadDeProducto() throws InterruptedException {
         String cantProdC =PosDef.datosPOS.get("cantProdC");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtDescripcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
         Utils.enmarcarElemento(driver, txtDescripcion);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vOMNIBOX\"]"), "cantidad producto " );
@@ -455,7 +456,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         String formaPago = PosDef.datosPOS.get("formaDePago");
         switch (formaPago) {
             case "Efectivo":
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"PAGOEFECTIVOContainer\"]/button"), STR."El metodo de pago escojido es: \{formaPago}");
                 WebElement btnEfectivo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"PAGOEFECTIVOContainer\"]/button")));
                 Utils.enmarcarElemento(driver, btnEfectivo);
@@ -464,7 +465,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
                 btnEfectivo.click();
                 break;
             case "Tarjeta":
-                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(15));
+                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"PAGOTARJETAContainer\"]/button"), STR."El metodo de pago escojido es: \{formaPago}");
                 WebElement btnTarjeta = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"PAGOTARJETAContainer\"]/button")));
                 Utils.enmarcarElemento(driver, btnTarjeta);
@@ -473,7 +474,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
                 btnTarjeta.click();
                 break;
             case "Credito":
-                WebDriverWait wait5 = new WebDriverWait(driver, Duration.ofSeconds(15));
+                WebDriverWait wait5 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"PAGOCREDITO\"]"), STR."El metodo de pago escojido es: \{formaPago}");
                 WebElement btnCredito = wait5.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"PAGOCREDITO\"]")));
                 Utils.enmarcarElemento(driver, btnCredito);
@@ -482,7 +483,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
                 btnCredito.click();
                 break;
             case "Convenio":
-                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(15));
+                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnPagos = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"ACTIONGROUPUC_ACTIONGROUPContainer\"]/div/div[1]/span")));
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"PAGOCONVENIO\"]"), STR."El metodo de pago escojido es: \{formaPago}");
                 WebElement btnConvenio = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"PAGOCONVENIO\"]")));
@@ -493,7 +494,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
                 btnConvenio.click();
                 break;
             case "Transferencia":
-                WebDriverWait wait4 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait4 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnPagos2;
                 btnPagos2 = wait4.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"ACTIONGROUPUC_ACTIONGROUPContainer\"]/div/div[1]/span")));
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"PAGOTRANSFERENCIA\"]"), STR."El metodo de pago escojido es: \{formaPago}");
@@ -505,7 +506,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
                 btnTransferencia.click();
                 break;
             case "Cheque":
-                WebDriverWait wait6 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait6 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnPagos3;
                 btnPagos3 = wait6.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"ACTIONGROUPUC_ACTIONGROUPContainer\"]/div/div[1]/span")));
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"PAGOCHEQUE\"]"), STR."El metodo de pago escojido es: \{formaPago}");
@@ -523,7 +524,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     public static void ingresarTipoDePago() throws InterruptedException {
         Thread.sleep(3000);
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement chbTipoPago = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vAUXNOTAVENTAPAGOINSTITUCION\"]")));
         Utils.enmarcarElemento(driver, chbTipoPago);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vAUXNOTAVENTAPAGOINSTITUCION\"]"), "Tipo de pago" );
@@ -536,7 +537,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     public static void ingresoDeDatosParaElPago() throws InterruptedException {
         Thread.sleep(2000);
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtMontoPago = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vXNOTAVENTAPAGOMONTO\"]")));
         Utils.enmarcarElemento(driver, txtMontoPago);
         BaseTest.tomarCaptura("Datos del Pago");
@@ -563,7 +564,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         tipoEmision = PosDef.datosPOS.get("tipoEmision");
         switch (tipoEmision) {
             case "Factura":
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnFactura = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"BTNEMITIRFACTURAContainer\"]/button")));
                 Utils.enmarcarElemento(driver, btnFactura);
                 //BaseTest.tomarCaptura("Usuarios");
@@ -572,7 +573,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
                 btnFactura.click();
                 break;
             case "Boleta":
-                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnTarjeta = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"BTNEMITIRBOLETAContainer\"]/button")));
                 Utils.enmarcarElemento(driver, btnTarjeta);
                 //BaseTest.tomarCaptura("Autoriza Este Terminal");
@@ -581,7 +582,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
                 btnTarjeta.click();
                 break;
             case "Ticket":
-                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(30));
                 WebElement btnEmitir = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"ACTIONGROUPUC_ACTIONGROUP1Container\"]/div/div[1]/span")));
                 WebElement btnEmitirTicket = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"BTNEMITIRTICKET\"]")));
                 Utils.enmarcarElemento(driver, btnEmitirTicket);
@@ -596,7 +597,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         }
     }
     public static void seleccionarBtnGuardar(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnGuardar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"GUARDAR\"]")));
         Utils.enmarcarElemento(driver, btnGuardar);
         //BaseTest.tomarCaptura("Autoriza Este Terminal");
@@ -605,7 +606,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         btnGuardar.click();
     }
     public static void clickBtnVendedor(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnVendedor = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"SELECCIONAVENDEDORContainer\"]/button")));
         Utils.enmarcarElemento(driver, btnVendedor);
         //BaseTest.tomarCaptura("click btn Vendedor");
@@ -615,7 +616,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void seleccionarVendedor(String nombreVendedor) throws InterruptedException {
         driver.switchTo().frame(0);
-        Thread.sleep(2000);
+        Thread.sleep(3000);
         // Nombre a buscar
         nombreVendedor = PosDef.datosPOS.get("nombreVendedor");
         List<WebElement> nombres = driver.findElements(By.xpath("//td[4]"));
@@ -630,7 +631,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         driver.switchTo().defaultContent();
     }
     public static void clickBtnGlosa(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnGlosa = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"EDITARGLOSAContainer\"]/button")));
         Utils.enmarcarElemento(driver, btnGlosa);
         //BaseTest.tomarCaptura("click btn Vendedor");
@@ -640,7 +641,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void escribirGlosa() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtEscribirGlosa = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vNOTAVENTAGLOSA\"]")));
         WebElement btnConfirmar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"CONFIRMAR\"]")));
         Utils.enmarcarElemento(driver, txtEscribirGlosa);
@@ -652,7 +653,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         driver.switchTo().defaultContent();
     }
     public static void visualizarInformacionDePago(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement rowInfoPago = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164ATTRIBUTESCONTAINERTABLE_ATTRIBUTES1\"]")));
         Utils.enmarcarElemento(driver, rowInfoPago);
         //BaseTest.tomarCaptura("click btn Vendedor");
@@ -661,7 +662,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
        // btnVendedor.click();
     }
     public static void escribirProductoEnFiltroDespensa() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtDespensa = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164vCLASIFICADORACATCOD_0001\"]")));
         Utils.enmarcarElemento(driver, txtDespensa);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0164vCLASIFICADORACATCOD_0001\"]"), "ingreso de producto por filtro" );
@@ -670,7 +671,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         txtDespensa.sendKeys(PosDef.datosPOS.get("catDespensa"));
     }
     public static void escribirProductoEnFiltroANNO() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtCatAnno = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0001\"]")));
         Utils.enmarcarElemento(driver, txtCatAnno);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0001\"]"), "ingreso de producto por filtro" );
@@ -679,7 +680,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         txtCatAnno.sendKeys(PosDef.datosPOS.get("catANNO"));
     }
     public static void escribirProductoEnFiltroOtros() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtCatOtros = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0002\"]")));
         Utils.enmarcarElemento(driver, txtCatOtros);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0002\"]"), "ingreso de producto por filtro" );
@@ -689,7 +690,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void clickBtnTransportista() throws InterruptedException {
         Thread.sleep(2500);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); //*[@id="DATOSTRANSPORTISTAContainer"]/button
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); //*[@id="DATOSTRANSPORTISTAContainer"]/button
         WebElement btnTransportista = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"DATOSTRANSPORTISTAContainer\"]/button")));
         Utils.enmarcarElemento(driver, btnTransportista);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"DATOSTRANSPORTISTAContainer\"]/button"), "click btn transportista");
@@ -698,7 +699,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void seleccionarMotivoDeTraslado() throws InterruptedException {Thread.sleep(2500);
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));                                     //*[@id="vMOTIVOTRASLADO"]
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));                                     //*[@id="vMOTIVOTRASLADO"]
         WebElement chbMTraslado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vMOTIVOTRASLADO\"]")));
         Utils.enmarcarElemento(driver, chbMTraslado);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vMOTIVOTRASLADO\"]"), "Motivo de Traslado" );
@@ -710,7 +711,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void seleccionarTipoDeTraslado() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement chbMTraslado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vTIPOTRASLADO\"]")));
         Utils.enmarcarElemento(driver, chbMTraslado);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vTIPOTRASLADO\"]"), "Tipo de Traslado" );
@@ -722,7 +723,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresarNombreChofer() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtNombreChofer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vNOMBRECHOFER\"]")));
         Utils.enmarcarElemento(driver, txtNombreChofer);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vNOMBRECHOFER\"]"), "Nombre de Chofer" );
@@ -732,7 +733,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresarRutChofer(){
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtRutChofer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vRUTCHOFER\"]")));
         Utils.enmarcarElemento(driver, txtRutChofer);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vRUTCHOFER\"]"), "Rut de Chofer" );
@@ -742,7 +743,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresarPatente() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtPatente = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vPATENTE\"]")));
         WebElement btnConfirmar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"CONFIRMAR\"]")));
         Utils.enmarcarElemento(driver, txtPatente);
@@ -755,7 +756,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         cerrarDriver();
     }
     public static void clickBtnBuscar() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnBuscar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164BUSCAR\"]")));
         Utils.enmarcarElemento(driver, btnBuscar);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0164BUSCAR\"]"), "boton buscar" );
@@ -784,7 +785,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void visualizarInformacionDeProducto() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtDescripcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"COLUMN1\"]/div")));
         WebElement btnCerrar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"CERRAR\"]")));
         Utils.enmarcarElemento(driver, txtDescripcion);
@@ -795,7 +796,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
         driver.switchTo().defaultContent();
     }
     public static void clickBtnCotizar(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnCotizar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"IMPRIMETICKETContainer\"]/button")));
         Utils.enmarcarElemento(driver, btnCotizar);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"IMPRIMETICKETContainer\"]/button"), "click btn cotizar" );
@@ -804,7 +805,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void clickBtnCarta() throws InterruptedException {
         Thread.sleep(3000);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnCarta = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"BTNCARTAContainer\"]/button")));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"BTNCARTAContainer\"]/button"), "btn Carta" );
         Utils.enmarcarElemento(driver, btnCarta);
@@ -814,7 +815,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     public static void clickCategoria() throws InterruptedException {
         Thread.sleep(3000);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement linkCategoria = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0166LINESEPARATORTITLE_LINESEPARATOR_0001\"]")));
         Utils.enmarcarElemento(driver, linkCategoria);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0166LINESEPARATORTITLE_LINESEPARATOR_0001\"]"), "click link cuidado capilar" );
@@ -824,7 +825,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void seleccionarProducto() throws InterruptedException {
         Thread.sleep(3000);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement linkProducto = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"span_W0166vPRODUCTODESCRIPCION_00010001\"]/a")));
         Utils.enmarcarElemento(driver, linkProducto);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"span_W0166vPRODUCTODESCRIPCION_00010001\"]/a"), "click lista de producto" );
@@ -836,7 +837,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     public static void modificarPrecioProducto() throws InterruptedException {
 
 //        driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement tblCarroCompra = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0122GridContainerRow_0001\"]")));
         WebElement tdPrecio = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"span_W0122vPRECIOPICTURE_0001\"]")));
         WebElement txtDescripcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
@@ -851,7 +852,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
 
     }
     public static void modificarCantidadProducto() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement tblCarroCompra = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0122GridContainerRow_0001\"]")));
         WebElement tdCantidad = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"span_W0122vCANTIDADPICTURE_0001\"]")));
         WebElement txtDescripcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
@@ -866,7 +867,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void clickBtnCrearProdLibre() throws InterruptedException {
         Thread.sleep(3000);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnCrearProducto = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"CREARPRODUCTOLIBRE\"]")));
         Utils.enmarcarElemento(driver, btnCrearProducto);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"CREARPRODUCTOLIBRE\"]"), "Click btn Crar Prod Libre" );
@@ -876,7 +877,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
 
     public static void ingresarCodigoProductoLibre(){
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtCodigoPL = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECODIGO\"]")));
         Utils.enmarcarElemento(driver, txtCodigoPL);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECODIGO\"]"), "ingreso de codigo" );
@@ -887,7 +888,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresarDescripcionCPL(){
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtCodigoPL = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDESCRIPCION\"]")));
         Utils.enmarcarElemento(driver, txtCodigoPL);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDESCRIPCION\"]"), "ingreso de descripcion" );
@@ -898,7 +899,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void seleccionarUnidadDeMedida() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement chbUniMedida = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREUNIDADMEDIDA\"]")));
         Utils.enmarcarElemento(driver, chbUniMedida);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREUNIDADMEDIDA\"]"), "Unidad de Medida" );
@@ -910,7 +911,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void seleccionarUnidadDeMedida2() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement chbUniMedida2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREUNIDADMEDIDA2A\"]")));
         Utils.enmarcarElemento(driver, chbUniMedida2);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREUNIDADMEDIDA2A\"]"), "Unidad de Medida2" );
@@ -922,7 +923,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void seleccionTratamientoTributario() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement lblTraTributario = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRETRATAMIENTOTRIBUTARIO\"] ")));
         Utils.enmarcarElemento(driver, lblTraTributario);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRETRATAMIENTOTRIBUTARIO\"]"), "Tratamiento Tributario" );
@@ -934,7 +935,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void seleccionCodigoEspecial() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement lblCodEspecial = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREIMPUESTOESPECIALCODIGO\"]")));
         Utils.enmarcarElemento(driver, lblCodEspecial);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREIMPUESTOESPECIALCODIGO\"]"), "Codigo Especial" );
@@ -946,7 +947,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresarCantidad() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtCantidad = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECANTIDAD\"]")));
         Utils.enmarcarElemento(driver, txtCantidad);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECANTIDAD\"]"), "cantidad");
@@ -958,7 +959,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresarPrecio() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtPrecio = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREPRECIO\"]")));
         Utils.enmarcarElemento(driver, txtPrecio);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREPRECIO\"]"), "Ingreso Precio" );
@@ -970,7 +971,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresoDescuento() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtDescuento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDESCUENTO\"]")));
         Utils.enmarcarElemento(driver, txtDescuento);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDESCUENTO\"]"), "Ingreso Descuento" );
@@ -982,7 +983,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresoDimensiones() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement chbUniMedida = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDIMENSIONES\"]")));
         Utils.enmarcarElemento(driver, chbUniMedida);
         esperarElementoYMedirTiempo(By.xpath(""), "Ingreso Dimensiones" );
@@ -994,7 +995,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresarEstadoDeEntrega() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtEstadoEntrega = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREESTADOENTREGA\"]")));
         Utils.enmarcarElemento(driver, txtEstadoEntrega);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREESTADOENTREGA\"]"), "Estado de Entrega" );
@@ -1005,7 +1006,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void ingresarGlosa() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtGlosa = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREGLOSACONTENIDO\"]")));
         Utils.enmarcarElemento(driver, txtGlosa);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREGLOSACONTENIDO\"]"), "Glosa" );
@@ -1016,7 +1017,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void clickBtnConfirmarVistaProdLibre() throws InterruptedException {
         driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnConfirmarPL = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"ENTER\"]")));
         Utils.enmarcarElemento(driver, btnConfirmarPL);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"ENTER\"]"), "Formulario Crear Prod Libre" );
@@ -1028,7 +1029,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
     }
     public static void visualizarProductoAgreadoCarroCompras() throws InterruptedException {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement trCarroCompra = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0122GridContainerRow_0001\"]")));
         Utils.enmarcarElemento(driver, trCarroCompra);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0122GridContainerRow_0001\"]"), "Producto agregado en Carro" );
@@ -1045,7 +1046,7 @@ public static void seleccionarCajaConNuestroNombre() throws InterruptedException
                 throw new IllegalArgumentException("❌ 'rutClienteFiado' no puede ser null o vacío");
             }
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
             // Buscar el input de búsqueda
             WebElement inputBuscar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vGENERICFILTER_GRID\"]")));

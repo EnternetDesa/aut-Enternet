@@ -42,8 +42,8 @@ public class FiadoPage {
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"MENUTOGGLE_MPAGE\"]"), "menu izquierdo");
         WebElement btnMenuAndesPos = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"MENUTOGGLE_MPAGE\"]")));
         btnMenuAndesPos.click();
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[7]/a/div/span"), "Seleccion Fiado");
-        WebElement linkFiado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[7]/a/div/span")));
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a/div/span"), "Seleccion Fiado");
+        WebElement linkFiado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a/div/span")));
         Utils.enmarcarElemento(driver, linkFiado);
         tomarCaptura("Seleccion Fiado");
        // esperarElementoYMedirTiempo(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a"), "Seleccion Fiado");

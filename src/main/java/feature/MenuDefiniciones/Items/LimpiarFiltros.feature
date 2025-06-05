@@ -12,6 +12,7 @@ Background:
      And en la vista del warning selecciono enviar de todas formas
      And debe de mostrar la vista de stock
 
+@itemsLimpiarFiltro
 Scenario: Limpiar Filtros - Sin categorias
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -21,7 +22,8 @@ Scenario: Limpiar Filtros - Sin categorias
     And seleccionamos sin categoria "<sinCategoria>"
     And Seleccionamos Limpiar Filtros
     Then nos debe de mostrar que no este ningun filtro seleccionado
-    
+
+@itemsLimpiarFiltro
 Scenario: Limpiar Filtros - Categoria Clasificadora
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -33,6 +35,7 @@ Scenario: Limpiar Filtros - Categoria Clasificadora
     And Seleccionamos Limpiar Filtros
     Then nos debe de mostrar que no este ningun filtro seleccionado
 
+@itemsLimpiarFiltro
 Scenario: Limpiar Filtros - Categoria Buscadora
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -44,7 +47,8 @@ Scenario: Limpiar Filtros - Categoria Buscadora
     And Seleccionamos Limpiar Filtros
     Then nos debe de mostrar que no este ningun filtro seleccionado
 
-Scenario: Limpiar Filtros - Filtros Generales -Codigo
+@itemsLimpiarFiltro
+    Scenario: Limpiar Filtros - Filtros Generales -Codigo
     And estoy en home de stock
     And selecciono el menu de "<menu>"
     And luego el submenu de "<subMenuD>"
@@ -54,6 +58,7 @@ Scenario: Limpiar Filtros - Filtros Generales -Codigo
     And Seleccionamos Limpiar Filtros
     Then nos debe de mostrar que no este ningun filtro seleccionado
 
+@itemsLimpiarFiltro
 Scenario: Limpiar Filtros - Filtros Generales -Descripcion
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -64,7 +69,8 @@ Scenario: Limpiar Filtros - Filtros Generales -Descripcion
     And Seleccionamos Limpiar Filtros
     Then nos debe de mostrar que no este ningun filtro seleccionado
 
-Scenario: Limpiar Filtros - Filtros Generales - Mostrar Todo
+@itemsLimpiarFiltroM
+    Scenario: Limpiar Filtros - Filtros Generales - Mostrar Todo
     And estoy en home de stock
     And selecciono el menu de "<menu>"
     And luego el submenu de "<subMenuD>"

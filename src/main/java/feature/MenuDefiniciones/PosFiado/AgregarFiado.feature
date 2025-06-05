@@ -1,5 +1,6 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
+  @Fiado
 Feature: POS - Fiado
 
   Background:
@@ -12,6 +13,7 @@ Feature: POS - Fiado
     And en la vista del warning selecciono enviar de todas formas
     And debe de mostrar la vista de Pos
 
+  @AgregarFiado
   Scenario: Pos Fiado - Agregar Cliente
     Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
     And estoy en home de Pos
@@ -23,7 +25,7 @@ Feature: POS - Fiado
     And luego pegamos la url en un nuevo navegador
     And ingresamos el tipo de perfil
     And ingresamos el modulo IDL
-    And ingresamos el rut "<user>" y contrasenia "<clave>"
+    And ingresamos el rut "<userPOS>" y contrasenia "<clave>"
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
     And que ingreso los datos desde el archivo datosFiado "C:\git\aut-Enternet\src\java\resources\datosFiado.json"
@@ -47,12 +49,11 @@ Feature: POS - Fiado
     And seleccionar boton guardar
     And seleccionamos tipo de emision
    ## And firmamos la emision de factura o boleta
-
-
    #Then nos debe de mostrar los productos de esa categoria
 
+  @EditarFiado
   Scenario: Pos Fiado - Editar Cliente
-    Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
+ #   Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
     And estoy en home de Pos
     And selecciono el menu de Pos "<menuPOS>"
     And luego el submenu de Pos "<subMenuP>"

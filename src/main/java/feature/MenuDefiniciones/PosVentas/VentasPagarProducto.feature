@@ -3,7 +3,7 @@
 Feature: POS - Promociones
 
   Background:
-    Given que cargo los datos desde el archivo "C:\git\aut-Enternet\src\java\resources\datos.json"
+    Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
     And Ingreso con el tipo de "user"
     And ingreso la contrasenia "clave"
     And luego presiono el boton continuar
@@ -12,6 +12,7 @@ Feature: POS - Promociones
     And en la vista del warning selecciono enviar de todas formas
     And debe de mostrar la vista de Pos
 
+  @ventaProducto
   Scenario: POS - Agregar Producto por boton Carta
   Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
   And estoy en home de Pos
@@ -37,7 +38,7 @@ Feature: POS - Promociones
 
 
   Scenario: POS - Agregar Producto por Buscador
-    Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
+   # Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
     And estoy en home de Pos
     And selecciono el menu de Pos "<menuPOS>"
     And luego el submenu de Pos "<subMenuP>"

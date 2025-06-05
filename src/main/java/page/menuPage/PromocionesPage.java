@@ -1,6 +1,7 @@
 package page.menuPage;
 
 import definitions.Commons.BaseTest;
+import definitions.Commons.DatosGlobales;
 import definitions.Commons.Utils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -27,18 +28,26 @@ public class PromocionesPage {
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"APPLICATIONNAME_MPAGE\"]"), "Administrador Promociones");
         Utils.desenmarcarObjeto(driver, txtAdminPromo);
     }
-    public static void seleccionEmpresa(String nombreEmpresa) throws InterruptedException {
+    public static void seleccionEmpresa() throws InterruptedException {
         Thread.sleep(2000);
 
-        Object nombreEmpRaw = datosPromociones.get("nombEmp");
-        if (nombreEmpRaw != null) {
-            nombreEmpresa = nombreEmpRaw.toString();
-        } else {
-            throw new RuntimeException("dato 'nombEmp' no encontrado en datosPromociones");
+        // Asegúrate de acceder a los datos globales
+        Map<String, String> datos = DatosGlobales.datos;
+
+        if (datos == null) {
+            throw new IllegalStateException("❌ Los datos no han sido cargados antes de llamar a seleccionEmpresa().");
         }
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        String nombreEmpRaw = datos.get("nombEmp");
+        if (nombreEmpRaw == null) {
+            throw new RuntimeException("❌ El campo 'nombEmp' no fue encontrado en los datos cargados.");
+        }
+
+        String nombreEmpresa = nombreEmpRaw.toString();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("GridempresaContainerTbl")));
+
         List<WebElement> filas = driver.findElements(By.xpath("//*[@id=\"GridempresaContainerTbl\"]//tr[position()>1]"));
         boolean encontrado = false;
 
@@ -46,14 +55,12 @@ public class PromocionesPage {
             WebElement celdaCodigoEmpresa = fila.findElement(By.xpath("./td[1]")); // columna 1
 
             if (celdaCodigoEmpresa.getText().trim().equalsIgnoreCase(nombreEmpresa.trim())) {
-                // Buscar el enlace <a> dentro de la celda
                 WebElement enlaceEmpresa = celdaCodigoEmpresa.findElement(By.xpath(".//a"));
                 Utils.enmarcarElemento(driver, enlaceEmpresa);
-                System.out.println(STR."✅ Enlace de la empresa encontrado: \{enlaceEmpresa.getText()}");
+                System.out.println("✅ Enlace de la empresa encontrado: " + enlaceEmpresa.getText());
                 tomarCaptura("Empresa encontrada");
                 Utils.desenmarcarObjeto(driver, enlaceEmpresa);
 
-                // Usar JavaScript para asegurar el clic
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", enlaceEmpresa);
                 Thread.sleep(300);
 
@@ -65,18 +72,20 @@ public class PromocionesPage {
                     ((JavascriptExecutor) driver).executeScript("arguments[0].click();", enlaceEmpresa);
                     System.out.println("✅ Click ejecutado por JS.");
                 }
+
                 encontrado = true;
                 break;
             }
         }
 
         if (!encontrado) {
-            System.out.println(STR."❌ Empresa no encontrada: \{nombreEmpresa}");
+            System.out.println("❌ Empresa no encontrada en la tabla: " + nombreEmpresa);
+            throw new RuntimeException("Empresa no encontrada: " + nombreEmpresa);
         }
     }
 
     public static void validarVistaPromociones() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement tblNuevaPromo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"LAYOUTDEFINED_GRID_INNER_GRIDPROMOTION\"]")));
         Utils.enmarcarElemento(driver, tblNuevaPromo);
         tomarCaptura("Vista promocion");
@@ -84,7 +93,7 @@ public class PromocionesPage {
         Utils.desenmarcarObjeto(driver, tblNuevaPromo);
     }
     public static void seleccionarNuevaPromo() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement btnNuevaPromo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NUEVAPROMOCIONContainer\"]/div/i")));
         Utils.enmarcarElemento(driver, btnNuevaPromo);
         tomarCaptura("click Nueva promocion");
@@ -93,12 +102,25 @@ public class PromocionesPage {
         btnNuevaPromo.click();
     }
     public static void ingresarNombrePromocion() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        String nombPromo = datosPromociones.get("nombPromo").toString();
-        WebElement txtNuevaPromo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026vPROMODESCRIPCION\"]")));
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+        // Obtener datos desde el mapa global
+        Map<String, String> datos = DatosGlobales.datos;
+
+        // Validar que existe el campo "nombPromo"
+        if (!datos.containsKey("nombPromo")) {
+            throw new RuntimeException("❌ El campo 'nombPromo' no fue encontrado en el JSON cargado.");
+        }
+
+        String nombPromo = datos.get("nombPromo");
+        WebElement txtNuevaPromo = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[@id=\"W0026vPROMODESCRIPCION\"]")));
+
         Utils.enmarcarElemento(driver, txtNuevaPromo);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0026vPROMODESCRIPCION\"]"), "Nombre Nueva Promocion");
         Utils.desenmarcarObjeto(driver, txtNuevaPromo);
+
         txtNuevaPromo.sendKeys(nombPromo);
     }
 
@@ -731,7 +753,7 @@ public static void seleccionarProductos(String criteria, String value, int canti
         try {
             System.out.println("Iniciando selección de productos.");
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
             List<WebElement> ruleRows = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//tbody//tr//td[2]")));
 
             boolean ruleSelected = false;
@@ -793,7 +815,7 @@ public static void seleccionarProductos(String criteria, String value, int canti
             try {
                 System.out.println("[INFO] Iniciando validación de datos de la promoción.");
 
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
                 // Validar nombre de la promoción
                 WebElement nombre = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Nombre')]/following-sibling::div")));
@@ -1112,129 +1134,66 @@ public static void seleccionarProductos(String criteria, String value, int canti
         }
     }
     public static boolean verPromocion(String nombrePromocion) {
-//
-//        try {
-//            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//            List<WebElement> promociones = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//table//tr")));
-//
-//            for (WebElement promo : promociones) {
-//                String nombreActual = promo.findElement(By.xpath(".//td[17]")).getText().trim();
-//                if (nombreActual.equalsIgnoreCase(nombrePromocion)) {
-//                    WebElement btnVer = promo.findElement(By.xpath(".//td//i[contains(@class, 'fa-eye')]"));
-//                    Utils.enmarcarElemento(driver, btnVer);
-//                    btnVer.click();
-//                    System.out.println("[INFO] Promoción '" + nombrePromocion + "' seleccionada para ver.");
-//                    return true;
-//                }
-//            }
-//            System.err.println("[ERROR] No se encontró la promoción para ver: " + nombrePromocion);
-//            return false;
-//        } catch (Exception e) {
-//            System.err.println("[ERROR] Error al intentar ver la promoción: " + e.getMessage());
-//            return false;
-//        } finally {
-//
-//        }
+        boolean dentroIframe = false;
 
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-            // Verificar si hay un iframe y cambiar a él
-            if (driver.findElements(By.tagName("iframe")).size() > 0) {
-                driver.switchTo().frame(0);
-                System.out.println("[INFO] Cambiado al iframe para editar la promoción.");
+            // Cambiar al iframe si existe
+            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+            if (!iframes.isEmpty()) {
+                driver.switchTo().frame(iframes.get(0));
+                dentroIframe = true;
+                System.out.println("[INFO] Cambiado al iframe.");
             }
 
-            // Esperar que la tabla esté visible y cargada
+            // Esperar la tabla de promociones
             WebElement tabla = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
-
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", tabla);
-            System.out.println("Tabla de promociones encontrada.");
+            System.out.println("✅ Tabla de promociones cargada.");
 
-            // Obtener todas las filas visibles
             List<WebElement> filas = tabla.findElements(By.xpath(".//tr[td]"));
-            System.out.println("[DEBUG] Total de filas encontradas: " + filas.size());
+            System.out.println("Filas encontradas: " + filas.size());
 
-            boolean encontrado = false;
             for (WebElement fila : filas) {
                 String textoFila = fila.getText().trim();
-                System.out.println("Contenido de la fila: " + textoFila);
+                System.out.println("Fila: " + textoFila);
 
                 if (textoFila.contains(nombrePromocion)) {
-                    // Enmarcar la fila para asegurarnos de que es la correcta
-                    Utils.enmarcarElemento(driver, fila);
-                    System.out.println("Promoción '" + nombrePromocion + "' encontrada.");
-                    Utils.desenmarcarObjeto(driver, fila);
+                    System.out.println("Promoción encontrada: " + nombrePromocion);
 
-                    // Buscar el botón de editar (ícono de lápiz) dentro de la misma fila
-                    WebElement btnVer = fila.findElement(By.xpath(".//td[17]"));
+                    Utils.enmarcarElemento(driver, fila);
+                    WebElement btnVer = fila.findElement(By.xpath("./td[17]"));
+                    Utils.desenmarcarObjeto(driver, fila);
                     ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", btnVer);
                     Utils.enmarcarElemento(driver, btnVer);
-                    esperarElementoYMedirTiempo(By.xpath(".//td[17]"), "click ver promocion");
-                    btnVer.click();
-                    System.out.println("[INFO] Se hizo clic en el botón de ver.");
 
-                    encontrado = true;
-                    break;
+                    // Usamos WebDriverWait explícito para el botón dentro del contexto del iframe
+                    wait.until(ExpectedConditions.elementToBeClickable(btnVer));
+                    esperarElementoYMedirTiempo(By.xpath("./td[17]"), "click ver promoción");
+                    Utils.desenmarcarObjeto(driver, btnVer);
+                    btnVer.click();
+                    System.out.println("Se hizo clic en el botón Ver.");
+
+                    return true;
                 }
             }
 
-            if (!encontrado) {
-                System.err.println("[ERROR] No se encontró la promoción: " + nombrePromocion);
-            }
-
-            // Salir del iframe si estábamos dentro de uno
-            driver.switchTo().defaultContent();
-            return encontrado;
+            System.err.println("No se encontró la promoción: " + nombrePromocion);
+            return false;
 
         } catch (Exception e) {
-            System.err.println("[ERROR] Error al copiar la promoción: " + e.getMessage());
+            System.err.println("Error al visualizar la promoción: " + e.getMessage());
             return false;
-        }
-    }
-    public static void probarAccionesPromocion(String nombrePromocion) {
-        System.out.println("===== INICIO PRUEBA DE ACCIONES PARA LA PROMOCIÓN: " + nombrePromocion + " =====");
 
-        // Probar Editar
-        if (editarPromocion(nombrePromocion)) {
-            System.out.println("✅ Prueba de Edición: ÉXITO.");
-            // Puedes agregar aquí pasos para modificar algún dato y guardar, si deseas.
-        } else {
-            System.err.println("❌ Prueba de Edición: FALLIDA.");
-        }
-
-        // Probar Copiar
-        if (copiarPromocion(nombrePromocion)) {
-            System.out.println("✅ Prueba de Copiar: ÉXITO.");
-            // Puedes agregar pasos para validar que la copia se realizó correctamente.
-        } else {
-            System.err.println("❌ Prueba de Copiar: FALLIDA.");
-        }
-
-        // Probar Ver
-        if (verPromocion(nombrePromocion)) {
-            System.out.println("✅ Prueba de Ver: ÉXITO.");
-            // Puedes agregar validaciones para confirmar que la información se ve correctamente.
-            driver.navigate().back(); // Regresar a la lista después de ver
-        } else {
-            System.err.println("❌ Prueba de Ver: FALLIDA.");
-        }
-
-        // Probar Eliminar
-        if (eliminarPromocion(nombrePromocion)) {
-            System.out.println("✅ Prueba de Eliminación: ÉXITO.");
-            // Confirmar que ya no aparece en la lista
-            if (!buscarPromocionEnLista(nombrePromocion)) {
-                System.out.println("✅ Confirmación de Eliminación: La promoción no aparece en la lista.");
-            } else {
-                System.err.println("❌ Confirmación de Eliminación: La promoción aún aparece en la lista.");
+        } finally {
+            if (dentroIframe) {
+                driver.switchTo().defaultContent();
+                System.out.println("[INFO] Regresado al contenido principal.");
             }
-        } else {
-            System.err.println("❌ Prueba de Eliminación: FALLIDA.");
         }
-
-        System.out.println("===== FIN PRUEBA DE ACCIONES PARA LA PROMOCIÓN: " + nombrePromocion + " =====");
     }
+
     public static boolean confirmarPromocion(String nombrePromocion){
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -1339,6 +1298,14 @@ public static void seleccionarProductos(String criteria, String value, int canti
         Utils.desenmarcarObjeto(driver, btnEditarRestriccion);
         btnEditarRestriccion.click();
     }
+    private String obtenerDato(String clave) {
+        Object valor = datosPromociones.get(clave);
+        if (valor == null) {
+            throw new RuntimeException("❌ El valor para '" + clave + "' no fue encontrado en datosPromociones.");
+        }
+        return valor.toString();
+    }
+
 
 
 

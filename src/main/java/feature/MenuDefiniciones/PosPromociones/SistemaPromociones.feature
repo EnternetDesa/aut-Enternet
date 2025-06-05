@@ -1,9 +1,10 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
-Feature: Promociones
+  @Promociones
+Feature: Gestion de Promociones
 
   Background:
-    Given que cargo los datos desde el archivo "C:\git\aut-Enternet\src\java\resources\datos.json"
+    Given que cargo los datos desde el archivo "datosPromociones.json"
     And Ingreso con el tipo de "user"
     And ingreso la contrasenia "clave"
     And luego presiono el boton continuar
@@ -11,8 +12,9 @@ Feature: Promociones
     And selecciono la opcion "rol"
     And debe de mostrar la vista del Administrador de Promociones
 
+    @agregarPromocion @promociones
 Scenario: Promociones - Agregar Promocion
-  Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
+ # Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
   And selecciono el nombre de la empresa
   And nos debe dirigir a la vista de promociones
   And seleccionamos el icono con el signo mas
@@ -38,8 +40,9 @@ Scenario: Promociones - Agregar Promocion
   And seleccionamos el boton finalizar
   Then nos debe dirigir a la pantalla principal y visualizar nuestra promocion
 
+  @editarPromocion @promociones
   Scenario: Promociones - Editar Promocion
-    Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
+ #   Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And editamos una promocion ya existente y modificamos el nombre a la promocion <"nombPromoEditado">
@@ -63,8 +66,9 @@ Scenario: Promociones - Agregar Promocion
     And seleccionamos el boton finalizar
     Then nos debe dirigir a la pantalla principal y visualizar nuestra promocion editada
 
+  @copiarPromocion @promociones
   Scenario: Promociones - Copiar Promocion
-    Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
+#Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And copiamos una promocion ya existente
@@ -72,16 +76,17 @@ Scenario: Promociones - Agregar Promocion
     And hacemos click en confirmar la promocion
     Then visualizar nuestra promocion copiada
 
+  @anularPromocion @promociones
   Scenario: Promociones - Anular Promocion
-    Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
+ #   Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And buscamos la promocion que anularemos
     Then validar que se despliega mensaje de anulacion exitosa
 
-
+  @verPromocion
   Scenario: Promociones - Ver Promocion
-    Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
+  #  Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And buscamos la promocion que necesitamos ver y hacemos clicn en ella
