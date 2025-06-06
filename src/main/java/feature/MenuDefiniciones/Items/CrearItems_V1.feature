@@ -11,6 +11,7 @@ Feature: Definiciones - Crear Items
     And en la vista del warning selecciono enviar de todas formas
     And debe de mostrar la vista de stock
 
+    @itemsSinLotes
 Scenario: Definiciones - Crear Items Sin Lotes
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -38,7 +39,7 @@ Scenario: Definiciones - Crear Items Sin Lotes
     Then nos debe de mostrar el items creado en la lista el items
  ##   And validar que los datos ingresados esten el la base de datos
 
-
+  @itemsConLotes
 Scenario: Definiciones - Crear Items Usa Lotes
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -65,7 +66,7 @@ Scenario: Definiciones - Crear Items Usa Lotes
     And seleccionamos las categorias ingresadas anteriormente y buscamos por esos filtros
     Then nos debe de mostrar el items creado en la lista el items
 
-
+  @itemsVendeConLotes
 Scenario: Definiciones - Crear Items vende con Lotes
         And estoy en home de stock
         And selecciono el menu de "<menu>"

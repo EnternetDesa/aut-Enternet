@@ -8,6 +8,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
+import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
 import org.apache.commons.io.FileUtils;
@@ -19,28 +20,29 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 
 public class BaseTest {
     // Lista que solo contiene las capturas de la ejecución en curso
     private static ThreadLocal<List<String>> capturasPendientes = ThreadLocal.withInitial(ArrayList::new);
-   // public static List<String> capturasPendientes = new ArrayList<>();
     protected static WebDriver driver;
     public static Map<String, String> datos;
     public static Map<String, String> datosPOS;
+    public static Map<String , Object> datosPromociones;
+    public static Map<String , Object> datosFiado;
     public static final String RUTA_PDF = "C:/git/aut-Enternet/reportes/";
-    private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/reportes/";
-    public static List<String> mensajes = new ArrayList<>();
+    private static final String RUTA_CAPTURAS = "C:/git/aut-Enternet/reportes/capturas/";
+    public static List<String> tiemposDeCarga = new ArrayList<>();
     public static PdfDocument pdfDocument;
     public static Document document;
     static String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -48,17 +50,72 @@ public class BaseTest {
     public static String estadoEjecucion = "Passed";
 
 
-    @Given("que cargo los datos desde el archivo {string}")
-    public void queCargoLosDatosDesdeElArchivo(String archivo) {
-        ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                datos = objectMapper.readValue(new File("C:/git/aut-Enternet/src/main/resources/datos.json"), Map.class);
 
-                System.out.println("✅ Datos cargados desde JSON: " + datos);
+    static {
+        cargarDatosPromociones();
+    }
+    public static void cargarDatosPromociones() {
+        try {
+            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosPromociones.json");
+            if (is == null) {
+                throw new RuntimeException("❌ Archivo datosPromociones.json no encontrado en resources.");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            datosPromociones = mapper.readValue(is, new TypeReference<>() {});
+            System.out.println("✅ datosPromociones cargado correctamente.");
+        } catch (Exception e) {
+            System.err.println("❌ Error al cargar datosPromociones: " + e.getMessage());
+            datosPromociones = null; // evitar estado inconsistente
+        }
+    }
+    public class JsonUtils {
+        public static Map<String, String> leerJsonComoMapa(String ruta) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readValue(new File(ruta), new TypeReference<Map<String, String>>() {});
             } catch (IOException e) {
                 e.printStackTrace();
-                estadoEjecucion = "Failed";
+                return new HashMap<>();
             }
+        }
+    }
+
+    @Given("que ingreso los datos desde el archivo datosFiado {string}")
+    public void queIngresoLosDatosDesdeElArchivoDatosFiado(String arg0) {
+
+        try {
+            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosFiado.json");
+            if (is == null) {
+                throw new RuntimeException("❌ Archivo datosFiado.json no encontrado en resources.");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            datosFiado = mapper.readValue(is, new TypeReference<>() {});
+            System.out.println("✅ datosFiado cargado correctamente.");
+        } catch (Exception e) {
+            System.err.println(STR."❌ Error al cargar datosFiado: \{e.getMessage()}");
+            datosFiado = null; // evitar estado inconsistente
+        }
+    }
+    public static <T> T cargarJsonDesdeResource(String nombreArchivo, TypeReference<T> tipo) {
+        try (InputStream is = BaseTest.class.getClassLoader().getResourceAsStream(nombreArchivo)) {
+            if (is == null) throw new RuntimeException("❌ Archivo " + nombreArchivo + " no encontrado.");
+            return new ObjectMapper().readValue(is, tipo);
+        } catch (IOException e) {
+            System.err.println("❌ Error al cargar " + nombreArchivo + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Given("que cargo los datos desde el archivo {string}")
+    public void queCargoLosDatosDesdeElArchivo(String archivo) {
+        try {
+            DatosGlobales.datos = cargarJsonComoMapa(archivo);
+            System.out.println("✅ Datos cargados desde: " + archivo);
+        } catch (IOException e) {
+            throw new RuntimeException("❌ Error al cargar datos desde: " + archivo, e);
+        }
+
+        //System.out.println("ℹDatos actuales disponibles: " + DatosGlobales.datosActuales);
     }
 
 
@@ -86,6 +143,7 @@ public class BaseTest {
             // ✅ Ahora SÍ es momento de generar el PDF con las capturas tomadas
             generarPDFConCapturas(RUTA_PDF, timestamp, nombreFeature, estadoEjecucion);
             cerrarPDF();
+            eliminarCapturas();
         }
     }
 
@@ -96,7 +154,7 @@ public class BaseTest {
         return driver;
     }
 
-    // Método para ingresar datos y validar si los elementos existen o están ocultos
+    // Metodo para ingresar datos y validar si los elementos existen o están ocultos
     public static void validarIngreso(WebDriver driver, String dato, By locator) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
@@ -172,18 +230,37 @@ public class BaseTest {
       }
   }
 
+    public static String esperarElementoYMedirTiempo( By locator, String descripcion) {
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        long inicio = System.currentTimeMillis();
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+            long fin = System.currentTimeMillis();
+            long tiempoCarga = fin - inicio;
+
+            tiemposDeCarga.add("⏱ Tiempo de carga de "+ descripcion+ ":" +tiempoCarga+ "ms");
+        } catch (TimeoutException e) {
+
+            tiemposDeCarga.add("⏱ Tiempo de carga de "+ descripcion+ ": No apareció en el tiempo esperado.");
+
+        }
+        return descripcion;
+    }
+
     public static void generarPDFConCapturas(String rutaPdf, String fechaHora, String nombreFeature, String status) {
         try {
-            document.add(new Paragraph("📄 Reporte de pruebas Selenium").setBold().setFontSize(16));
-            document.add(new Paragraph("🟢 Estado: " + status));
+            document.add(new Paragraph("Reporte de pruebas Selenium").setBold().setFontSize(16));
+            document.add(new Paragraph("Estado: " + status));
 
-            // Aquí se agrega el nombre del feature al reporte
+            // nombre del feature
             if (nombreFeature != null && !nombreFeature.isEmpty()) {
-                document.add(new Paragraph("🧪 Feature: " + nombreFeature).setFontSize(12f));
+                document.add(new Paragraph("Feature: " + nombreFeature).setFontSize(12f));
             } else {
-                document.add(new Paragraph("🧪 Feature: No disponible").setFontSize(12f));
+                document.add(new Paragraph("Feature: No disponible").setFontSize(12f));
             }
-            document.add(new Paragraph("🕒 Fecha: " + fechaHora).setTextAlignment(TextAlignment.LEFT));
+            document.add(new Paragraph("Fecha: " + fechaHora).setTextAlignment(TextAlignment.LEFT));
+
 
             if (!capturasPendientes.get().isEmpty()) {
                 for (String rutaCaptura : capturasPendientes.get()) {
@@ -191,25 +268,46 @@ public class BaseTest {
                     if (captura.exists()) {
                         ImageData imageData = ImageDataFactory.create(rutaCaptura);
                         Image image = new Image(imageData).scaleToFit(500, 350);
-                        document.add(new Paragraph("📸 Captura: " + captura.getName()));
+
+                        String nombreCaptura = captura.getName();
+                        String descripcion = nombreCaptura.replaceAll("_[0-9]{8}_[0-9]+\\.png", "");
+
+                        document.add(new Paragraph("📸 Captura: " + nombreCaptura));
                         document.add(image);
+
+                        // Buscar y mostrar el tiempo correspondiente a la descripción
+                        for (String tiempo : tiemposDeCarga) {
+                            if (tiempo.contains(descripcion)) {
+                                document.add(new Paragraph("🕒 " + tiempo));
+                                break;
+                            }
+                        }
+
                         document.add(new Paragraph("\n"));
                     }
                 }
             } else {
-                document.add(new Paragraph("⚠️ No hay capturas disponibles."));
+                document.add(new Paragraph("No hay capturas disponibles."));
             }
-            // ✅ Limpieza final
-         //   capturasPendientes.clear();
-            System.out.println("✅ PDF generado correctamente: " + rutaPdf);
 
+            // Agregar el tiempo total al final del reporte (si hay tiempos registrados)
+            if (!tiemposDeCarga.isEmpty()) {
+                document.add(new Paragraph("Resumen de tiempos de ejecución:"));
+                for (String tiempo : tiemposDeCarga) {
+                    document.add(new Paragraph(tiempo));
+                }
+            }
+            System.out.println("✅ PDF generado correctamente: " + rutaPdf);
+            // ✅ Limpieza automática de listas para evitar acumulación
+            tiemposDeCarga.clear();
+            capturasPendientes.get().clear();
         } catch (Exception e) {
             System.out.println("❌ Error al generar el PDF: " + e.getMessage());
             estadoEjecucion = "Failed";
         }
     }
 
-    // Método para cerrar el PDF después de la prueba
+    // Metodo para cerrar el PDF después de la prueba
     public static void cerrarPDF() {
         if (document != null) {
             document.close();
@@ -217,7 +315,7 @@ public class BaseTest {
         }
     }
 
-    // Método para inicializar el PDF antes de comenzar a agregar capturas
+    // Metodo para inicializar el PDF antes de comenzar a agregar capturas
     public static void inicializarPDF() {
         try {
             int numero = obtenerNumeroConsecutivo(RUTA_PDF);
@@ -227,29 +325,14 @@ public class BaseTest {
             pdfDocument = new PdfDocument(writer);
             document = new Document(pdfDocument);
 
-            System.out.println("📄 Documento PDF inicializado: " + ruta);
+            System.out.println("Documento PDF inicializado: " + ruta);
         } catch (Exception e) {
             System.out.println("❌ No se pudo inicializar el PDF: " + e.getMessage());
             estadoEjecucion = "Failed";
         }
     }
-    public static String esperarElementoYMedirTiempo( By locator, String descripcion) {
 
-        long inicio = System.currentTimeMillis();
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(10))
-                    .until(ExpectedConditions.visibilityOfElementLocated(locator));
-            long fin = System.currentTimeMillis();
-            String mensaje = descripcion + " apareció en " + (fin - inicio) + " ms";
-            mensajes.add(mensaje);
-            return mensaje;
-        } catch (TimeoutException e) {
-            String mensaje = "⚠️ No apareció " + descripcion;
-            mensajes.add(mensaje);
-            return mensaje;
-        }
-    }
-    // Método para eliminar las capturas de pantalla después de generar el PDF
+    // Metodo para eliminar las capturas de pantalla después de generar el PDF
     public static void eliminarCapturas() {
         try {
             Files.list(Paths.get(RUTA_CAPTURAS)) // Solo lista archivos, sin incluir la carpeta
@@ -268,7 +351,7 @@ public class BaseTest {
     }
 
     /*metodos de putty*/
-    // 🔹 Método para convertir la primera letra a mayúscula
+    // 🔹 Metodo para convertir la primera letra a mayúscula
     public static String capitalizarPrimeraLetra(String texto) {
         if (texto == null || texto.isEmpty()) {
             return texto;
@@ -276,7 +359,7 @@ public class BaseTest {
         return Character.toUpperCase(texto.charAt(0)) + texto.substring(1);
     }
 
-    // 🔹 Método para escribir texto con caracteres especiales y primera letra en mayúscula
+    // 🔹 Metodo para escribir texto con caracteres especiales y primera letra en mayúscula
     public static void escribirTextoEspecial(Robot robot, String texto) {
         for (int i = 0; i < texto.length(); i++) {
             char c = texto.charAt(i);
@@ -296,7 +379,7 @@ public class BaseTest {
         }
     }
 
-    // 🔹 Método para escribir texto normal
+    // 🔹 Metodo para escribir texto normal
     public static void escribirTexto(Robot robot, String texto) {
         for (char c : texto.toCharArray()) {
             int keyCode = KeyEvent.getExtendedKeyCodeForChar(c);
@@ -308,7 +391,7 @@ public class BaseTest {
         }
     }
 
-    // 🔹 Método especial para escribir "?" en teclado español latinoamericano
+    // 🔹 Metodo especial para escribir "?" en teclado español latinoamericano
     public static void escribirCaracterPregunta(Robot robot) {
         robot.keyPress(KeyEvent.VK_SHIFT);
         robot.keyPress(KeyEvent.VK_QUOTE); // 🔹 Para "?" en teclado LATAM
@@ -316,7 +399,7 @@ public class BaseTest {
         robot.keyRelease(KeyEvent.VK_SHIFT);
     }
 
-    // 🔹 Método para presionar teclas combinadas
+    // 🔹 Metodo para presionar teclas combinadas
     public static void presionarTeclas(Robot robot, int tecla1, int tecla2) {
         robot.keyPress(tecla1);
         robot.keyPress(tecla2);
@@ -372,6 +455,59 @@ public class BaseTest {
         System.out.println("⏳ Tiempo de espera agotado. No se encontró el archivo.");
         return false;
     }
+    // Método para obtener el siguiente número consecutivo para el PDF
+    public static int obtenerSiguienteNumero(String carpeta) {
+        File dir = new File(carpeta);
+        if (!dir.exists()) {
+            dir.mkdirs();
+            return 1;
+        }
+
+        File[] archivos = dir.listFiles((d, name) -> name.endsWith(".pdf"));
+        if (archivos == null || archivos.length == 0) {
+            return 1;
+        }
+
+        return Arrays.stream(archivos)
+                .map(File::getName)
+                .map(name -> name.replaceAll("\\D+", ""))
+                .filter(num -> !num.isEmpty())
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0) + 1;
+    }
+
+
+
+    public static Map<String, String> cargarJsonComoMapa(String nombreArchivo) throws IOException {
+
+//        ObjectMapper mapper = new ObjectMapper();
+//        File file = new File("C:/git/aut-Enternet/src/main/resources/" + nombreArchivo);
+//        return mapper.readValue(file, new TypeReference<Map<String, String>>() {});
+        ObjectMapper mapper = new ObjectMapper();
+        File archivoJson = new File("C:/git/aut-Enternet/src/main/resources/" +nombreArchivo);
+
+        if (!archivoJson.exists()) {
+            throw new FileNotFoundException("❌ No se encontró el archivo JSON en: " + nombreArchivo);
+        }
+
+        return mapper.readValue(archivoJson, new TypeReference<Map<String, String>>() {});
+
+    }
+    public static Map<String, String> leerDatosDesdeJSON(String nombreArchivo) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(
+                    new File("src/test/resources/datos/" + nombreArchivo),
+                    new TypeReference<Map<String, String>>() {}
+            );
+        } catch (Exception e) {
+            System.err.println("❌ Error leyendo el archivo JSON: " + e.getMessage());
+            return null;
+        }
+    }
+
+
 
 
 

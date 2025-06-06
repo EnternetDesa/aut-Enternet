@@ -1,40 +1,89 @@
 package definitions.menuDef;
 
 import definitions.Commons.BaseTest;
+import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.WebDriver;
+import page.menuPage.PosPage;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.awt.*;
+
+import java.io.InputStream;
 import java.util.Map;
 
 import static definitions.Commons.BaseTest.cerrarDriver;
-import static definitions.Commons.BaseTest.datosPOS;
-import static definitions.Commons.BaseTest.estadoEjecucion;
-import static page.loginPage.PosPage.*;
+import static page.menuPage.PosPage.*;
+import static definitions.Commons.BaseTest.*;
 
 public class PosDef {
-
-    WebDriver driver = BaseTest.getDriver();
-    public static Map<String, String> datosPOS;
-
+     public static Map<String, String> datosPOS;
     @Given("que ingreso los datos desde el archivo datosPos {string}")
-    public void queIngresoLosDatosDesdeElArchivoDatosPos(String arg0) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public void queIngresoLosDatosDesdeElArchivoDatosPOS(String arg0) {
         try {
-            datosPOS = objectMapper.readValue(new File("C:/git/aut-Enternet/src/main/java/resources/datosPOS.json"), Map.class);
-
-            System.out.println(STR."✅ Datos cargados desde JSON: \{datosPOS}");
-        } catch (IOException e) {
-            e.printStackTrace();
-            estadoEjecucion = "Failed";
+            InputStream is = BaseTest.class.getClassLoader().getResourceAsStream("datosPOS.json");
+            if (is == null) {
+                throw new RuntimeException("❌ Archivo datosPOS.json no encontrado en resources.");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            datosPOS = mapper.readValue(is, new TypeReference<>() {});
+            System.out.println("✅ datosPOS cargado correctamente.");
+        } catch (Exception e) {
+            System.err.println(STR."❌ Error al cargar datosPOS: \{e.getMessage()}");
+            datosPOS = null; // evitar estado inconsistente
         }
     }
+
+
+//    @Given("que ingreso los datos desde el archivo datosPos {string}")
+//    public static void queIngresoLosDatosDesdeElArchivoDatosPos(String nombreArchivo) {
+//        try {
+//            ObjectMapper mapper = new ObjectMapper();
+//            InputStream input = PosDef.class.getClassLoader().getResourceAsStream(nombreArchivo);
+//            if (input != null) {
+//                datosPOS = mapper.readValue(input, new TypeReference<Map<String, String>>() {});
+//                System.out.println("✅ datosPOS cargado correctamente.");
+//            } else {
+//                System.err.println("❌ No se encontró el archivo: " + nombreArchivo);
+//            }
+//        } catch (Exception e) {
+//            System.err.println("❌ Error al cargar datosPOS: " + e.getMessage());
+//        }
+//    }
+//    @Given("cargo los datos del POS")
+//    public void cargoLosDatosDelPOS() {
+//        PosDef.queIngresoLosDatosDesdeElArchivoDatosPos("datosPOS.json"); // El archivo debe estar en `resources`
+//    }
+
+
+
+        public static void cargarDatosPOSDesdeJson(String nombreArchivo) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                InputStream input = PosDef.class.getClassLoader().getResourceAsStream(nombreArchivo);
+                if (input != null) {
+                    datosPOS = mapper.readValue(input, new TypeReference<Map<String, String>>() {});
+                    System.out.println("✅ datosPOS cargado correctamente.");
+                } else {
+                    System.err.println("❌ No se encontró el archivo: " + nombreArchivo);
+                }
+            } catch (Exception e) {
+                System.err.println("❌ Error al cargar datosPOS: " + e.getMessage());
+            }
+        }
+
+        @Given("cargo los datos del POS")
+        public void cargoLosDatosDelPOS() {
+            cargarDatosPOSDesdeJson("datosPOS.json");
+        }
 
 
     @And("debe de mostrar la vista de Pos")
@@ -49,13 +98,14 @@ public class PosDef {
 
     @And("selecciono el menu de Pos {string}")
     public void seleccionoElMenuDePos(String menuP) throws InterruptedException {
-        seleccionMenuPos(BaseTest.datosPOS.get("menuPOS"));
+        menuP = datosPOS.get("menuPOS");
+        seleccionMenuPos(menuP);
     }
 
     @And("luego el submenu de Pos {string}")
     public void luegoElSubmenuDePos(String subMenuP) throws InterruptedException {
-        seleccionamosSubMenuPOS(datosPOS.get("subMenuP"));
-
+        subMenuP =datosPOS.get("subMenuP");
+        seleccionamosSubMenuPOS(subMenuP);
     }
 
     @When("este en el modulo de Enrolamiento de Terminales")
@@ -72,7 +122,6 @@ public class PosDef {
     @And("seleccionamos el boton copiar")
     public void seleccionamosElBotonCopiar() throws InterruptedException {
         seleccionBtnCopiar();
-
     }
 
     @And("luego pegamos la url en un nuevo navegador")
@@ -92,7 +141,7 @@ public class PosDef {
     }
 
     @And("ingresamos el rut {string} y contrasenia {string}")
-    public void ingresamosElRutYContrasenia(String arg0, String arg1) {
+    public void ingresamosElRutYContrasenia(String rutPos, String clavePos) {
         ingresarRut();
         ingresarClave();
     }
@@ -114,26 +163,30 @@ public class PosDef {
 
     @And("le asignamos el cliente a quien venderemos {string}")
     public void leAsignamosElClienteAQuienVenderemos(String nombreCliente) throws InterruptedException {
-        clickBtnCliente();
-        seleccionCliente(nombreCliente);
+   //     buscarClienteYSeleccionarPorRut(); //poner que si se depliega antes la lista de clientes seleccione
+        clickBtnCliente();  //clickbtnCliente
+        ingresarRutcliente(); //203344473
+        seleccionCliente(); //hace click en nombe cliente
     }
 
     @And("Ingresamos la descripcion o codigo de un producto y apretamos enter")
     public void ingresamosLaDescripcionOCodigoDeUnProductoYApretamosEnter() throws InterruptedException {
         ingresarProductoPorDescripcion();
-        ingresarProductoPorCodigo();
-        clickBtnEnter();
+        seleccionarNombreProducto();
+       // ingresarProductoPorCodigo();
+      //  clickBtnEnter();
     }
 
     @And("ingresamos la cantidad de producto que llevaremos")
-    public void ingresamosLaCantidadDeProductoQueLlevaremos() {
+    public void ingresamosLaCantidadDeProductoQueLlevaremos() throws InterruptedException {
         ingresarCantidadDeProducto();
-        cerrarDriver();
+
     }
-    @And("seleccionamos el tipo de pago que ocuparemos e ingresamos los datos para el pago")
-    public void seleccionamosElTipoDePagoQueOcuparemosEIngresamosLosDatosParaElPago(String tipoPago) throws InterruptedException {
-        ingresarTipoDePago(tipoPago);
-        ingresoDeDatosParaElPago();
+    @And("seleccionamos la forma de pago <{string}> que ocuparemos e ingresamos los datos para el pago")
+    public void seleccionamosLaFormaDePagoQueOcuparemosEIngresamosLosDatosParaElPago(String args0) throws InterruptedException {
+        ingresarFormaDePago();
+        ingresarTipoDePago();
+      //  ingresoDeDatosParaElPago();
     }
 
     @And("seleccionar boton guardar")
@@ -169,7 +222,7 @@ public class PosDef {
     @And("hacemos click en el boton carta y seleccionamos el producto que muestre")
     public void hacemosClickEnElBotonCartaYSeleccionamosElProductoQueMuestre() throws InterruptedException {
         clickBtnCarta();
-        clickCuidadoCapilar();
+        clickCategoria();
         seleccionarProducto();
     }
 
@@ -179,9 +232,9 @@ public class PosDef {
     }
 
     @And("le modificamos la cantidad de producto a comprar {string}")
-    public void
-    leModificamosLaCantidadDeProductoAComprar(String arg0) throws InterruptedException {
+    public void leModificamosLaCantidadDeProductoAComprar(String arg0) throws InterruptedException {
         modificarCantidadProducto();
+        cerrarDriver();
     }
 
     @And("seleccionamos el boton buscar")
@@ -289,5 +342,14 @@ public class PosDef {
 
     }
 
+    @And("seleccionamos la forma de pago <{string}> y el tipo de pago <{string}> que ocuparemos")
+    public void seleccionamosLaFormaDePagoYElTipoDePagoQueOcuparemos(String formaDePago, String tipoDePAgo) throws InterruptedException {
+        ingresarFormaDePago();
+        ingresoDeDatosParaElPago();
+    }
 
+    @Then("seleccionar boton imprimir")
+    public void seleccionarBotonImprimir() throws InterruptedException {
+        seleccionarBtnImprimir();
+    }
 }

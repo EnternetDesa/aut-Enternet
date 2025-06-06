@@ -12,8 +12,9 @@ Background:
      And en la vista del warning selecciono enviar de todas formas
      And debe de mostrar la vista de stock
 
+@filtroItems @items
 Scenario: Aplicar Filtros - Sin categorias
-    And estoy en home de stock
+    Given estoy en home de stock
     And selecciono el menu de "<menu>"
     And luego el submenu de "<subMenuD>"
     When este en el modulo de items
@@ -22,6 +23,7 @@ Scenario: Aplicar Filtros - Sin categorias
     And luego seleccionemos el boton buscar
     Then nos debe de mostrar los productos de esa categoria
 
+    @filtroItems @items
 Scenario: Aplicar Filtros - categoria Clasificadora
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -33,6 +35,7 @@ Scenario: Aplicar Filtros - categoria Clasificadora
     And luego seleccionemos el boton buscar
     Then nos debe de mostrar los productos de esa categoria
 
+    @filtroItems @items
 Scenario: Aplicar Filtros - categoria Buscadora
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -44,6 +47,7 @@ Scenario: Aplicar Filtros - categoria Buscadora
     And luego seleccionemos el boton buscar
     Then nos debe de mostrar los productos de esa categoria
 
+    @filtroItems @items
 Scenario: Aplicar Filtros - Filtros Generales -Codigo
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -54,6 +58,7 @@ Scenario: Aplicar Filtros - Filtros Generales -Codigo
     And luego seleccionemos el boton buscar
     Then nos debe de mostrar los productos de esa categoria
 
+    @filtroItems @items
 Scenario: Aplicar Filtros - Filtros Generales -Descripcion
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -64,6 +69,7 @@ Scenario: Aplicar Filtros - Filtros Generales -Descripcion
     And luego seleccionemos el boton buscar
     Then nos debe de mostrar el producto creado "<descProd>"
 
+    @filtroItems @items
 Scenario: Aplicar Filtros - Filtros Generales - Mostrar Todo
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -74,6 +80,7 @@ Scenario: Aplicar Filtros - Filtros Generales - Mostrar Todo
     And luego seleccionemos el boton buscar
     Then nos debe de mostrar los productos de esa categoria
 
+    @filtroItems @items
 Scenario: Aplicar Filtros - Filtros Generales - Días ultima modificacion
     And estoy en home de stock
     And selecciono el menu de "<menu>"

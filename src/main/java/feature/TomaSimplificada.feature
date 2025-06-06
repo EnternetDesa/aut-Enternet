@@ -13,7 +13,7 @@ Feature: Toma Simplificada - Procesos
     And debe de mostrar la vista de stock
 
   Scenario: Toma Simplificada - Procesos
-    Given que estoy en home de stock
+    Given estoy en home de stock
     And selecciono el menu de "<menu>"
     And luego el submenu de "<subMenuP>"
     When este en seleccion de ubicacion y haga click en "<ubicacion>"

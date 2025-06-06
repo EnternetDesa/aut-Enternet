@@ -12,6 +12,7 @@ Feature: Definiciones- Crear Items - EditarProducto.
     And en la vista del warning selecciono enviar de todas formas
     And debe de mostrar la vista de stock
 
+  @items
 Scenario: Editar items - Crear Items Sin descripcion
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -30,7 +31,7 @@ Scenario: Editar items - Crear Items Sin descripcion
     And seleccionamos guardar producto
     Then nos debe de mostrar el msj creado en la lista el items
 
-
+  @items
   Scenario: Crear items - Crear Items Sin equivalencia de comparacion
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -48,7 +49,7 @@ Scenario: Editar items - Crear Items Sin descripcion
     And seleccionamos guardar producto
     Then nos debe de mostrar el msj creado en la lista el items
 
-
+  @items
   Scenario: Crear items - Sin codigo interno, EAN o SKU
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -66,6 +67,7 @@ Scenario: Editar items - Crear Items Sin descripcion
     And seleccionamos guardar producto
     Then nos debe de mostrar el msj creado en la lista el items
 
+  @items
   Scenario: Crear items - Crear Items Sin codigo Base
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -83,6 +85,7 @@ Scenario: Editar items - Crear Items Sin descripcion
     And seleccionamos guardar producto
     Then nos debe de mostrar el msj creado en la lista el items
 
+  @items
   Scenario: Crear items - Ingresar un codigo EAN incorrecto
     And estoy en home de stock
     And selecciono el menu de "<menu>"
@@ -100,6 +103,7 @@ Scenario: Editar items - Crear Items Sin descripcion
     And seleccionamos guardar producto
     Then nos debe de mostrar el msj creado en la lista el items
 
+  @items
   Scenario: Crear items - Validacion de filtro clasificadora/Buscadora
     And estoy en home de stock
     And selecciono el menu de "<menu>"
