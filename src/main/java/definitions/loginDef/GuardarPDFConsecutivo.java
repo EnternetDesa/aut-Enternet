@@ -7,7 +7,7 @@ import org.openqa.selenium.TakesScreenshot;
 import java.io.File;
 import java.io.IOException;
 
-import static definitions.Commons.CapturaYReporte.driver;
+import static Utils.Commons.CapturaYReporte.driver;
 
 
 public class GuardarPDFConsecutivo {

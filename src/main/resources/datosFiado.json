@@ -7,5 +7,9 @@
     "subMenu": "Items",
     "rutCliente": "203344473",
     "montoCredito": "100000",
-    "estado": "Activo"
+    "estado": "Activo",
+    "formaDePago": "Tarjeta",
+    "tipoDePago": "Fiado",
+    "rutClienteFiado": "203344473",
+    "tipoEmision": "Boleta"
 }

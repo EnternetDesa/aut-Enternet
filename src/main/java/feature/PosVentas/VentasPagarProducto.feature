@@ -1,5 +1,7 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
+
+@Ventas
 Feature: POS - Promociones
 
   Background:

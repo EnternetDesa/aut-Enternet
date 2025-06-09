@@ -1,8 +1,8 @@
 package page.menuPage;
 
 
-import definitions.Commons.BaseTest;
-import definitions.Commons.Utils;
+import Utils.Commons.BaseTest;
+import Utils.Commons.Utils;
 import definitions.verificarArchivo;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -17,7 +17,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.*;
+import static Utils.Commons.DatosGlobales.datos;
 
 
 public class ItemsPage {

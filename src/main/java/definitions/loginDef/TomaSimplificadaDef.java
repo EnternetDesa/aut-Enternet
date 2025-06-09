@@ -1,7 +1,7 @@
 package definitions.loginDef;
 
-import definitions.Commons.BaseTest;
-import definitions.Commons.Utils;
+import Utils.Commons.BaseTest;
+import Utils.Commons.Utils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Random;
 
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.*;
 
 
 public class TomaSimplificadaDef {

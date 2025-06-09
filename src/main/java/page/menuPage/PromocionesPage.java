@@ -1,8 +1,8 @@
 package page.menuPage;
 
-import definitions.Commons.BaseTest;
-import definitions.Commons.DatosGlobales;
-import definitions.Commons.Utils;
+import Utils.Commons.BaseTest;
+import Utils.Commons.DatosGlobales;
+import Utils.Commons.Utils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,8 +12,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static definitions.Commons.BaseTest.*;
-import static definitions.Commons.BaseTest.datosPromociones;
+import static Utils.Commons.BaseTest.*;
 
 public class PromocionesPage {
     static WebDriver driver = BaseTest.getDriver();
@@ -125,23 +124,29 @@ public class PromocionesPage {
     }
 
     public static void escribirFechaConValorJS(String idInput, String fecha) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(idInput)));
 
             ((JavascriptExecutor) driver).executeScript("arguments[0].value = arguments[1];", input, fecha);
-            // También puedes disparar un evento si la página lo necesita
-            ((JavascriptExecutor) driver).executeScript("arguments[0].dispatchEvent(new Event('change', { bubbles: true }))", input);
-            tomarCaptura("Fecha inicio");
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].dispatchEvent(new Event('input', { bubbles: true })); arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+                    input
+            );
+
+            System.out.println("[INFO] Fecha establecida en el campo con ID: " + idInput + " -> " + fecha);
+            tomarCaptura("Fecha establecida - " + idInput);
 
         } catch (Exception e) {
-            System.out.println(" No se pudo establecer la fecha con JS directamente.");
+            System.err.println("[ERROR] No se pudo establecer la fecha con JS directamente en el campo: " + idInput);
             e.printStackTrace();
-            tomarCaptura("Fecha inicio Failed");
+            tomarCaptura("Error al establecer fecha - " + idInput);
         }
     }
 
-public static void ingresoFechaFin() throws InterruptedException {
+
+    public static void ingresoFechaFin() throws InterruptedException {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     WebElement btnTieneFechaTermino = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='W0026PROMOTIENEVIGENCIAContainer']/div/div")));
    // Utils.enmarcarElemento(driver, btnTieneFechaTermino);
@@ -153,7 +158,7 @@ public static void ingresoFechaFin() throws InterruptedException {
     boolean estaActivado = estadoBoton.contains("toggle-on") || estadoBoton.contains("active");
    // boolean estaActivado = estadoBoton.contains("bootstrap-switch-handle-on bootstrap-switch-success on") || estadoBoton.contains("active");
 
-    if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))) {
+    if ("Si".equalsIgnoreCase(String.valueOf(DatosGlobales.datos.get("tieneFechaFin")))) {
         if (!estaActivado) {
             System.out.println(" El botón está en 'OFF'. Activando...");
             btnTieneFechaTermino.click();
@@ -989,14 +994,12 @@ public static void seleccionarProductos(String criteria, String value, int canti
                     Utils.enmarcarElemento(driver, botonEditar);
                     esperarElementoYMedirTiempo(By.xpath(".//td[15]"), "click editar promocion");
                     botonEditar.click();
-                   // Utils.desenmarcarObjeto(driver, fila);
                     System.out.println("[INFO] Se hizo clic en el botón de editar.");
-
 
                     // Esperar a que la página de edición se cargue
                     WebElement inputNombre = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0026vPROMODESCRIPCION\"]")));
                     inputNombre.clear();
-                    inputNombre.sendKeys(datosPromociones.get("nombPromoEditado")+"");
+                    inputNombre.sendKeys(datos.get("nombPromoEditado")+"");
                     tomarCaptura("edicion de promocion");
                     encontrado = true;
                     break;
@@ -1012,7 +1015,7 @@ public static void seleccionarProductos(String criteria, String value, int canti
             return encontrado;
 
         } catch (Exception e) {
-            System.err.println("[ERROR] Error al editar la promoción: " + e.getMessage());
+            System.err.println("❌ Error al editar la promoción: " + e.getMessage());
             return false;
         }
     }
@@ -1075,64 +1078,59 @@ public static void seleccionarProductos(String criteria, String value, int canti
         }
     }
     public static boolean copiarPromocion(String nombrePromocion) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        boolean entroAFrame = false;
 
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
-            // Verificar si hay un iframe y cambiar a él
-            if (driver.findElements(By.tagName("iframe")).size() > 0) {
-                driver.switchTo().frame(0);
+            // Cambiar al iframe si existe
+            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+            if (!iframes.isEmpty()) {
+                driver.switchTo().frame(iframes.get(0));
+                entroAFrame = true;
                 System.out.println("[INFO] Cambiado al iframe para editar la promoción.");
             }
 
-            // Esperar que la tabla esté visible y cargada
+            // Esperar la visibilidad de la tabla
             WebElement tabla = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
-
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", tabla);
-            System.out.println("Tabla de promociones encontrada.");
+            System.out.println("[INFO] Tabla de promociones encontrada.");
 
-            // Obtener todas las filas visibles
             List<WebElement> filas = tabla.findElements(By.xpath(".//tr[td]"));
             System.out.println("[DEBUG] Total de filas encontradas: " + filas.size());
 
-            boolean encontrado = false;
             for (WebElement fila : filas) {
                 String textoFila = fila.getText().trim();
-                System.out.println("Contenido de la fila: " + textoFila);
+                System.out.println("[DEBUG] Contenido de la fila: " + textoFila);
 
                 if (textoFila.contains(nombrePromocion)) {
-                    // Enmarcar la fila para asegurarnos de que es la correcta
                     Utils.enmarcarElemento(driver, fila);
-                    System.out.println("Promoción '" + nombrePromocion + "' encontrada.");
+                    System.out.println("[INFO] Promoción '" + nombrePromocion + "' encontrada.");
                     Utils.desenmarcarObjeto(driver, fila);
 
-                    // Buscar el botón de editar (ícono de lápiz) dentro de la misma fila
                     WebElement btnCopiar = fila.findElement(By.xpath(".//td[14]"));
                     ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", btnCopiar);
                     Utils.enmarcarElemento(driver, btnCopiar);
                     esperarElementoYMedirTiempo(By.xpath(".//td[14]"), "click copiar promocion");
                     btnCopiar.click();
-                    // Utils.desenmarcarObjeto(driver, fila);
                     System.out.println("[INFO] Se hizo clic en el botón de copiar.");
-
-                    encontrado = true;
-                    break;
+                    return true;
                 }
             }
 
-            if (!encontrado) {
-                System.err.println("[ERROR] No se encontró la promoción: " + nombrePromocion);
-            }
-
-            // Salir del iframe si estábamos dentro de uno
-            driver.switchTo().defaultContent();
-            return encontrado;
+            System.err.println("[ERROR] No se encontró la promoción: " + nombrePromocion);
+            return false;
 
         } catch (Exception e) {
             System.err.println("[ERROR] Error al copiar la promoción: " + e.getMessage());
             return false;
+
+        } finally {
+            if (entroAFrame) {
+                driver.switchTo().defaultContent();
+            }
         }
     }
+
     public static boolean verPromocion(String nombrePromocion) {
         boolean dentroIframe = false;
 

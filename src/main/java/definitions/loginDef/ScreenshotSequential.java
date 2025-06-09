@@ -9,7 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import java.io.File;
 import java.io.IOException;
 
-import static definitions.Commons.BaseTest.obtenerNumeroConsecutivo;
+import static Utils.Commons.BaseTest.obtenerNumeroConsecutivo;
 
 public class ScreenshotSequential {
     static WebDriver driver;

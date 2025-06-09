@@ -1,4 +1,4 @@
-package definitions.Commons;
+package Utils.Commons;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;

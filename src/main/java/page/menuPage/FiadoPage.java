@@ -1,26 +1,18 @@
 package page.menuPage;
 
-import definitions.Commons.BaseTest;
-import org.openqa.selenium.Rectangle;
+import Utils.Commons.BaseTest;
 import org.openqa.selenium.WebDriver;
-import definitions.Commons.Utils;
+import Utils.Commons.Utils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.time.Duration;
-import java.awt.Toolkit;
-import java.awt.Robot;
 
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.esperarElementoYMedirTiempo;
+import static Utils.Commons.BaseTest.tomarCaptura;
+import static Utils.Commons.DatosGlobales.datosFiado;
 
 
 public class FiadoPage {

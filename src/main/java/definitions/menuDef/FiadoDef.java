@@ -1,19 +1,13 @@
 package definitions.menuDef;
 
-import definitions.Commons.BaseTest;
-import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 
 import java.util.Map;
 
-import java.io.InputStream;
-
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.cerrarDriver;
+import static Utils.Commons.BaseTest.tomarCaptura;
 import static page.menuPage.FiadoPage.*;
 import static page.menuPage.PromocionesPage.buscarYEnmarcarPromocion;
-import static page.menuPage.PromocionesPage.editarPromocion;
 
 
 public class FiadoDef {

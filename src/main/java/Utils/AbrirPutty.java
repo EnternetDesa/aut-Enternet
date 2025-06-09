@@ -1,13 +1,13 @@
 package definitions;
 
-import definitions.Commons.BaseTest;
+import Utils.Commons.BaseTest;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.*;
 
 public class AbrirPutty {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package definitions.Commons;
+package Utils.Commons;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -108,14 +108,15 @@ public class BaseTest {
 
     @Given("que cargo los datos desde el archivo {string}")
     public void queCargoLosDatosDesdeElArchivo(String archivo) {
+     //   DatosGlobales.cargarDatosDesdeArchivo(archivo);
         try {
             DatosGlobales.datos = cargarJsonComoMapa(archivo);
             System.out.println("✅ Datos cargados desde: " + archivo);
         } catch (IOException e) {
             throw new RuntimeException("❌ Error al cargar datos desde: " + archivo, e);
         }
+        System.out.println("ℹDatos actuales disponibles: " + DatosGlobales.datosActuales);
 
-        //System.out.println("ℹDatos actuales disponibles: " + DatosGlobales.datosActuales);
     }
 
 
@@ -327,7 +328,7 @@ public class BaseTest {
 
             System.out.println("Documento PDF inicializado: " + ruta);
         } catch (Exception e) {
-            System.out.println("❌ No se pudo inicializar el PDF: " + e.getMessage());
+            System.out.println(STR."❌ No se pudo inicializar el PDF: \{e.getMessage()}");
             estadoEjecucion = "Failed";
         }
     }
@@ -384,14 +385,14 @@ public class BaseTest {
         for (char c : texto.toCharArray()) {
             int keyCode = KeyEvent.getExtendedKeyCodeForChar(c);
             if (KeyEvent.CHAR_UNDEFINED == keyCode) {
-                throw new RuntimeException("No se puede escribir: " + c);
+                throw new RuntimeException(STR."No se puede escribir: \{c}");
             }
             robot.keyPress(keyCode);
             robot.keyRelease(keyCode);
         }
     }
 
-    // 🔹 Metodo especial para escribir "?" en teclado español latinoamericano
+    //  Metodo especial para escribir "?" En teclado español latinoamericano
     public static void escribirCaracterPregunta(Robot robot) {
         robot.keyPress(KeyEvent.VK_SHIFT);
         robot.keyPress(KeyEvent.VK_QUOTE); // 🔹 Para "?" en teclado LATAM
@@ -481,9 +482,6 @@ public class BaseTest {
 
     public static Map<String, String> cargarJsonComoMapa(String nombreArchivo) throws IOException {
 
-//        ObjectMapper mapper = new ObjectMapper();
-//        File file = new File("C:/git/aut-Enternet/src/main/resources/" + nombreArchivo);
-//        return mapper.readValue(file, new TypeReference<Map<String, String>>() {});
         ObjectMapper mapper = new ObjectMapper();
         File archivoJson = new File("C:/git/aut-Enternet/src/main/resources/" +nombreArchivo);
 

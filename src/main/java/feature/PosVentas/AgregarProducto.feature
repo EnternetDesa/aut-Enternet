@@ -1,9 +1,11 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
-Feature: POS - Promociones
+
+@Ventas
+Feature: POS - Ventas
 
 Background:
-     Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
+     Given que cargo los datos desde el archivo "datosPOS.json"
      And Ingreso con el tipo de "user"
      And ingreso la contrasenia "clave"
      And luego presiono el boton continuar

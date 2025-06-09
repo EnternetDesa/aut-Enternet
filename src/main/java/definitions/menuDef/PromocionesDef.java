@@ -1,20 +1,16 @@
 package definitions.menuDef;
 
-import definitions.Commons.BaseTest;
-import definitions.Commons.DatosGlobales;
-import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
+import Utils.Commons.DatosGlobales;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.cerrarDriver;
+import static Utils.Commons.BaseTest.tomarCaptura;
 import static page.menuPage.PromocionesPage.*;
 import static page.menuPage.PromocionesPage.capturarMensajePantalla;
 import static page.menuPage.PromocionesPage.validacionDeDatos;
@@ -76,11 +72,11 @@ public class PromocionesDef {
 //        escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", fechaFin);
 //        }
 
-        escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", datosPromociones.get("fechaInicio"));
+        escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", DatosGlobales.datos.get("fechaInicio"));
 
-        if ("Si".equalsIgnoreCase(datosPromociones.get("tieneFechaFin"))) {
+        if ("Si".equalsIgnoreCase(DatosGlobales.datos.get("tieneFechaFin"))) {
             ingresoFechaFin();
-            escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", datosPromociones.get("fechaFin"));
+            escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", DatosGlobales.datos.get("fechaFin"));
         }
     }
 
@@ -136,8 +132,8 @@ public class PromocionesDef {
 
     @And("seleccionamos la categoria de la promocion <{string}>")
     public void seleccionamosLaCategoriaDeLaPromocion(String args0) throws InterruptedException {
-        String restriccion = datosPromociones.get("categoriaRestriccion");
-        String restriccion2 = datosPromociones.get("categoriaRestriccion2");
+        String restriccion = DatosGlobales.datos.get("categoriaRestriccion");
+        String restriccion2 = DatosGlobales.datos.get("categoriaRestriccion2");
 //        seleccionarCategorias(Arrays.asList(restriccion2, restriccion));
         List<String> categorias = Arrays.asList(restriccion, restriccion2, "Bebidas");
         seleccionarCategorias(categorias);
@@ -160,7 +156,7 @@ public class PromocionesDef {
 
     @And("ingresamos el tipo de descuento que tendra la promocion")
     public void ingresamosElTipoDeDescuentoQueTendraLaPromocion() throws InterruptedException {
-        String nombreRestriccion = datosPromociones.get("nombreRestriccion");
+        String nombreRestriccion = DatosGlobales.datos.get("nombreRestriccion");
         seleccionarReglaDePromocion("Monto fijo", nombreRestriccion, 150 );
     }
 
@@ -175,9 +171,9 @@ public class PromocionesDef {
 
 //        String horaIni = datosPromociones.get("validaDesde");
 //        String horaFin = datosPromociones.get("validaHasta");
-        String nombrePromo = datosPromociones.get("nombPromo");
-        String fechaInicio = datosPromociones.get("fechaInicio");
-        String fechaFin = datosPromociones.get("fechaFin");
+        String nombrePromo = DatosGlobales.datos.get("nombPromo");
+        String fechaInicio = DatosGlobales.datos.get("fechaInicio");
+        String fechaFin = DatosGlobales.datos.get("fechaFin");
         String horaCanje = capturarMensajePantalla("//*[@id=\"span_W0026vHORARIO\"]");
         String diasCanje = capturarMensajePantalla("//*[@id=\"span_W0026vDIASDECANGE\"]");
         String descuento = capturarMensajePantalla("//*[@id=\"span_W0026vDESCUENTOAREALIZAR\"]");
@@ -199,11 +195,11 @@ public class PromocionesDef {
     @And("validamos que sean los datos editados anteriormente")
     public void validamosQueSeanLosDatosEditadosAnteriormente() {
 
-        String nombrePromo = datosPromociones.get("nombPromoEditado");
-        String fechaInicio = datosPromociones.get("fechaInicio");
-        String fechaFin = datosPromociones.get("fechaFin");
-        String horaIni = datosPromociones.get("validaDesde");
-        String horaFin = datosPromociones.get("validaHasta");
+        String nombrePromo = DatosGlobales.datos.get("nombPromoEditado");
+        String fechaInicio = DatosGlobales.datos.get("fechaInicio");
+        String fechaFin = DatosGlobales.datos.get("fechaFin");
+        String horaIni = DatosGlobales.datos.get("validaDesde");
+        String horaFin = DatosGlobales.datos.get("validaHasta");
         String horaCanje = capturarMensajePantalla("//*[@id=\"span_W0026vHORARIO\"]");
         String diasCanje = capturarMensajePantalla("//*[@id=\"span_W0026vDIASDECANGE\"]");
         String descuento = capturarMensajePantalla("//*[@id=\"span_W0026vDESCUENTOAREALIZAR\"]");
@@ -233,7 +229,7 @@ public class PromocionesDef {
     public void nosDebeDirigirALaPantallaPrincipalYVisualizarNuestraPromocion() throws InterruptedException {
       // tomarCaptura("Promociones");
         Thread.sleep(2000);
-        String nombrePromocion = datosPromociones.get("nombPromo"); // El nombre de la promoción que deseas buscar
+        String nombrePromocion = DatosGlobales.datos.get("nombPromo"); // El nombre de la promoción que deseas buscar
         boolean encontrada = buscarYEnmarcarPromocion(nombrePromocion);
 
         if (encontrada) {
@@ -247,9 +243,11 @@ public class PromocionesDef {
 
 
     @And("editamos una promocion ya existente y modificamos el nombre a la promocion <{string}>")
-    public void editamosUnaPromocionYaExistenteYModificamosElNombreALaPromocion(String arg0) {
+    public void editamosUnaPromocionYaExistenteYModificamosElNombreALaPromocion(String arg0) throws InterruptedException {
 
-        String nombrePromocion = datosPromociones.get("nombPromo"); // El nombre de la promoción que deseas buscar
+        String nombrePromocion = DatosGlobales.datos.get("nombPromo");
+
+        System.out.println("[INFO] Buscando la promoción a editar: " + nombrePromocion);
         boolean encontrada = editarPromocion(nombrePromocion);
 
         if (encontrada) {
@@ -257,20 +255,25 @@ public class PromocionesDef {
         } else {
             System.out.println("❌ La promoción no fue encontrada.");
         }
+
+        if (DatosGlobales.datos == null || !DatosGlobales.datos.containsKey("nombPromo")) {
+            throw new IllegalStateException("❌ No se encontró la clave 'nombPromo' en los datos cargados. Asegúrate de haber cargado los datos correctamente.");
+        }
+
     }
 
     @And("editamos con una nueva fecha de inicio <{string}>")
     public void editamosConUnaNuevaFechaDeInicio(String fechaInicio) throws InterruptedException {
-        fechaInicio = datosPromociones.get("fechaInicio");
+        fechaInicio = DatosGlobales.datos.get("fechaInicio");
 //        escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", fechaInicio);
 //        ingresoFechaFin();
 
-        fechaInicio = datosPromociones.get("fechaInicio");
+        fechaInicio = DatosGlobales.datos.get("fechaInicio");
         escribirFechaConValorJS("W0026vPROMOVIGENCIAINICIOFECHA", fechaInicio);
 
-        if ("Si".equalsIgnoreCase(String.valueOf(datosPromociones.get("tieneFechaFin")))){
+        if ("Si".equalsIgnoreCase(String.valueOf(DatosGlobales.datos.get("tieneFechaFin")))){
             ingresoFechaFin();
-          String fechaFin = datosPromociones.get("fechaFin");
+          String fechaFin = DatosGlobales.datos.get("fechaFin");
             escribirFechaConValorJS("W0026vPROMOVIGENCIATERMINOFECHA", fechaFin);
         }
     }
@@ -312,8 +315,8 @@ public class PromocionesDef {
 
     @And("Editamos la categoria de la promocion <{string}>")
     public void editamosLaCategoriaDeLaPromocion(String arg0) throws InterruptedException {
-        String restriccion = datosPromociones.get("categoriaRestriccion");
-        String restriccion2 = datosPromociones.get("categoriaRestriccion2");
+        String restriccion = DatosGlobales.datos.get("categoriaRestriccion");
+        String restriccion2 = DatosGlobales.datos.get("categoriaRestriccion2");
         List<String> categorias = Arrays.asList(restriccion, restriccion2, "Aguas", "Hielo" );
         seleccionarCategorias(categorias);
 
@@ -335,13 +338,13 @@ public class PromocionesDef {
 
     @And("editamos el tipo de descuento que tendra la promocion")
     public void editamosElTipoDeDescuentoQueTendraLaPromocion() throws InterruptedException {
-        String nombreRestriccion = datosPromociones.get("nombreRestriccion");
+        String nombreRestriccion = DatosGlobales.datos.get("nombreRestriccion");
         seleccionarReglaDePromocion("Menor precio monto fijo", nombreRestriccion, 1000 );
     }
 
     @Then("nos debe dirigir a la pantalla principal y visualizar nuestra promocion editada")
     public void nosDebeDirigirALaPantallaPrincipalYVisualizarNuestraPromocionEditada() throws InterruptedException {
-        String nombrePromocion = datosPromociones.get("nombPromoEditado"); // El nombre de la promoción que deseas buscar
+        String nombrePromocion = DatosGlobales.datos.get("nombPromoEditado"); // El nombre de la promoción que deseas buscar
         boolean encontrada = buscarYEnmarcarPromocion(nombrePromocion);
         tomarCaptura("error");
         if (encontrada) {
@@ -371,7 +374,7 @@ public class PromocionesDef {
 
     @And("copiamos una promocion ya existente")
     public void copiamosUnaPromocionYaExistente() {
-        String nombrePromocion = datosPromociones.get("nombPromo"); // El nombre de la promoción que deseas buscar
+        String nombrePromocion = DatosGlobales.datos.get("nombPromo"); // El nombre de la promoción que deseas buscar
         boolean encontrada = copiarPromocion(nombrePromocion);
 
         if (encontrada) {
@@ -388,7 +391,7 @@ public class PromocionesDef {
 
     @Then("visualizar nuestra promocion copiada")
     public void visualizarNuestraPromocionCopiada() {
-        String nombrePromocion = datosPromociones.get("nombPromo") + " Copia"; // El nombre de la promoción que deseas buscar
+        String nombrePromocion = DatosGlobales.datos.get("nombPromo") + " Copia"; // El nombre de la promoción que deseas buscar
         boolean encontrada = buscarYEnmarcarPromocion(nombrePromocion);
 
         if (encontrada) {
@@ -401,7 +404,7 @@ public class PromocionesDef {
 
     @And("hacemos click en confirmar la promocion")
     public void hacemosClickEnConfirmarLaPromocion() {
-        String nombrePromocion= datosPromociones.get("nombPromo") + " Copia";
+        String nombrePromocion= DatosGlobales.datos.get("nombPromo") + " Copia";
         boolean encontrada = confirmarPromocion(nombrePromocion);
         if (encontrada) {
             System.out.println("✅ La promoción fue confirmada correctamente.");
@@ -413,7 +416,7 @@ public class PromocionesDef {
     @And("buscamos la promocion que anularemos")
     public void buscamosLaPromocionQueAnularemos() {
 
-        String nombrePromocion= datosPromociones.get("nombPromo") + " Copia";
+        String nombrePromocion = DatosGlobales.datos.get("nombPromo") + " Copia";
         boolean encontrada = eliminarPromocion(nombrePromocion);
         if (!encontrada) {
             System.out.println("❌  La promoción fue eliminada correctamente.");
@@ -421,6 +424,7 @@ public class PromocionesDef {
             System.out.println("✅ La promoción fue eliminada correctamente.");
 
         }
+
     }
 
     @And("validar que se despliega mensaje de anulacion exitosa")

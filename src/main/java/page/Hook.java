@@ -1,8 +1,8 @@
 package page;
 
-import definitions.Commons.BaseTest;
-import definitions.Commons.DataLoader;
-import definitions.Commons.DatosGlobales;
+import Utils.Commons.BaseTest;
+import Utils.Commons.DataLoader;
+import Utils.Commons.DatosGlobales;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 
@@ -42,9 +42,9 @@ public class Hook {
           DatosGlobales.datosPromociones = DataLoader.cargarDatosDesde( "datosPromociones.json");
           DatosGlobales.datosActuales = DatosGlobales.datosPromociones;
 
-      } else if (scenario.getSourceTagNames().contains("@POS")) {
+      } else if (scenario.getSourceTagNames().contains("@Ventas")) {
 //          archivo = "datosPOS.json";
-          DatosGlobales.datosPOS = DataLoader.cargarDatosDesde(basePath + "datosPOS.json");
+          DatosGlobales.datosPOS = DataLoader.cargarDatosDesde( "datosPOS.json");
           DatosGlobales.datosActuales = DatosGlobales.datosPOS;
 
       } else if (scenario.getSourceTagNames().contains("@Fiado")) {
@@ -57,13 +57,6 @@ public class Hook {
           DatosGlobales.datosLogin = DataLoader.cargarDatosDesde(basePath + "datos.json");
           DatosGlobales.datosActuales = DatosGlobales.datosLogin;
       }
-
-//      if (archivo != null) {
-//          DatosGlobales.datos = DataLoader.cargarDatosDesde(basePath + archivo);
-//          System.out.println("✅ Datos cargados desde: " + archivo);
-//      } else {
-//          System.out.println("⚠️ No se encontró una etiqueta reconocida para cargar datos automáticamente.");
-//      }
 
 
   }

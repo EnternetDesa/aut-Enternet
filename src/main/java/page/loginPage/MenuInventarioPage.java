@@ -1,6 +1,6 @@
 package page.loginPage;
 
-import definitions.Commons.Utils;
+import Utils.Commons.Utils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;

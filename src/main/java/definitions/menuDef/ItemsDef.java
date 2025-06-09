@@ -1,6 +1,6 @@
 package definitions.menuDef;
 
-import definitions.Commons.BaseTest;
+import Utils.Commons.BaseTest;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -12,8 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static definitions.Commons.BaseTest.obtenerNumeroConsecutivo;
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.*;
 import static page.menuPage.ItemsPage.*;
 
 
@@ -157,7 +156,7 @@ public class ItemsDef {
        // mostrarListadoDeItems();
         buscarProductoPorNombre(nombreProducto);
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
 
@@ -179,7 +178,7 @@ public class ItemsDef {
         buscarProductoPorNombre(nombreProducto);
         //mostrarListadoDeItems();
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
 
     }
 
@@ -258,7 +257,7 @@ public class ItemsDef {
     public void nosDebeDeMostrarQueNoEsteNingunFiltroSeleccionado() throws InterruptedException, IOException {
         BaseTest.tomarCaptura("Sin Filtros Aplicados");
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("seleccione el boton de descargar columna base para maestras")
@@ -270,7 +269,7 @@ public class ItemsDef {
     public void seDescargaElArchivoCvs() {
         validarArchivoDescargado();
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("seleccionamos guardar producto")
@@ -282,7 +281,7 @@ public class ItemsDef {
     public void nosDebeDeMostrarElMsjCreadoEnLaListaElItems() throws InterruptedException, IOException {
         visualizarMsjAlerta();
 //        BaseTest.tomarCaptura(" Debe ingresar una descripcion");
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("validar que los datos ingresados esten el la base de datos")
@@ -318,7 +317,7 @@ public class ItemsDef {
     @Then("nos debe de mostrar un mensaje que la base esta cargada")
     public void nosDebeDeMostrarUnMensajeQueLaBaseEstaCargada() throws InterruptedException, IOException {
        validarMensajeDeCarga();
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("luego seleccionamos varios tipos de categoria  <{string}>")
@@ -332,7 +331,7 @@ public class ItemsDef {
     public void alIntentarSeleccionarVariosTiposDeCategoriaClasificadoraDebeMostrarElMensajeQueSoloSePuedeSeleccionarUna() throws InterruptedException, IOException {
         validarMsjAlerta();
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("Luego seleccionamos varios tipos de categoria Buscadoras <{string}>")
@@ -363,7 +362,7 @@ public class ItemsDef {
         buscarProductoPorNombre(nombreProducto);
         //mostrarListadoDeItems();
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @Then("nos debe mostrar un mensaje de alerta que el producto ya existe")

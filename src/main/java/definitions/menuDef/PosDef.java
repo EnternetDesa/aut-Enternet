@@ -1,6 +1,7 @@
 package definitions.menuDef;
 
-import definitions.Commons.BaseTest;
+import Utils.Commons.BaseTest;
+import Utils.Commons.DatosGlobales;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
@@ -9,23 +10,17 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import page.menuPage.PosPage;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.awt.*;
 
-import java.io.InputStream;
-import java.util.Map;
-
-import static definitions.Commons.BaseTest.cerrarDriver;
+import static Utils.Commons.BaseTest.cerrarDriver;
 import static page.menuPage.PosPage.*;
-import static definitions.Commons.BaseTest.*;
 
 public class PosDef {
      public static Map<String, String> datosPOS;
+
+
     @Given("que ingreso los datos desde el archivo datosPos {string}")
     public void queIngresoLosDatosDesdeElArchivoDatosPOS(String arg0) {
         try {
@@ -98,14 +93,14 @@ public class PosDef {
 
     @And("selecciono el menu de Pos {string}")
     public void seleccionoElMenuDePos(String menuP) throws InterruptedException {
-        menuP = datosPOS.get("menuPOS");
-        seleccionMenuPos(menuP);
+        String menu = DatosGlobales.datos.get("menuPOS");
+        PosPage.seleccionMenuPos(menu);
     }
 
     @And("luego el submenu de Pos {string}")
-    public void luegoElSubmenuDePos(String subMenuP) throws InterruptedException {
-        subMenuP =datosPOS.get("subMenuP");
-        seleccionamosSubMenuPOS(subMenuP);
+    public void luegoElSubmenuDePos(String args0) throws InterruptedException {
+        String subMenuP = DatosGlobales.datos.get("subMenuP");
+        PosPage.seleccionamosSubMenuPOS(subMenuP);
     }
 
     @When("este en el modulo de Enrolamiento de Terminales")
@@ -131,6 +126,7 @@ public class PosDef {
 
     @And("ingresamos el tipo de perfil")
     public void ingresamosElTipoDePerfil() throws InterruptedException, AWTException {
+
         clickBtnIrALogin();
         seleccionTipoPerfil();
     }
@@ -142,13 +138,14 @@ public class PosDef {
 
     @And("ingresamos el rut {string} y contrasenia {string}")
     public void ingresamosElRutYContrasenia(String rutPos, String clavePos) {
+
         ingresarRut();
         ingresarClave();
     }
 
     @And("seleccionamos el boton ingresar")
     public void seleccionamosElBotonIngresar() throws InterruptedException {
-        seleccionarBtnIngresar();
+       // seleccionarBtnIngresar();
     }
 
     @And("hacemos click en la caja que muestra nuestro nombre")
@@ -163,10 +160,10 @@ public class PosDef {
 
     @And("le asignamos el cliente a quien venderemos {string}")
     public void leAsignamosElClienteAQuienVenderemos(String nombreCliente) throws InterruptedException {
-   //     buscarClienteYSeleccionarPorRut(); //poner que si se depliega antes la lista de clientes seleccione
-        clickBtnCliente();  //clickbtnCliente
-        ingresarRutcliente(); //203344473
-        seleccionCliente(); //hace click en nombe cliente
+        buscarClienteYSeleccionarPorRut(); //poner que si se depliega antes la lista de clientes seleccione
+//        clickBtnCliente();  //clickbtnCliente
+//        ingresarRutcliente(); //203344473
+//        seleccionCliente(); //hace click en nombe cliente
     }
 
     @And("Ingresamos la descripcion o codigo de un producto y apretamos enter")
@@ -180,7 +177,6 @@ public class PosDef {
     @And("ingresamos la cantidad de producto que llevaremos")
     public void ingresamosLaCantidadDeProductoQueLlevaremos() throws InterruptedException {
         ingresarCantidadDeProducto();
-
     }
     @And("seleccionamos la forma de pago <{string}> que ocuparemos e ingresamos los datos para el pago")
     public void seleccionamosLaFormaDePagoQueOcuparemosEIngresamosLosDatosParaElPago(String args0) throws InterruptedException {
@@ -195,7 +191,9 @@ public class PosDef {
     }
 
     @And("seleccionamos tipo de emision")
-    public void seleccionamosTipoDeEmision(String tipoEmision) {
+    public void seleccionamosTipoDeEmision(String args0) {
+        //seleccionTipoDeEmision(tipoEmision);
+        String tipoEmision = DatosGlobales.datosPOS.get("tipoEmision");
         seleccionTipoDeEmision(tipoEmision);
     }
 
