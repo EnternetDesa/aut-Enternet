@@ -49,7 +49,7 @@ public class Hook {
 
       } else if (scenario.getSourceTagNames().contains("@Fiado")) {
 //          archivo = "datosFiado.json";
-          DatosGlobales.datosFiado = DataLoader.cargarDatosDesde(basePath + "datosFiado.json");
+          DatosGlobales.datosFiado = DataLoader.cargarDatosDesde("datosFiado.json");
           DatosGlobales.datosActuales = DatosGlobales.datosFiado;
 
       } else if (scenario.getSourceTagNames().contains("@Inventario")) {

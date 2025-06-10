@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 import static Utils.Commons.BaseTest.esperarElementoYMedirTiempo;
 import static Utils.Commons.BaseTest.tomarCaptura;
@@ -31,16 +32,36 @@ public class FiadoPage {
 
     public static void seleccionarMenuFiado() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"MENUTOGGLE_MPAGE\"]"), "menu izquierdo");
-        WebElement btnMenuAndesPos = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"MENUTOGGLE_MPAGE\"]")));
+
+        // Abre el menú lateral
+        esperarElementoYMedirTiempo(By.id("MENUTOGGLE_MPAGE"), "menu izquierdo");
+        WebElement btnMenuAndesPos = wait.until(ExpectedConditions.elementToBeClickable(By.id("MENUTOGGLE_MPAGE")));
         btnMenuAndesPos.click();
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a/div/span"), "Seleccion Fiado");
-        WebElement linkFiado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a/div/span")));
-        Utils.enmarcarElemento(driver, linkFiado);
-        tomarCaptura("Seleccion Fiado");
-       // esperarElementoYMedirTiempo(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a"), "Seleccion Fiado");
-        Utils.desenmarcarObjeto(driver, linkFiado);
-        linkFiado.click();
+        Thread.sleep(1000); // Espera breve para que cargue el menú
+
+        // Busca todos los elementos del menú
+        List<WebElement> opcionesMenu = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+                By.cssSelector("#K2baccordionmenu li a span")));
+
+        boolean encontrado = false;
+
+        for (WebElement opcion : opcionesMenu) {
+            String texto = opcion.getText().trim();
+            if (texto.equalsIgnoreCase("Fiado")) {
+                Utils.enmarcarElemento(driver, opcion);
+                esperarElementoYMedirTiempo(By.xpath(BaseTest.getXPath(opcion)), "Seleccion Fiado");
+                tomarCaptura("Seleccion Fiado");
+                opcion.click();
+                Utils.desenmarcarObjeto(driver, opcion);
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            throw new RuntimeException("❌ No se encontró la opción de menú 'Fiado'");
+        }
+
     }
     public static void clickBtnAgregarCliente() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));

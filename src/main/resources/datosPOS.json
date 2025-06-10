@@ -9,13 +9,14 @@
     "moduloIDL": "CAJA",
     "cajeroPos": "Carlos",
     "tipoPago": "Transferencia",
-    "descProd": "Vino Memorias 2018 750 ml",
+    "descProd": "Prueba2503271113",
     "codProd": "7802950572452",
     "nombreCliente": "ppppp pppppppp, pp",
     "MontoPago": "",
     "nombreVendedor": "ALEXIS QUINTANA VEGA",
     "glosa": "PRUEBA QA GLOSA",
     "catDespensa": "Aceite y Condimentos",
+    "prodCatDespensa": "Aceite De Oliva Extra Virgen Banquete 1 Lt",
     "catANNO": "x2020",
     "catOtros": "Fiesta",
     "precio": "$2500",
@@ -32,5 +33,7 @@
     "formaDePago": "Tarjeta",
     "tipoDePago": "Fiado",
     "rutClienteFiado": "203344473",
-    "tipoEmision": "Boleta"
+    "tipoEmision": "Factura",
+    "categoriaCarta": "CUIDADO CAPILAR",
+    "prodCatCarta" : "Acondicionador Dove Regeneración Extrema 400 Ml."
 }

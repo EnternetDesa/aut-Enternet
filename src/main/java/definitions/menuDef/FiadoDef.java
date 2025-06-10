@@ -16,8 +16,7 @@ public class FiadoDef {
 
     @And("hacemos click en menu izquierdo y en la opcion fiado")
     public void hacemosClickEnMenuIzquierdoYEnLaOpcionFiado() throws InterruptedException {
-        //cerrarMsjAlerta();
-        seleccionarMenuFiado();
+          seleccionarMenuFiado();
     }
 
     @And("seleccionamos boton agregar cliente")

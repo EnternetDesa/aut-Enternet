@@ -62,22 +62,11 @@ public class LoginDef {
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
         ReporteUtils.tiemposDeCarga.add("Ingreso con el tipo de " + us + " (Tiempo: " + duration + " ms)");
-
     }
 
     @And("ingreso la contrasenia {string}")
     public void ingresoLaContrasenia(String clave) {
-//        long startTime = System.currentTimeMillis();
-//        By element = By.xpath("//input[@name='_PASSWDPLANO']");
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//        WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='_PASSWDPLANO']")));
-//        Utils.enmarcarElemento(driver, elemento);
-//        elemento.sendKeys(datos.get("clave"));
-//        Utils.desenmarcarObjeto(driver, elemento);
-//        esperarElementoYMedirTiempo(By.name("BOTPAS"),"Contraseña");
-//        long endTime = System.currentTimeMillis();
-//        long duration = endTime - startTime;
-//        ReporteUtils.tiemposDeCarga.add("Ingreso de clave (Tiempo: " + duration + " ms)" );
+
         Map<String, String> datos = DatosGlobales.datosActuales;
 
         if (datos == null || !datos.containsKey("clave")) {

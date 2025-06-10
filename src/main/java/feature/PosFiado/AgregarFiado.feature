@@ -15,7 +15,6 @@ Feature: POS - Fiado
 
   @AgregarFiado
   Scenario: Pos Fiado - Agregar Cliente
-    Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
     And estoy en home de Pos
     And selecciono el menu de Pos "<menuPOS>"
     And luego el submenu de Pos "<subMenuP>"
@@ -25,10 +24,10 @@ Feature: POS - Fiado
     And luego pegamos la url en un nuevo navegador
     And ingresamos el tipo de perfil
     And ingresamos el modulo IDL
-    And ingresamos el rut "<userPOS>" y contrasenia "<clave>"
+    And ingresamos el rut "<user>" y contrasenia "<clave>"
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
-    And que ingreso los datos desde el archivo datosFiado "C:\git\aut-Enternet\src\java\resources\datosFiado.json"
+    #ok hasta aqui
     And hacemos click en menu izquierdo y en la opcion fiado
     And seleccionamos boton agregar cliente
     And ingresamos el rut del cliente "<rutCliente>"
@@ -39,17 +38,15 @@ Feature: POS - Fiado
     And seleccionar boton volver
     And validamos que se haya creado correctamente
     And hacemos click en menu opcion modulo de ventas
-    And que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
+    # ok desde aqui
     And seleccionamos boton nueva venta
     And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And Ingresamos la descripcion o codigo de un producto y apretamos enter
     And ingresamos la cantidad de producto que llevaremos
-  #  And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
-    And seleccionamos la forma de pago <"formaDePago"> y el tipo de pago <"tipoDePago"> que ocuparemos
+    And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
-    And seleccionamos tipo de emision
-   ## And firmamos la emision de factura o boleta
-   #Then nos debe de mostrar los productos de esa categoria
+    And seleccionamos tipo de emision <"tipoEmision">
+   #Then seleccionar boton imprimir
 
   @EditarFiado
   Scenario: Pos Fiado - Editar Cliente

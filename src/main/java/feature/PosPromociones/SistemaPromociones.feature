@@ -14,7 +14,6 @@ Feature: Gestion de Promociones
 
     @agregarPromocion @promociones
 Scenario: Promociones - Agregar Promocion
- # Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
   And selecciono el nombre de la empresa
   And nos debe dirigir a la vista de promociones
   And seleccionamos el icono con el signo mas
@@ -42,7 +41,6 @@ Scenario: Promociones - Agregar Promocion
 
   @editarPromocion @promociones
   Scenario: Promociones - Editar Promocion
- #   Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And editamos una promocion ya existente y modificamos el nombre a la promocion <"nombPromoEditado">
@@ -68,7 +66,6 @@ Scenario: Promociones - Agregar Promocion
 
   @copiarPromocion @promociones
   Scenario: Promociones - Copiar Promocion
-#Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And copiamos una promocion ya existente
@@ -78,7 +75,6 @@ Scenario: Promociones - Agregar Promocion
 
   @anularPromocion @promociones
   Scenario: Promociones - Anular Promocion
- #   Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And buscamos la promocion que anularemos
@@ -86,7 +82,6 @@ Scenario: Promociones - Agregar Promocion
 
   @verPromocion
   Scenario: Promociones - Ver Promocion
-  #  Given que ingreso los datos desde el archivo datosPromociones "C:\git\aut-Enternet\src\java\resources\datosPromociones.json"
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
     And buscamos la promocion que necesitamos ver y hacemos clicn en ella

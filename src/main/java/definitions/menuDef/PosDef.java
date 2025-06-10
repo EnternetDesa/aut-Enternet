@@ -14,7 +14,9 @@ import java.io.InputStream;
 import java.util.Map;
 import java.awt.*;
 
+
 import static Utils.Commons.BaseTest.cerrarDriver;
+import static Utils.Commons.BaseTest.tomarCaptura;
 import static page.menuPage.PosPage.*;
 
 public class PosDef {
@@ -138,7 +140,6 @@ public class PosDef {
 
     @And("ingresamos el rut {string} y contrasenia {string}")
     public void ingresamosElRutYContrasenia(String rutPos, String clavePos) {
-
         ingresarRut();
         ingresarClave();
     }
@@ -169,7 +170,7 @@ public class PosDef {
     @And("Ingresamos la descripcion o codigo de un producto y apretamos enter")
     public void ingresamosLaDescripcionOCodigoDeUnProductoYApretamosEnter() throws InterruptedException {
         ingresarProductoPorDescripcion();
-        seleccionarNombreProducto();
+        PosPage.seleccionarNombreProducto();
        // ingresarProductoPorCodigo();
       //  clickBtnEnter();
     }
@@ -181,24 +182,28 @@ public class PosDef {
     @And("seleccionamos la forma de pago <{string}> que ocuparemos e ingresamos los datos para el pago")
     public void seleccionamosLaFormaDePagoQueOcuparemosEIngresamosLosDatosParaElPago(String args0) throws InterruptedException {
         ingresarFormaDePago();
+
         ingresarTipoDePago();
-      //  ingresoDeDatosParaElPago();
+         //  ingresoDeDatosParaElPago();
     }
 
     @And("seleccionar boton guardar")
-    public void seleccionarBotonGuardar() {
+    public void seleccionarBotonGuardar() throws InterruptedException {
         seleccionarBtnGuardar();
     }
-
-    @And("seleccionamos tipo de emision")
-    public void seleccionamosTipoDeEmision(String args0) {
+    @And("seleccionamos tipo de emision <{string}>")
+    public void seleccionamosTipoDeEmision(String arg0) throws InterruptedException {
         //seleccionTipoDeEmision(tipoEmision);
-        String tipoEmision = DatosGlobales.datosPOS.get("tipoEmision");
-        seleccionTipoDeEmision(tipoEmision);
+
+        seleccionTipoDeEmision();
+        Thread.sleep(6000);
+        tomarCaptura("boleta emitida");
+        Thread.sleep(1000);
+        cerrarDriver();
     }
 
     @And("ingresamos un producto desde el modulo del filtro por categorias")
-    public void ingresamosUnProductoDesdeElModuloDelFiltroPorCategorias()  {
+    public void ingresamosUnProductoDesdeElModuloDelFiltroPorCategorias() throws InterruptedException {
 
     }
 
@@ -350,4 +355,6 @@ public class PosDef {
     public void seleccionarBotonImprimir() throws InterruptedException {
         seleccionarBtnImprimir();
     }
+
+
 }
