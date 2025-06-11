@@ -54,8 +54,8 @@ public class Hook {
 
       } else if (scenario.getSourceTagNames().contains("@Inventario")) {
 //          archivo = "datos.json";
-          DatosGlobales.datosLogin = DataLoader.cargarDatosDesde("datos.json");
-          DatosGlobales.datosActuales = DatosGlobales.datosLogin;
+          DatosGlobales.datos = DataLoader.cargarDatosDesde("datos.json");
+          DatosGlobales.datosActuales = DatosGlobales.datos;
       }
 
 

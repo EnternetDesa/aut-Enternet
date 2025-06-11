@@ -1,9 +1,10 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
+    @Inventario
 Feature: Definiciones - Aplicar Filtros
 
 Background:
-     Given que cargo los datos desde el archivo "C:\git\aut-Enternet\src\java\resources\datos.json"
+     Given que cargo los datos desde el archivo "datos.json"
      And Ingreso con el tipo de "user"
      And ingreso la contrasenia "clave"
      And luego presiono el boton continuar

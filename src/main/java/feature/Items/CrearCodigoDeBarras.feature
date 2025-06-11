@@ -1,7 +1,7 @@
 Feature: Definiciones - Aplicar Filtros
 
   Background:
-    Given que cargo los datos desde el archivo "C:\git\aut-Enternet\src\java\resources\datos.json"
+    Given que cargo los datos desde el archivo "datos.json"
     And Ingreso con el tipo de "user"
     And ingreso la contrasenia "clave"
     And luego presiono el boton continuar
@@ -68,5 +68,5 @@ Scenario: Items - Ingresar Codigo Existente y salga mensaje de error
     And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccione el boton crear codigo barra
-    And se visualiza vista para ingresar codigo de barras e ingresamos el codigo y seleccionamos el boton siguiente
+    #And se visualiza vista para ingresar codigo de barras e ingresamos el codigo y seleccionamos el boton siguiente
     Then nos debe mostrar un mensaje de alerta que el producto ya existe

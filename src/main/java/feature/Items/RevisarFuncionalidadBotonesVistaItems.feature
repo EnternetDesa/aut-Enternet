@@ -3,7 +3,7 @@
 Feature: Definiciones - Funcionalidades de botones
 
   Background:
-    Given que cargo los datos desde el archivo "C:\git\aut-Enternet\src\java\resources\datos.json"
+    Given que cargo los datos desde el archivo "datos.json"
     And Ingreso con el tipo de "user"
     And ingreso la contrasenia "clave"
     And luego presiono el boton continuar
@@ -23,7 +23,7 @@ Scenario: Definiciones - Seleccionar Descargar Columnas Base para Maestras
   Scenario: Definiciones - Items - Importar Archivo
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario {string} "<subMenuD>"
     When este en el modulo de items
     And seleccionamos el boton importar archivo
     And en la ventana de carga de archivo ingresamos el tipo de separador de celdas "<separadorCeldas>"

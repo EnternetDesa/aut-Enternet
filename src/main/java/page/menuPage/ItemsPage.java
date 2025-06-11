@@ -2,6 +2,7 @@ package page.menuPage;
 
 
 import Utils.Commons.BaseTest;
+import Utils.Commons.DatosGlobales;
 import Utils.Commons.Utils;
 import definitions.verificarArchivo;
 import org.openqa.selenium.*;
@@ -43,11 +44,11 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, txtDescProd);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vMITEMNOM\"]"), "Ingreso Descripcion Items");
         Utils.desenmarcarObjeto(driver, txtDescProd);
-        txtDescProd.sendKeys(BaseTest.datos.get("descProd"));
+        txtDescProd.sendKeys(DatosGlobales.datos.get("descProd"));
     }
 
     public static void seleccionUnidadDeMedida(String uniMedida) {
-        uniMedida = BaseTest.datos.get("uniMedida");
+        uniMedida = DatosGlobales.datos.get("uniMedida");
 //        uniMedida = "Unidad";
         switch (uniMedida) {
             case "Botella":
@@ -137,7 +138,7 @@ public class ItemsPage {
     }
 
     public static void seleccionUnidadDeComparacion(String uniComparacion) {
-        uniComparacion = BaseTest.datos.get("uniComparacion");
+        uniComparacion = DatosGlobales.datos.get("uniComparacion");
         switch (uniComparacion) {
             case "Botella":
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -233,12 +234,12 @@ public class ItemsPage {
         txtEquivalenciaComparacion.clear();
         Thread.sleep(1000);
         Utils.desenmarcarObjeto(driver, txtEquivalenciaComparacion);
-        txtEquivalenciaComparacion.sendKeys(BaseTest.datos.get("equivalenciaComparacion"));
+        txtEquivalenciaComparacion.sendKeys(DatosGlobales.datos.get("equivalenciaComparacion"));
     }
 
     public static void selecconarSiElProductoUsaLotesONo() {
-        String lotes = BaseTest.datos.get("lotes");
-        String vendeLotes = BaseTest.datos.get("vendeLotes");
+        String lotes = DatosGlobales.datos.get("lotes");
+        String vendeLotes = DatosGlobales.datos.get("vendeLotes");
 
         if (lotes.equals("Si")) {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -263,7 +264,7 @@ public class ItemsPage {
             Utils.enmarcarElemento(driver, chxUsaLotes);
             esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vLOTECODIGO\"]"), "¿Producto usa Lotes?: " + lotes + "");
             Utils.desenmarcarObjeto(driver, chxUsaLotes);
-            txtCodLotes.sendKeys(BaseTest.datos.get("codigoLotes"));
+            txtCodLotes.sendKeys(DatosGlobales.datos.get("codigoLotes"));
 
         }
         System.out.println("El producto no usa lotes");
@@ -275,7 +276,7 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, txtcodigoInterno);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vCODIGOINT\"]"), "Ingreso Codigo interno: " + codInterno + "");
         Utils.desenmarcarObjeto(driver, txtcodigoInterno);
-        txtcodigoInterno.sendKeys(BaseTest.datos.get("codInterno"));
+        txtcodigoInterno.sendKeys(DatosGlobales.datos.get("codInterno"));
     }
 
     public static void ingresarCodigoEANDelProducto(String codEAN) {
@@ -284,7 +285,7 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, txtcodigoEAN);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vCODIGOEAN\"]"), "Ingreso Codigo EAN: " + codEAN + "");
         Utils.desenmarcarObjeto(driver, txtcodigoEAN);
-        txtcodigoEAN.sendKeys(BaseTest.datos.get("codEAN"));
+        txtcodigoEAN.sendKeys(DatosGlobales.datos.get("codEAN"));
 
     }
 
@@ -294,7 +295,7 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, txtcodigoSKU);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vCODIGOSKU\"]"), "Ingreso Codigo SKU: " + codSKU + "");
         Utils.desenmarcarObjeto(driver, txtcodigoSKU);
-        txtcodigoSKU.sendKeys(BaseTest.datos.get("codSKU"));
+        txtcodigoSKU.sendKeys(DatosGlobales.datos.get("codSKU"));
     }
 
     public static void ingresarCodigoBase(String codBase) throws IOException, InterruptedException {
@@ -303,7 +304,7 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, txtcodigoBase);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vCODIGOBASE\"]"), "Ingreso Codigo Base: " + codBase + "");
         Utils.desenmarcarObjeto(driver, txtcodigoBase);
-        txtcodigoBase.sendKeys(BaseTest.datos.get("codBase"));
+        txtcodigoBase.sendKeys(DatosGlobales.datos.get("codBase"));
         tomarCaptura("Menu Movimientos");
     }
 
@@ -314,7 +315,7 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, btnCatBuscadora);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vCATEGORIABUSCADORA\"]"), "Categoria Buscadora: " + catBuscadora + "");
         Utils.desenmarcarObjeto(driver, btnCatBuscadora);
-        if (BaseTest.datos.get("catBuscadora").equals("ANNO")) {
+        if (DatosGlobales.datos.get("catBuscadora").equals("ANNO")) {
             Select select = new Select(btnCatBuscadora);
             select.selectByIndex(1);
 
@@ -335,7 +336,7 @@ public class ItemsPage {
     }
 
     public static void seleccionCategoriaBuscadoraTipoOtros(String codCatBuscadoraTipo) throws IOException, InterruptedException {
-        codCatBuscadoraTipo = BaseTest.datos.get("codCatBuscadoraTipo");
+        codCatBuscadoraTipo = DatosGlobales.datos.get("codCatBuscadoraTipo");
         Thread.sleep(3000);
         switch (codCatBuscadoraTipo) {
             case "Ferreteria":
@@ -396,7 +397,7 @@ public class ItemsPage {
     }
 
     public static void seleccionCategoriaClasificadoraTipo(String catClasificadora) throws IOException, InterruptedException {
-        catClasificadora = BaseTest.datos.get("catClasificadora");
+        catClasificadora = DatosGlobales.datos.get("catClasificadora");
         Thread.sleep(3000);
         switch (catClasificadora) {
             case "Aceite y Condimentos":
@@ -509,7 +510,7 @@ public class ItemsPage {
     public static void ingresoDeCantidadDeProductoPorUbicacion(String ubicacionStock ) throws InterruptedException {
 
 
-            ubicacionStock = BaseTest.datos.get("ubicacionStock");
+            ubicacionStock = DatosGlobales.datos.get("ubicacionStock");
             Thread.sleep(3000);
             switch (ubicacionStock) {
                 case "Raiz":
@@ -519,7 +520,7 @@ public class ItemsPage {
                     esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vSTOCK_0001\"]"), "");
                     Utils.desenmarcarObjeto(driver, txtCant);
                     txtCant.clear();
-                    txtCant.sendKeys(BaseTest.datos.get("cantidadP"));
+                    txtCant.sendKeys(DatosGlobales.datos.get("cantidadP"));
 
                     break;
 
@@ -530,7 +531,7 @@ public class ItemsPage {
                     esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vSTOCK_0002\"]"), "");
                     Utils.desenmarcarObjeto(driver, txtCant2);
                     txtCant2.clear();
-                    txtCant2.sendKeys(BaseTest.datos.get("cantidadP"));  //stock del items
+                    txtCant2.sendKeys(DatosGlobales.datos.get("cantidadP"));  //stock del items
 //                    txtCostoUni2.sendKeys(BaseTest.datos.get("costoUni"));  //valor de compra del items
 //                    txtPrecioProd2.sendKeys(BaseTest.datos.get("precioProd"));   //precio venta del items
                     break;
@@ -542,7 +543,7 @@ public class ItemsPage {
                     esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vSTOCK_0003\"]"), "");
                     Utils.desenmarcarObjeto(driver, txtCant3);
                     txtCant3.clear();
-                    txtCant3.sendKeys(BaseTest.datos.get("cantidadP"));
+                    txtCant3.sendKeys(DatosGlobales.datos.get("cantidadP"));
 
                     break;
 //
@@ -553,7 +554,7 @@ public class ItemsPage {
                     esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vSTOCK_0004\"]"), "");
                     Utils.desenmarcarObjeto(driver, txtCant4);
                     txtCant4.clear();
-                    txtCant4.sendKeys(BaseTest.datos.get("cantidadP"));
+                    txtCant4.sendKeys(DatosGlobales.datos.get("cantidadP"));
 
                 break;
 
@@ -564,7 +565,7 @@ public class ItemsPage {
     }
 
     public static void ingresoDeCostoUnitario(String ubicacionStock) throws InterruptedException {
-        ubicacionStock = BaseTest.datos.get("ubicacionStock");
+        ubicacionStock = DatosGlobales.datos.get("ubicacionStock");
        // cantidadP = datos.get("cantidadP");
 
         Thread.sleep(3000);
@@ -581,7 +582,7 @@ public class ItemsPage {
                 Utils.enmarcarElemento(driver, txtCostoUni);
                 Utils.desenmarcarObjeto(driver, txtCostoUni);
                 txtCostoUni.clear();
-                txtCostoUni.sendKeys(BaseTest.datos.get("costoUni"));
+                txtCostoUni.sendKeys(DatosGlobales.datos.get("costoUni"));
 //              Utils.enmarcarElemento(driver, txtPrecioProd);
 //              Utils.desenmarcarObjeto(driver, txtPrecioProd);
 //              txtPrecioProd.sendKeys(BaseTest.datos.get("precioProd"));
@@ -597,7 +598,7 @@ public class ItemsPage {
                 Utils.desenmarcarObjeto(driver, txtCostoUni2);
  //               txtCant2.sendKeys(BaseTest.datos.get("cantidadP"));  //stock del items
                 txtCostoUni2.clear();
-                txtCostoUni2.sendKeys(BaseTest.datos.get("costoUni"));  //valor de compra del items
+                txtCostoUni2.sendKeys(DatosGlobales.datos.get("costoUni"));  //valor de compra del items
 //                txtPrecioProd2.sendKeys(BaseTest.datos.get("precioProd"));   //precio venta del items
                 break;
 
@@ -610,7 +611,7 @@ public class ItemsPage {
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vCOSTOUNITARIO_0003\"]"), "");
                 Utils.desenmarcarObjeto(driver, txtCostoUni3);
                 txtCostoUni3.clear();
-                txtCostoUni3.sendKeys(BaseTest.datos.get("costoUni"));
+                txtCostoUni3.sendKeys(DatosGlobales.datos.get("costoUni"));
                 break;
 
             case "TURNO SIN INVENTARIO":
@@ -622,7 +623,7 @@ public class ItemsPage {
                 esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vCOSTOUNITARIO_0004\"]"), "");
                 Utils.desenmarcarObjeto(driver, txtCostoUni4);
                 txtCostoUni4.clear();
-                txtCostoUni4.sendKeys(BaseTest.datos.get("costoUni"));
+                txtCostoUni4.sendKeys(DatosGlobales.datos.get("costoUni"));
                 break;
 
             default:
@@ -631,9 +632,9 @@ public class ItemsPage {
     }
 
     public static void ingresarPrecioProducto(String ubicacionStock) throws InterruptedException {
-        if(BaseTest.datos.get("lotes").equals("Si")){
+        if(DatosGlobales.datos.get("lotes").equals("Si")){
 
-            ubicacionStock = BaseTest.datos.get("ubicacionStock");
+            ubicacionStock = DatosGlobales.datos.get("ubicacionStock");
 
 
             Thread.sleep(3000);
@@ -645,7 +646,7 @@ public class ItemsPage {
                     esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vPRECIOVENTA_0001\"]"), "");
                     Utils.desenmarcarObjeto(driver, txtPrecioProd);
                     txtPrecioProd.clear();
-                    txtPrecioProd.sendKeys(BaseTest.datos.get("precioPorLotes"));
+                    txtPrecioProd.sendKeys(DatosGlobales.datos.get("precioPorLotes"));
                     break;
 
                 case "UbiBox":
@@ -655,7 +656,7 @@ public class ItemsPage {
                     esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vPRECIOVENTA_0002\"]"),"");
                     Utils.desenmarcarObjeto(driver, txtPrecioProd2);
                     txtPrecioProd2.clear();
-                    txtPrecioProd2.sendKeys(BaseTest.datos.get("precioPorLotes"));
+                    txtPrecioProd2.sendKeys(DatosGlobales.datos.get("precioPorLotes"));
                     break;
 
                 case "UbiOlmue":
@@ -665,7 +666,7 @@ public class ItemsPage {
                     esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vPRECIOVENTA_0003\"]"),"");
                     Utils.desenmarcarObjeto(driver, txtPrecioProd3);
                     txtPrecioProd3.clear();
-                    txtPrecioProd3.sendKeys(BaseTest.datos.get("precioPorLotes"));
+                    txtPrecioProd3.sendKeys(DatosGlobales.datos.get("precioPorLotes"));
                     break;
 
                 case "TURNO SIN INVENTARIO":
@@ -675,7 +676,7 @@ public class ItemsPage {
                     esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vPRECIOVENTA_0004\"]"),"");
                     Utils.desenmarcarObjeto(driver, txtPrecioProd4);
                     txtPrecioProd4.clear();
-                    txtPrecioProd4.sendKeys(BaseTest.datos.get("precioPorLotes"));
+                    txtPrecioProd4.sendKeys(DatosGlobales.datos.get("precioPorLotes"));
                     break;
 
                 default:
@@ -683,7 +684,7 @@ public class ItemsPage {
             }
 
         }else {
-            ubicacionStock = BaseTest.datos.get("ubicacionStock");
+            ubicacionStock = DatosGlobales.datos.get("ubicacionStock");
             Thread.sleep(3000);
             switch (ubicacionStock) {
                 case "Raiz":
@@ -693,7 +694,7 @@ public class ItemsPage {
                     Utils.enmarcarElemento(driver, txtPrecioProd);
                     Utils.desenmarcarObjeto(driver, txtPrecioProd);
                     txtPrecioProd.clear();
-                    txtPrecioProd.sendKeys(BaseTest.datos.get("precioProd"));
+                    txtPrecioProd.sendKeys(DatosGlobales.datos.get("precioProd"));
                     break;
 
                 case "UbiBox":
@@ -703,7 +704,7 @@ public class ItemsPage {
                     Utils.enmarcarElemento(driver, txtPrecioProd2);
                     Utils.desenmarcarObjeto(driver, txtPrecioProd2);
                     txtPrecioProd2.clear();
-                    txtPrecioProd2.sendKeys(BaseTest.datos.get("precioProd"));   //precio venta del items
+                    txtPrecioProd2.sendKeys(DatosGlobales.datos.get("precioProd"));   //precio venta del items
                     break;
 
                 case "UbiOlmue":
@@ -713,7 +714,7 @@ public class ItemsPage {
                     Utils.enmarcarElemento(driver, txtPrecioProd3);
                     Utils.desenmarcarObjeto(driver, txtPrecioProd3);
                     txtPrecioProd3.clear();
-                    txtPrecioProd3.sendKeys(BaseTest.datos.get("precioProd"));
+                    txtPrecioProd3.sendKeys(DatosGlobales.datos.get("precioProd"));
                     break;
 
                 case "TURNO SIN INVENTARIO":
@@ -723,7 +724,7 @@ public class ItemsPage {
                     Utils.enmarcarElemento(driver, txtPrecioProd4);
                     Utils.desenmarcarObjeto(driver, txtPrecioProd4);
                     txtPrecioProd4.clear();
-                    txtPrecioProd4.sendKeys(BaseTest.datos.get("precioProd"));
+                    txtPrecioProd4.sendKeys(DatosGlobales.datos.get("precioProd"));
                     break;
 
                 default:
@@ -759,7 +760,7 @@ public class ItemsPage {
     }
     public static void seleccionarCodigoCatClasificadoraVistaModuloItems(String catClasificadora) throws InterruptedException, IOException {
 
-        catClasificadora = BaseTest.datos.get("catClasificadora");
+        catClasificadora = DatosGlobales.datos.get("catClasificadora");
         Thread.sleep(3000);
         switch (catClasificadora) {
             case "Aceite y Condimentos":
@@ -880,7 +881,7 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, btnCatBuscadora);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vBUSCADORACATPDRCOD\"]"), "");
         Utils.desenmarcarObjeto(driver, btnCatBuscadora);
-        if (BaseTest.datos.get("catBuscadora").equals("ANNO")){
+        if (DatosGlobales.datos.get("catBuscadora").equals("ANNO")){
             Select select = new Select(btnCatBuscadora);
             select.selectByIndex(1);
         }else {
@@ -890,7 +891,7 @@ public class ItemsPage {
         Thread.sleep(2000);
     }
     public static void seleccionarCodigoCatBuscadoraVistaModuloItems(String codCatBuscadoraTipo) throws InterruptedException, IOException {
-        codCatBuscadoraTipo = BaseTest.datos.get("codCatBuscadoraTipo");
+        codCatBuscadoraTipo = DatosGlobales.datos.get("codCatBuscadoraTipo");
         Thread.sleep(3000);
         switch (codCatBuscadoraTipo) {
             case "Ferreteria":
@@ -995,7 +996,7 @@ public class ItemsPage {
         WebElement txtCodigoItems = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vITMCOD")));
         Utils.enmarcarElemento(driver, txtCodigoItems );
         esperarElementoYMedirTiempo(By.id("vITMCOD"),"Busqueda por Codigo:"+codigo);
-        txtCodigoItems.sendKeys(BaseTest.datos.get("codigo"));
+        txtCodigoItems.sendKeys(DatosGlobales.datos.get("codigo"));
         tomarCaptura("Busqueda por codigo de items");
         Utils.desenmarcarObjeto(driver,txtCodigoItems);
     }
@@ -1004,7 +1005,7 @@ public class ItemsPage {
         WebElement txtCodigoItems = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vITMDES")));
         Utils.enmarcarElemento(driver, txtCodigoItems );
         esperarElementoYMedirTiempo(By.id("vITMDES"), "Busqueda por Descripcion "+descProd );
-        txtCodigoItems.sendKeys(BaseTest.datos.get("descProd"));
+        txtCodigoItems.sendKeys(DatosGlobales.datos.get("descProd"));
         tomarCaptura("Busqueda por descripcion de Items");
         Utils.desenmarcarObjeto(driver,txtCodigoItems);
     }
@@ -1012,10 +1013,10 @@ public class ItemsPage {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement txtDiaUltMod = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vMODIFICACIONDIAS")));
         Utils.enmarcarElemento(driver, txtDiaUltMod );
-        esperarElementoYMedirTiempo( By.id("vMODIFICACIONDIAS"), "Busqueda por Ultimos "+BaseTest.datos.get("diasMod")+" modificados");
+        esperarElementoYMedirTiempo( By.id("vMODIFICACIONDIAS"), "Busqueda por Ultimos "+DatosGlobales.datos.get("diasMod")+" modificados");
         Utils.desenmarcarObjeto(driver,txtDiaUltMod);
         txtDiaUltMod.clear();
-        txtDiaUltMod.sendKeys(BaseTest.datos.get("diasMod"));
+        txtDiaUltMod.sendKeys(DatosGlobales.datos.get("diasMod"));
         tomarCaptura("Busqueda por dias de ultima modificacion");
     }
     public static void seleccionarLimpiarFiltros() throws InterruptedException, IOException {
@@ -1274,7 +1275,7 @@ public class ItemsPage {
     }
     public static void buscarProductoPorNombre(String nombreProducto) throws InterruptedException {
         Thread.sleep(2000);
-        nombreProducto= BaseTest.datos.get("descProd");
+        nombreProducto= DatosGlobales.datos.get("descProd");
         // Espera que cargue la tabla
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"GriditemsContainerTbl\"]")));

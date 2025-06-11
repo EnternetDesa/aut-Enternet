@@ -13,23 +13,4 @@ public class DatosGlobales {
     // Si quieres una referencia "activa"
     public static Map<String, String> datosActuales;
 
-
-//    public static void cargarDatosDesdeArchivo(String archivo) {
-//        switch (archivo.toLowerCase()) {
-//            case "datos.json":
-//                datos = JsonUtils.leerArchivo("src/test/resources/data/datos.json");
-//                break;
-//            case "datospos.json":
-//                datos = JsonUtils.leerArchivo("src/test/resources/data/datosPOS.json");
-//                break;
-//            case "datosfiado.json":
-//                datos = JsonUtils.leerArchivo("src/test/resources/data/datosFiado.json");
-//                break;
-//            case "datospromociones.json":
-//                datos = JsonUtils.leerArchivo("src/test/resources/data/datosPromociones.json");
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Archivo no reconocido: " + archivo);
-//        }
-//    }
 }
