@@ -13,7 +13,7 @@ Feature: Definiciones - Aplicar Filtros
 Scenario: Items - Crear Codigo de Barra
 And estoy en home de stock
 And selecciono el menu de "<menu>"
-And luego el submenu de "<subMenuD>"
+And luego el submenu de Inventario "<subMenuD>"
 When este en el modulo de items
 And seleccione el boton crear codigo barra
   And se visualiza vista para ingresar codigo de barras e ingresamos el codigo y seleccionamos el boton editar
@@ -38,7 +38,7 @@ And seleccionamos guardar producto y nos debe redirigir a la vista de Ingrese c√
 Scenario: Items - Ingresar Codigo Existente
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccione el boton crear codigo barra
     And se visualiza vista para ingresar codigo de barras e ingresamos el codigo y seleccionamos el boton siguiente
@@ -65,7 +65,7 @@ Scenario: Items - Ingresar Codigo Existente
 Scenario: Items - Ingresar Codigo Existente y salga mensaje de error
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccione el boton crear codigo barra
     And se visualiza vista para ingresar codigo de barras e ingresamos el codigo y seleccionamos el boton siguiente

@@ -15,7 +15,7 @@ Feature: Definiciones - Crear Items
 Scenario: Definiciones - Crear Items Sin Lotes
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en lista de items y presionamos el boton crear items
     And nos redirige a la vista de creacion de producto
     And ingresamos los datos de descripcion de producto "<descProducto>"
@@ -43,7 +43,7 @@ Scenario: Definiciones - Crear Items Sin Lotes
 Scenario: Definiciones - Crear Items Usa Lotes
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en lista de items y presionamos el boton crear items
     And nos redirige a la vista de creacion de producto
     And ingresamos los datos de descripcion de producto "<descProducto>"
@@ -70,7 +70,7 @@ Scenario: Definiciones - Crear Items Usa Lotes
 Scenario: Definiciones - Crear Items vende con Lotes
         And estoy en home de stock
         And selecciono el menu de "<menu>"
-        And luego el submenu de "<subMenuD>"
+        And luego el submenu de Inventario "<subMenuD>"
         When este en lista de items y presionamos el boton crear items
         And nos redirige a la vista de creacion de producto
         And ingresamos los datos de descripcion de producto "<descProducto>"

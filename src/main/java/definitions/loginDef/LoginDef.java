@@ -295,9 +295,9 @@ public void seleccionoLaOpcion(String rol) throws InterruptedException, IOExcept
 
     }
 
-    @And("luego el submenu de {string}")
+    @And("luego el submenu de Inventario {string}")
     public void luegoElSubmenuDe(String subMenuD) throws InterruptedException, IOException {
-
+        String valorEstado = String.valueOf(DatosGlobales.datos.get("estado")).trim();
         //aqui ---
         subMenuD = datos.get("subMenu");
         switch (subMenuD) {

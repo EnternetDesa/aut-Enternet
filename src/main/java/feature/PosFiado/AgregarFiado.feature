@@ -27,7 +27,6 @@ Feature: POS - Fiado
     And ingresamos el rut "<user>" y contrasenia "<clave>"
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
-    #ok hasta aqui
     And hacemos click en menu izquierdo y en la opcion fiado
     And seleccionamos boton agregar cliente
     And ingresamos el rut del cliente "<rutCliente>"
@@ -38,7 +37,6 @@ Feature: POS - Fiado
     And seleccionar boton volver
     And validamos que se haya creado correctamente
     And hacemos click en menu opcion modulo de ventas
-    # ok desde aqui
     And seleccionamos boton nueva venta
     And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And Ingresamos la descripcion o codigo de un producto y apretamos enter
@@ -50,7 +48,6 @@ Feature: POS - Fiado
 
   @EditarFiado
   Scenario: Pos Fiado - Editar Cliente
- #   Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
     And estoy en home de Pos
     And selecciono el menu de Pos "<menuPOS>"
     And luego el submenu de Pos "<subMenuP>"
@@ -63,13 +60,9 @@ Feature: POS - Fiado
     And ingresamos el rut "<user>" y contrasenia "<clave>"
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
-    And que ingreso los datos desde el archivo datosFiado "C:\git\aut-Enternet\src\java\resources\datosFiado.json"
     And hacemos click en menu izquierdo y en la opcion fiado
     And seleccionamos el cliente que queremos editar
-  #  And ingresamos el rut del cliente "<rutCliente>"
-  #  And seleccionamos el boton confirmar
-  #  And mos mostrara un pop de estas seguro , debemos aceptar
-    And en informacion general ingresamos el valor del credito a otorgar "<montoCredito>"
+    And en informacion general ingresamos el valor del credito a otorgar "<montoCreditoEditado>"
     And seleccionamos el boton actualizar
     And seleccionar boton volver
     And validamos que se haya creado correctamente
@@ -79,27 +72,26 @@ Feature: POS - Fiado
     And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And Ingresamos la descripcion o codigo de un producto y apretamos enter
     And ingresamos la cantidad de producto que llevaremos
-    And seleccionamos el tipo de pago que ocuparemos e ingresamos los datos para el pago
+    And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
-    And seleccionamos tipo de emision
-    And firmamos la emision de factura o boleta
+    And seleccionamos tipo de emision <"tipoEmision">
+   #Then seleccionar boton imprimir
 
-
+@descargar
   Scenario: Pos Fiado - descargar Tabla clientes
-    Given que ingreso los datos desde el archivo datosPos "C:\git\aut-Enternet\src\java\resources\datosPOS.json"
- #   And estoy en home de Pos
- #   And selecciono el menu de Pos "<menuPOS>"
- #   And luego el submenu de Pos "<subMenuP>"
- #   When este en el modulo de Enrolamiento de Terminales
- #   And seleccionamos un link de acceso QR
- #   And seleccionamos el boton copiar
- #   And luego pegamos la url en un nuevo navegador
- #   And ingresamos el tipo de perfil
- #   And ingresamos el modulo IDL
- #   And ingresamos el rut "<user>" y contrasenia "<clave>"
- #   And seleccionamos el boton ingresar
- #   And hacemos click en la caja que muestra nuestro nombre
- #   And hacemos click en menu izquierdo y en la opcion fiado
- #   And seleccionamos boton descargar cliente y luego exportar
+    And estoy en home de Pos
+    And selecciono el menu de Pos "<menuPOS>"
+    And luego el submenu de Pos "<subMenuP>"
+    When este en el modulo de Enrolamiento de Terminales
+    And seleccionamos un link de acceso QR
+    And seleccionamos el boton copiar
+    And luego pegamos la url en un nuevo navegador
+    And ingresamos el tipo de perfil
+    And ingresamos el modulo IDL
+    And ingresamos el rut "<user>" y contrasenia "<clave>"
+    And seleccionamos el boton ingresar
+    And hacemos click en la caja que muestra nuestro nombre
+    And hacemos click en menu izquierdo y en la opcion fiado
+    And seleccionamos boton descargar cliente y luego exportar
     And abrimos el documento
 

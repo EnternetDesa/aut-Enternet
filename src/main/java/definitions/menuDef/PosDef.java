@@ -197,6 +197,7 @@ public class PosDef {
 
         seleccionTipoDeEmision();
         Thread.sleep(6000);
+        visualizarBotones();
         tomarCaptura("boleta emitida");
         Thread.sleep(1000);
         cerrarDriver();

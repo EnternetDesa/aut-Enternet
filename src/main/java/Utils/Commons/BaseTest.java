@@ -17,8 +17,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,7 +37,7 @@ import java.util.List;
 
 public class BaseTest {
     // Lista que solo contiene las capturas de la ejecución en curso
-    private static ThreadLocal<List<String>> capturasPendientes = ThreadLocal.withInitial(ArrayList::new);
+    public static ThreadLocal<List<String>> capturasPendientes = ThreadLocal.withInitial(ArrayList::new);
     protected static WebDriver driver;
     public static Map<String, String> datos;
     public static Map<String, String> datosPOS;
@@ -48,6 +51,7 @@ public class BaseTest {
     static String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     public static String nombreFeature;
     public static String estadoEjecucion = "Passed";
+
 
 
 
@@ -269,7 +273,6 @@ public class BaseTest {
                     if (captura.exists()) {
                         ImageData imageData = ImageDataFactory.create(rutaCaptura);
                         Image image = new Image(imageData).scaleToFit(500, 350);
-
                         String nombreCaptura = captura.getName();
                         String descripcion = nombreCaptura.replaceAll("_[0-9]{8}_[0-9]+\\.png", "");
 
@@ -300,11 +303,16 @@ public class BaseTest {
             }
             System.out.println("✅ PDF generado correctamente: " + rutaPdf);
             // ✅ Limpieza automática de listas para evitar acumulación
-            tiemposDeCarga.clear();
-            capturasPendientes.get().clear();
+//            tiemposDeCarga.clear();
+//            capturasPendientes.get().clear();
         } catch (Exception e) {
             System.out.println("❌ Error al generar el PDF: " + e.getMessage());
             estadoEjecucion = "Failed";
+        } finally {
+            // ✅ Limpieza automática de listas para evitar acumulación
+            tiemposDeCarga.clear();
+            capturasPendientes.get().clear();
+            if (document != null) document.close();
         }
     }
 
@@ -561,6 +569,30 @@ public class BaseTest {
 
         return (String) ((JavascriptExecutor) driver).executeScript(js, element);
     }
+    public static String tomarCapturaPantalla(String nombreArchivo) {
+        try {
+            TakesScreenshot ts = (TakesScreenshot) driver;
+            File srcFile = ts.getScreenshotAs(OutputType.FILE);
+
+            String ruta = "C:/git/aut-Enternet/reportes/capturas/" + nombreArchivo + "_" + System.currentTimeMillis() + ".png";
+            File destFile = new File(ruta);
+            FileUtils.copyFile(srcFile, destFile);
+
+            return ruta;
+        } catch (Exception e) {
+            System.out.println("❌ Error al tomar captura: " + e.getMessage());
+            return null;
+        }
+    }
+    public static void agregarCapturaAlReporte(String rutaImagen) throws Exception {
+        if (document != null && rutaImagen != null) {
+            ImageData imageData = ImageDataFactory.create(rutaImagen);
+            Image imagen = new Image(imageData).scaleToFit(500, 500);
+            document.add(imagen);
+            document.add(new Paragraph("\n")); // Espacio extra
+        }
+    }
+
 
 
 

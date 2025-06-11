@@ -5,6 +5,8 @@ import Utils.Commons.DatosGlobales;
 import Utils.Commons.ReporteUtils;
 import Utils.Commons.Utils;
 
+import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
+import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.poi.hssf.record.TableRecord;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -14,8 +16,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -210,10 +215,12 @@ public class PosPage {
     }
 
     public static void ingresarRut() {
-        String rutPos = DatosGlobales.datosPOS.get("userPOS");
+        String rutPos = DatosGlobales.datosActuales.getOrDefault("userPOS", DatosGlobales.datosActuales.get("rutCliente"));
+
         if (rutPos == null || rutPos.trim().isEmpty()) {
-            throw new IllegalArgumentException("❌ 'rutPos' no puede ser null o vacío");
+            throw new IllegalArgumentException("❌ 'rutPos' no puede ser null o vacío (ni 'rutCliente')");
         }
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vRUT\"]"), "Vista Enrolamiento");
         WebElement txtRut = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vRUT\"]")));
@@ -225,9 +232,11 @@ public class PosPage {
     }
 
     public static void ingresarClave() {
-        String clavePos = DatosGlobales.datosPOS.get("clave");
+
+        String clavePos = DatosGlobales.datosActuales.getOrDefault("clave", DatosGlobales.datosActuales.get("password"));
+
         if (clavePos == null || clavePos.trim().isEmpty()) {
-            throw new IllegalArgumentException("❌ 'clavePos' no puede ser null o vacío");
+            throw new IllegalArgumentException("❌ La clave no puede ser null o vacía (ni 'clave' ni 'password')");
         }
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
@@ -238,6 +247,8 @@ public class PosPage {
         txtClave.clear();
         txtClave.sendKeys(clavePos + Keys.ENTER);
     }
+
+
 
     public static void seleccionarBtnIngresar() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -252,7 +263,7 @@ public class PosPage {
     }
 
     public static void seleccionarCajaConNuestroNombre() throws InterruptedException {
-        String nombreCajero = DatosGlobales.datosPOS.get("cajeroPos");
+        String nombreCajero = DatosGlobales.datosActuales.get("cajeroPos");
 
         if (nombreCajero == null || nombreCajero.isEmpty()) {
             throw new IllegalArgumentException("❌ 'cajeroPos' no puede ser null o vacío");
@@ -328,7 +339,7 @@ public class PosPage {
 
     public static void ingresarProductoPorDescripcion() throws InterruptedException {
 //        Actions actions = new Actions(driver);
-        String prodDesc = DatosGlobales.datosPOS.get("descProd");
+        String prodDesc = DatosGlobales.datosActuales.get("descProd");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtDescripcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
         Utils.enmarcarElemento(driver, txtDescripcion);
@@ -347,7 +358,7 @@ public class PosPage {
     public static void seleccionarNombreProducto() throws InterruptedException {
         Thread.sleep(2000);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        String nombreProducto = DatosGlobales.datosPOS.get("descProd");
+        String nombreProducto = DatosGlobales.datosActuales.get("descProd");
 
         // Asegurarse que nombreProducto no sea null ni vacío
         if (nombreProducto == null || nombreProducto.trim().isEmpty()) {
@@ -382,7 +393,7 @@ public class PosPage {
     }
 
     public static void ingresarCantidadDeProducto() throws InterruptedException {
-        String cantProdC = DatosGlobales.datosPOS.get("cantProdC");
+        String cantProdC = DatosGlobales.datosActuales.get("cantProdC");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement txtDescripcion = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vOMNIBOX\"]")));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vOMNIBOX\"]"), "cantidad producto ");
@@ -398,7 +409,7 @@ public class PosPage {
 
     public static void ingresarFormaDePago() throws InterruptedException {
         Thread.sleep(2000);
-        String formaPago = DatosGlobales.datosPOS.get("formaDePago");
+        String formaPago = DatosGlobales.datosActuales.get("formaDePago");
         switch (formaPago) {
             case "Efectivo":
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
@@ -468,7 +479,7 @@ public class PosPage {
     }
 
     public static void ingresarTipoDePago() throws InterruptedException {
-        String tipoPago = DatosGlobales.datosPOS.get("tipoDePago");
+        String tipoPago = DatosGlobales.datosActuales.get("tipoDePago");
 
         if (tipoPago == null || tipoPago.trim().isEmpty()) {
             System.out.println("❌ El tipo de pago no está definido en el JSON");
@@ -476,7 +487,7 @@ public class PosPage {
         }
 
         List<String> opcionesValidas = List.of(
-                "Transbank",
+                "TransBank",
                 "Fiado",
                 "Casa de Moneda",
                 "Sodexo Cheq. Res.",
@@ -536,15 +547,26 @@ public class PosPage {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         WebElement txtMontoPago = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"BTNEMITIRBOLETAContainer\"]/button")));
         Utils.enmarcarElemento(driver, txtMontoPago);
-        tomarCaptura("Datos del Pago");
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"BTNEMITIRBOLETAContainer\"]/button"), "Imprimir Boleta");
+        tomarCaptura("btn imprimir");
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"BTNEMITIRBOLETAContainer\"]/button"), "Imprimir Boleta o Factura");
         Utils.desenmarcarObjeto(driver, txtMontoPago);
         txtMontoPago.click();
         driver.switchTo().defaultContent();
     }
+    public static void visualizarBotones() throws InterruptedException {
+        Thread.sleep(2000);
+        driver.switchTo().frame(0);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"FIRMAR\"]"), "Firmar Boleta o Factura");
+        WebElement btnFirmar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"FIRMAR\"]")));
+        Utils.enmarcarElemento(driver, btnFirmar);
+        tomarCaptura("btn Formar");
+        Utils.desenmarcarObjeto(driver, btnFirmar);
+        driver.switchTo().defaultContent();
+    }
 
     public static void seleccionTipoDeEmision() throws InterruptedException {
-        String tipoEmision = DatosGlobales.datosPOS.get("tipoEmision");
+        String tipoEmision = DatosGlobales.datosActuales.get("tipoEmision");
         switch (tipoEmision) {
             case "Factura":
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
@@ -1178,7 +1200,7 @@ public class PosPage {
     }
 
     public static void buscarClienteYSeleccionarPorRut() throws InterruptedException {
-        String rutBusqueda = DatosGlobales.datosPOS.get("rutClienteFiado");
+        String rutBusqueda = DatosGlobales.datosActuales.get("rutClienteFiado");
         Thread.sleep(3000);
 
         if (rutBusqueda == null || rutBusqueda.isEmpty()) {

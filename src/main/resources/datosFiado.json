@@ -3,13 +3,17 @@
     "clave": "carito.123",
     "rol": "Punto de ventas Enternet",
     "userPOS": "171223369",
+    "cajeroPos": "Carlos",
     "menuPOS": "Definiciones",
     "subMenuP": "Enrolamiento De Equipos",
     "rutCliente": "203344473",
     "montoCredito": "100000",
     "estado": "Activo",
     "formaDePago": "Tarjeta",
-    "tipoDePago": "Fiado",
+    "tipoDePago": "TransBank",
     "rutClienteFiado": "203344473",
-    "tipoEmision": "Boleta"
+    "tipoEmision": "Boleta",
+    "descProd": "Aceite De Oliva Extra Virgen Banquete 1 Lt",
+    "cantProdC": "3",
+    "montoCreditoEditado": "150000"
 }

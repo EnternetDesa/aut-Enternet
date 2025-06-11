@@ -16,7 +16,7 @@ Background:
 Scenario: Limpiar Filtros - Sin categorias
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccionamos filtro por categoria
     And seleccionamos sin categoria "<sinCategoria>"
@@ -27,7 +27,7 @@ Scenario: Limpiar Filtros - Sin categorias
 Scenario: Limpiar Filtros - Categoria Clasificadora
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccionamos filtro por categoria
     And seleccionamos categoria clasificadora
@@ -39,7 +39,7 @@ Scenario: Limpiar Filtros - Categoria Clasificadora
 Scenario: Limpiar Filtros - Categoria Buscadora
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccionamos filtro por categoria
     And seleccionamos categoria buscadora "<catBuscadora>"
@@ -51,7 +51,7 @@ Scenario: Limpiar Filtros - Categoria Buscadora
     Scenario: Limpiar Filtros - Filtros Generales -Codigo
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccionamos filtros generales
     And seleccionamos codigo "<codigo>"
@@ -62,7 +62,7 @@ Scenario: Limpiar Filtros - Categoria Buscadora
 Scenario: Limpiar Filtros - Filtros Generales -Descripcion
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccionamos filtros generales
     And seleccionamos descripcion "<descProd>"
@@ -73,7 +73,7 @@ Scenario: Limpiar Filtros - Filtros Generales -Descripcion
     Scenario: Limpiar Filtros - Filtros Generales - Mostrar Todo
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenuD>"
     When este en el modulo de items
     And seleccionamos filtros generales
     And le demos click en mostrar todo
