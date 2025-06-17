@@ -99,103 +99,62 @@ public class LoginDef {
 
     }
 
-//    @And("selecciono la opcion {string}")
-//    public void seleccionoLaOpcion(String rol) throws InterruptedException, IOException {
-//
-//        rol = datos.get("rol");
-//        switch (rol) {
-//            case "Inventario":
-//                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//                WebElement btnInventario = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td")));
-//                Utils.enmarcarElemento(driver, btnInventario);
-//                tomarCaptura("Inventario");
-//                Utils.desenmarcarObjeto(driver, btnInventario);
-//                esperarElementoYMedirTiempo(By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td"), "Seleccion de Rol: " +rol+ "");
-//                btnInventario.click();
-//
-//                break;
-//
-//            case "Punto de ventas Enternet":
-//                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
-//                WebElement btnPuntoVentas = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.id("_APPICO_00020002")));
-//                Utils.enmarcarElemento(driver, btnPuntoVentas);
-//                tomarCaptura("POS Administrador Certificador");
-//                Utils.desenmarcarObjeto(driver, btnPuntoVentas);
-//                esperarElementoYMedirTiempo(By.id("_APPICO_00020002"), "Seleccion rol: " +rol );
-//                btnPuntoVentas.click();
-//
-//                break;
-//            case "Promociones":
-//                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
-//                WebElement btnPromociones = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.id("_APPICO_00050001")));
-//                Utils.enmarcarElemento(driver, btnPromociones);
-//                tomarCaptura("Administrador Promociones");
-//                Utils.desenmarcarObjeto(driver, btnPromociones);
-//                esperarElementoYMedirTiempo(By.id("_APPICO_00050001"), "Seleccion rol: " +rol );
-//                btnPromociones.click();
-//
-//                break;
-//            default:
-//                System.out.println("Opción no válida");
-//        }
-//
-//    }
-@And("selecciono la opcion {string}")
-public void seleccionoLaOpcion(String rol) throws InterruptedException, IOException {
-    Map<String, String> datos = DatosGlobales.datosActuales;
+    @And("selecciono la opcion {string}")
+    public void seleccionoLaOpcion(String rol) throws InterruptedException, IOException {
+        Map<String, String> datos = DatosGlobales.datosActuales;
 
-    if (datos == null || !datos.containsKey("rol")) {
-        throw new IllegalArgumentException("El archivo cargado no contiene el campo 'rol'");
+        if (datos == null || !datos.containsKey("rol")) {
+            throw new IllegalArgumentException("El archivo cargado no contiene el campo 'rol'");
+        }
+
+        // Sobrescribimos el parámetro con el valor real desde el JSON
+        rol = datos.get("rol");
+
+        switch (rol) {
+            case "Inventario":
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebElement btnInventario = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td")
+                ));
+                Utils.enmarcarElemento(driver, btnInventario);
+                tomarCaptura("Inventario");
+                Utils.desenmarcarObjeto(driver, btnInventario);
+                esperarElementoYMedirTiempo(
+                        By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td"),
+                        "Seleccion de Rol: " + rol
+                );
+                btnInventario.click();
+                break;
+
+            case "Punto de ventas Enternet":
+                WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebElement btnPuntoVentas = wait2.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.id("_APPICO_00020002")));
+                Utils.enmarcarElemento(driver, btnPuntoVentas);
+                tomarCaptura("POS Administrador Certificador");
+                Utils.desenmarcarObjeto(driver, btnPuntoVentas);
+                esperarElementoYMedirTiempo(
+                        By.id("_APPICO_00020002"),"Seleccion rol: " + rol
+                );
+                btnPuntoVentas.click();
+                break;
+
+            case "Promociones":
+                WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebElement btnPromociones = wait3.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.id("_APPICO_00050001")));
+                Utils.enmarcarElemento(driver, btnPromociones);
+                tomarCaptura("Administrador Promociones");
+                Utils.desenmarcarObjeto(driver, btnPromociones);
+                esperarElementoYMedirTiempo(
+                        By.id("_APPICO_00050001"),"Seleccion rol: " + rol);
+                btnPromociones.click();
+                break;
+
+            default:
+                throw new IllegalArgumentException("Opción de rol no válida: " + rol);
+        }
     }
-
-    // Sobrescribimos el parámetro con el valor real desde el JSON
-    rol = datos.get("rol");
-
-    switch (rol) {
-        case "Inventario":
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            WebElement btnInventario = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td")
-            ));
-            Utils.enmarcarElemento(driver, btnInventario);
-            tomarCaptura("Inventario");
-            Utils.desenmarcarObjeto(driver, btnInventario);
-            esperarElementoYMedirTiempo(
-                    By.xpath("//*[@id=\"TabLab\"]/table/tbody/tr[1]/td/table/tbody/tr/td[3]/table/tbody/tr/td[1]/table/tbody/tr/td"),
-                    "Seleccion de Rol: " + rol
-            );
-            btnInventario.click();
-            break;
-
-        case "Punto de ventas Enternet":
-            WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
-            WebElement btnPuntoVentas = wait2.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.id("_APPICO_00020002")));
-            Utils.enmarcarElemento(driver, btnPuntoVentas);
-            tomarCaptura("POS Administrador Certificador");
-            Utils.desenmarcarObjeto(driver, btnPuntoVentas);
-            esperarElementoYMedirTiempo(
-                    By.id("_APPICO_00020002"),"Seleccion rol: " + rol
-            );
-            btnPuntoVentas.click();
-            break;
-
-        case "Promociones":
-            WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
-            WebElement btnPromociones = wait3.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.id("_APPICO_00050001")));
-            Utils.enmarcarElemento(driver, btnPromociones);
-            tomarCaptura("Administrador Promociones");
-            Utils.desenmarcarObjeto(driver, btnPromociones);
-            esperarElementoYMedirTiempo(
-                    By.id("_APPICO_00050001"),"Seleccion rol: " + rol);
-            btnPromociones.click();
-            break;
-
-        default:
-            throw new IllegalArgumentException("Opción de rol no válida: " + rol);
-    }
-}
 
 
     @And("en la vista del warning selecciono enviar de todas formas")

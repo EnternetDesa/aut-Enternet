@@ -4,6 +4,7 @@
     "rol": "Inventario",
     "menu": "Definiciones",
     "subMenu": "Items",
+
     "tipoDocumento": "Factura",
     "folio": "20250305",
     "rutEmisor": "995998602",

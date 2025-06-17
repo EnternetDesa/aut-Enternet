@@ -139,7 +139,7 @@ public class PosDef {
     }
 
     @And("ingresamos el rut {string} y contrasenia {string}")
-    public void ingresamosElRutYContrasenia(String rutPos, String clavePos) {
+    public void ingresamosElRutYContrasenia(String args0, String args1) {
         ingresarRut();
         ingresarClave();
     }
@@ -193,14 +193,10 @@ public class PosDef {
     }
     @And("seleccionamos tipo de emision <{string}>")
     public void seleccionamosTipoDeEmision(String arg0) throws InterruptedException {
-        //seleccionTipoDeEmision(tipoEmision);
-
         seleccionTipoDeEmision();
         Thread.sleep(6000);
         visualizarBotones();
-        tomarCaptura("boleta emitida");
-        Thread.sleep(1000);
-        cerrarDriver();
+
     }
 
     @And("ingresamos un producto desde el modulo del filtro por categorias")
@@ -282,40 +278,33 @@ public class PosDef {
         ingresarPatente();
     }
 
-    @And("le damos click en el boton de crear prod libre")
-    public void leDamosClickEnElBotonDeCrearProdLibre() throws InterruptedException {
-        clickBtnCrearProdLibre();
+    @And("le damos click en el boton de crear prod libre y visualizamos el formulario para ingresar un producto")
+    public void leDamosClickEnElBotonDeCrearProdLibreYVisualizamosElFormularioParaIngresarUnProducto() {
     }
 
-    @And("visualizamos el formulario para ingresar un producto")
-    public void visualizamosElFormularioParaIngresarUnProducto() {
+    @And("ingresamos el codigo {string}, una descripcion {string} , una unidad de medida {string}")
+    public void ingresamosElCodigoUnaDescripcionUnaUnidadDeMedida(String arg0, String arg1, String arg2) throws InterruptedException {
+        crearEIngresarProductoLibre();
+    }
+    @And("seleccionamos un Tratamiento Tributario y un Codigo Especial")
+    public void seleccionamosUnTratamientoTributarioYUnCodigoEspecial() {
     }
 
-    @And("ingresamos el codigo {string}")
-    public void ingresamosElCodigo(String arg0) {
-        ingresarCodigoProductoLibre();
-    }
+//    @And("ingresamos una unidad de medida {string}")
+//    public void ingresamosUnaUnidadDeMedida(String arg0) throws InterruptedException {
+//        seleccionarUnidadDeMedida();
+//        seleccionarUnidadDeMedida2();
+//    }
 
-    @And("ingresamos una descripcion {string}")
-    public void ingresamosUnaDescripcion(String arg0) {
-        ingresarDescripcionCPL();
-    }
+//    @And("seleccionamos un Tratamiento Tributario")
+//    public void seleccionamosUnTratamientoTributario() throws InterruptedException {
+//        seleccionTratamientoTributario();
+//    }
 
-    @And("ingresamos una unidad de medida {string}")
-    public void ingresamosUnaUnidadDeMedida(String arg0) throws InterruptedException {
-        seleccionarUnidadDeMedida();
-        seleccionarUnidadDeMedida2();
-    }
-
-    @And("seleccionamos un Tratamiento Tributario")
-    public void seleccionamosUnTratamientoTributario() throws InterruptedException {
-        seleccionTratamientoTributario();
-    }
-
-    @And("seleccionamos un Codigo Especial")
-    public void seleccionamosUnCodigoEspecial() throws InterruptedException {
-        seleccionCodigoEspecial();
-    }
+//    @And("seleccionamos un Codigo Especial")
+//    public void seleccionamosUnCodigoEspecial() throws InterruptedException {
+//        seleccionCodigoEspecial();
+//    }
 
     @And("ingresamos la cantidad del producto <{string}> el precio <{string}> y descuento <{string}>")
     public void ingresamosLaCantidadDelProductoElPrecioYDescuento(String arg0, String arg1, String arg2) throws InterruptedException {
@@ -355,7 +344,11 @@ public class PosDef {
     @Then("seleccionar boton imprimir")
     public void seleccionarBotonImprimir() throws InterruptedException {
         seleccionarBtnImprimir();
+        tomarCaptura("boleta emitida");
+        Thread.sleep(3000);
+        cerrarDriver();
     }
+
 
 
 }

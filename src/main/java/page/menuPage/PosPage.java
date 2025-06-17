@@ -542,23 +542,22 @@ public class PosPage {
 
     public static void seleccionarBtnImprimir() throws InterruptedException {
 
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         driver.switchTo().frame(0);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        WebElement txtMontoPago = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"BTNEMITIRBOLETAContainer\"]/button")));
+        WebElement txtMontoPago = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"IMPRIMIR\"]")));
         Utils.enmarcarElemento(driver, txtMontoPago);
         tomarCaptura("btn imprimir");
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"BTNEMITIRBOLETAContainer\"]/button"), "Imprimir Boleta o Factura");
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"IMPRIMIR\"]"), "Imprimir Boleta o Factura");
         Utils.desenmarcarObjeto(driver, txtMontoPago);
         txtMontoPago.click();
         driver.switchTo().defaultContent();
     }
     public static void visualizarBotones() throws InterruptedException {
         Thread.sleep(2000);
-        driver.switchTo().frame(0);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"FIRMAR\"]"), "Firmar Boleta o Factura");
-        WebElement btnFirmar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"FIRMAR\"]")));
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"IMPRIMIR\"]"), "Firmar Boleta o Factura");
+        WebElement btnFirmar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"IMPRIMIR\"]")));
         Utils.enmarcarElemento(driver, btnFirmar);
         tomarCaptura("btn Formar");
         Utils.desenmarcarObjeto(driver, btnFirmar);
@@ -690,12 +689,13 @@ public class PosPage {
 
         txtDespensa.click(); // Asegura el foco
         txtDespensa.clear(); // Limpia el campo
+        Thread.sleep(5000);
         txtDespensa.sendKeys(catDespensa);
         Thread.sleep(500); // Espera leve tras escribir
 
         // Opcional: presiona ENTER si el filtro requiere activación
         txtDespensa.sendKeys(Keys.ENTER);
-
+        Thread.sleep(500);
     }
 
     public static void escribirProductoEnFiltroANNO() throws InterruptedException {
@@ -803,7 +803,7 @@ public class PosPage {
     }
 
     public static void hacerClickEnProducto() throws InterruptedException {
-               Thread.sleep(2000);
+               Thread.sleep(3000);
         String textoBuscado = DatosGlobales.datosPOS.get("prodCatDespensa"); //"Biosal Light Lobos 850 Gr"; nombre buscado por filtro de categoria
 
         // Obtiene todas las filas de la tabla
@@ -1022,28 +1022,246 @@ public class PosPage {
         btnCrearProducto.click();
     }
 
-    public static void ingresarCodigoProductoLibre() {
-        driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        WebElement txtCodigoPL = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECODIGO\"]")));
-        Utils.enmarcarElemento(driver, txtCodigoPL);
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECODIGO\"]"), "ingreso de codigo");
-        Utils.desenmarcarObjeto(driver, txtCodigoPL);
-        txtCodigoPL.sendKeys(DatosGlobales.datosPOS.get("codProd"));
-        // BaseTest.tomarCaptura("Se modifica precio producto");
-        driver.switchTo().defaultContent();
+//    public static void crearEIngresarProductoLibre() throws InterruptedException {
+//        try {
+//            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//
+//            // Paso 1: Click en el botón "Crear Producto Libre"
+//            Thread.sleep(3000);
+//            WebElement btnCrearProducto = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("CREARPRODUCTOLIBRE")));
+//            Utils.enmarcarElemento(driver, btnCrearProducto);
+//            esperarElementoYMedirTiempo(By.id("CREARPRODUCTOLIBRE"), "Click btn Crear Prod Libre");
+//            Utils.desenmarcarObjeto(driver, btnCrearProducto);
+//            btnCrearProducto.click();
+//            System.out.println("✅ Click en 'Crear Producto Libre' realizado.");
+//
+//            tomarCaptura("Click_Crear_Producto_Libre");
+//            Thread.sleep(2000); // espera para cargar iframe u otros elementos
+//
+//            // Paso 2: Detectar y cambiar a iframe si existe
+//            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+//            System.out.println("🔍 Iframes encontrados después del clic: " + iframes.size());
+//            for (WebElement iframe : iframes) {
+//                System.out.println("📋 iframe id: " + iframe.getAttribute("id") + ", name: " + iframe.getAttribute("name"));
+//            }
+//
+//            if (!iframes.isEmpty()) {
+//                driver.switchTo().frame(iframes.get(0));
+//                System.out.println("✅ Cambiado al primer iframe.");
+//            }
+//
+//            // Paso 3: Revisar campos con ID 'LIBRE'
+//            List<WebElement> inputs = driver.findElements(By.xpath("//*[contains(@id,'LIBRE')]"));
+//            System.out.println("📊 Inputs con 'LIBRE' encontrados: " + inputs.size());
+//            for (WebElement input : inputs) {
+//                System.out.println("🧾 ID real encontrado: " + input.getAttribute("id"));
+//            }
+//
+//            // Paso 4: Esperar campo del código y escribir el valor desde JSON
+//            WebElement txtCodigoPL = esperarElementoSeguro("NOTAVENTAITEMLIBRECODIGO", 30);
+//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", txtCodigoPL);
+//            Utils.enmarcarElemento(driver, txtCodigoPL);
+//            esperarElementoYMedirTiempo(By.xpath("//*[contains(@id,'NOTAVENTAITEMLIBRECODIGO')]"), "Ingreso de código");
+//
+//            String codigo = DatosGlobales.datosPOS.get("codProd");
+//            if (codigo == null || codigo.isBlank()) {
+//                throw new IllegalArgumentException("❌ codProd no está definido o está vacío en el JSON cargado.");
+//            }
+//
+//            txtCodigoPL.clear();
+//            txtCodigoPL.sendKeys(codigo);
+//            Utils.desenmarcarObjeto(driver, txtCodigoPL);
+//            System.out.println("✅ Código ingresado: " + codigo);
+//
+//            // Paso 5: Salir del iframe si fue usado
+//            if (!iframes.isEmpty()) {
+//                driver.switchTo().defaultContent();
+//                System.out.println("🔁 Regresado al contenido principal.");
+//            }
+//
+//        } catch (Exception e) {
+//            tomarCaptura("Error_Crear_Producto_Libre");
+//            System.out.println("⚠ Ocurrió un error: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
+
+
+    public static void crearEIngresarProductoLibre() throws InterruptedException {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+            // Paso 1: Click en botón Crear Producto Libre
+            Thread.sleep(3000);
+            WebElement btnCrearProducto = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("CREARPRODUCTOLIBRE")));
+            Utils.enmarcarElemento(driver, btnCrearProducto);
+            esperarElementoYMedirTiempo(By.id("CREARPRODUCTOLIBRE"), "Click btn Crear Prod Libre");
+            Utils.desenmarcarObjeto(driver, btnCrearProducto);
+            btnCrearProducto.click();
+            System.out.println("✅ Click en 'Crear Producto Libre' realizado.");
+            tomarCaptura("Click_Crear_Producto_Libre");
+            Thread.sleep(2000);
+
+            // Paso 2: Cambiar a iframe si existe
+            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+            System.out.println("🔍 Iframes encontrados: " + iframes.size());
+            for (WebElement iframe : iframes) {
+                System.out.println("🧾 iframe id: " + iframe.getAttribute("id") + ", name: " + iframe.getAttribute("name"));
+            }
+            if (!iframes.isEmpty()) {
+                driver.switchTo().frame(iframes.get(0));
+                System.out.println("✅ Cambiado al primer iframe.");
+            }
+
+            // Paso 3: Ingresar datos fijos
+            ingresarTextoFijo("NOTAVENTAITEMLIBRECODIGO", DatosGlobales.datosPOS.get("codProd"));
+            ingresarTextoFijo("NOTAVENTAITEMLIBREDESCRIPCION", DatosGlobales.datosPOS.get("descProd"));
+            //ingresarTextoFijo("NOTAVENTAITEMLIBREUNIDAD", "UnaUnidadDeMedida");
+
+            // Paso 4: Salir del iframe si se usó
+            if (!iframes.isEmpty()) {
+                driver.switchTo().defaultContent();
+                System.out.println("🔁 Regresado al contenido principal.");
+            }
+
+        } catch (Exception e) {
+            tomarCaptura("Error_Crear_Producto_Libre");
+            System.out.println("⚠ Ocurrió un error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    public static void ingresarTextoFijo(String idCampo, String valor) throws InterruptedException {
+        try {
+            WebElement campo = esperarElementoSeguro(idCampo, 20);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", campo);
+            Utils.enmarcarElemento(driver, campo);
+            campo.clear();
+            campo.sendKeys(valor);
+            Utils.desenmarcarObjeto(driver, campo);
+            System.out.println("✅ Ingresado '" + valor + "' en campo: " + idCampo);
+        } catch (Exception ex) {
+            System.out.println("❌ Error al ingresar valor fijo '" + valor + "' en campo " + idCampo + ": " + ex.getMessage());
+            tomarCaptura("Error_ingresando_" + idCampo);
+        }
     }
 
+    public static WebElement esperarElementoSeguro(String idParcial, int timeoutSegundos) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSegundos));
+
+        // Opción 1: ID exacto
+        String xpathExacto = "//*[@id='" + idParcial + "']";
+
+        // Opción 2: ID parcial
+        String xpathFlexible = "//*[contains(@id,'" + idParcial + "')]";
+
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathExacto)));
+        } catch (TimeoutException e1) {
+            System.out.println("⚠ No se encontró por ID exacto, intentando por ID parcial...");
+            try {
+                return wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathFlexible)));
+            } catch (TimeoutException e2) {
+                System.out.println("❌ No se encontró el elemento con id parcial: " + idParcial);
+                throw e2;
+            }
+        }
+    }
+
+
+
+
+
+//    public static void ingresarCodigoProductoLibre() throws InterruptedException {
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//
+//        try {
+//            System.out.println("⏳ Esperando sección de producto libre...");
+//            wait.until(ExpectedConditions.presenceOfElementLocated(
+//                    By.xpath("//*[contains(@id, 'NOTAVENTAITEMLIBRECODIGO')]")
+//            ));
+//
+//            System.out.println("✅ Sección visible. Buscando campo de código...");
+//            WebElement txtCodigoPL = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("NOTAVENTAITEMLIBRECODIGO")));
+//
+//            if (!txtCodigoPL.isDisplayed()) {
+//                tomarCaptura("⚠ Campo producto libre oculto");
+//                throw new IllegalStateException("⚠ El campo 'NOTAVENTAITEMLIBRECODIGO' está en el DOM pero no visible.");
+//            }
+//
+//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", txtCodigoPL);
+//            Utils.enmarcarElemento(driver, txtCodigoPL);
+//            esperarElementoYMedirTiempo(By.id("NOTAVENTAITEMLIBRECODIGO"), "Ingreso de código");
+//
+//            String codigo = DatosGlobales.datosPOS.get("codProd");
+//            if (codigo == null || codigo.isBlank()) {
+//                throw new IllegalArgumentException("❌ codProd no está definido o está vacío en el JSON cargado.");
+//            }
+//
+//            txtCodigoPL.clear();
+//            txtCodigoPL.sendKeys(codigo);
+//            Utils.desenmarcarObjeto(driver, txtCodigoPL);
+//
+//        } catch (Exception e) {
+//            tomarCaptura("❌ Error al ingresar código producto libre");
+//            System.out.println("⚠ Ocurrió un error: " + e.getMessage());
+//            e.printStackTrace();
+//            System.out.println("📄 HTML actual:");
+//            System.out.println(driver.getPageSource());
+//        }
+//    }
+
+
     public static void ingresarDescripcionCPL() {
-        driver.switchTo().frame(0);
+    //    driver.switchTo().frame(0);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        WebElement txtCodigoPL = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDESCRIPCION\"]")));
-        Utils.enmarcarElemento(driver, txtCodigoPL);
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDESCRIPCION\"]"), "ingreso de descripcion");
-        Utils.desenmarcarObjeto(driver, txtCodigoPL);
-        txtCodigoPL.sendKeys(DatosGlobales.datosPOS.get("descProd"));
+//        WebElement txtCodigoPL = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDESCRIPCION\"]")));
+//        Utils.enmarcarElemento(driver, txtCodigoPL);
+//        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREDESCRIPCION\"]"), "ingreso de descripcion");
+//        Utils.desenmarcarObjeto(driver, txtCodigoPL);
+//        txtCodigoPL.sendKeys(DatosGlobales.datosPOS.get("descProd"));
         // BaseTest.tomarCaptura("Se modifica precio producto");
-        driver.switchTo().defaultContent();
+      //  driver.switchTo().defaultContent();
+
+        // Paso 2: Detectar y cambiar a iframe si existe
+        List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+        System.out.println("🔍 Iframes encontrados después del clic: " + iframes.size());
+        for (WebElement iframe : iframes) {
+            System.out.println("📋 iframe id: " + iframe.getAttribute("id") + ", name: " + iframe.getAttribute("name"));
+        }
+
+        if (!iframes.isEmpty()) {
+            driver.switchTo().frame(iframes.get(0));
+            System.out.println("✅ Cambiado al primer iframe.");
+        }
+//
+//        // Paso 3: Revisar campos con ID 'LIBRE'
+//        List<WebElement> inputs = driver.findElements(By.xpath("//*[contains(@id,'LIBRE')]"));
+//        System.out.println("📊 Inputs con 'LIBRE' encontrados: " + inputs.size());
+//        for (WebElement input : inputs) {
+//            System.out.println("🧾 ID real encontrado: " + input.getAttribute("id"));
+//        }
+
+        // Paso 4: Esperar campo del código y escribir el valor desde JSON
+        WebElement txtDescripcionPL = esperarElementoSeguro("NOTAVENTAITEMLIBREDESCRIPCION", 30);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", txtDescripcionPL);
+        Utils.enmarcarElemento(driver, txtDescripcionPL);
+        esperarElementoYMedirTiempo(By.xpath("//*[contains(@id,'NOTAVENTAITEMLIBREDESCRIPCION')]"), "Ingreso de descripcion");
+
+        String descripcion = DatosGlobales.datosPOS.get("descProd");
+        if (descripcion == null || descripcion.isBlank()) {
+            throw new IllegalArgumentException("❌ descProd no está definido o está vacío en el JSON cargado.");
+        }
+
+        txtDescripcionPL.clear();
+        txtDescripcionPL.sendKeys(descripcion);
+        Utils.desenmarcarObjeto(driver, txtDescripcionPL);
+        System.out.println("✅ Código ingresado: " + descripcion);
+
+        if (!iframes.isEmpty()) {
+            driver.switchTo().defaultContent();
+            System.out.println("🔁 Regresado al contenido principal.");
+        }
+
     }
 
     public static void seleccionarUnidadDeMedida() throws InterruptedException {
@@ -1221,7 +1439,7 @@ public class PosPage {
         Thread.sleep(1000);
         //XPath dinámico para encontrar la fila con ese RUT y luego el botón "play" (ícono de acción)
         String xpathBotonPlay = String.format("//td[9]");
-
+        Thread.sleep(1000);
         WebElement botonPlay = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathBotonPlay)));
         Utils.enmarcarElemento(driver, botonPlay);
         tomarCaptura("Seleccion cliente por RUT");

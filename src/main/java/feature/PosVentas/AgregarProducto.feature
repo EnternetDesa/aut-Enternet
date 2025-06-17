@@ -37,7 +37,7 @@ Scenario: POS - Agregar Producto por Buscador
     And seleccionamos tipo de emision <"tipoEmision">
    #Then seleccionar boton imprimir
 
-    @agregarProdFiltroDespensa
+    @agregarProdFiltroDespensa @agregarPorDespensa
 Scenario: POS - Agregar Producto por Filtro Despensa
     And estoy en home de Pos
     And selecciono el menu de Pos "<menuPOS>"
@@ -61,7 +61,7 @@ Scenario: POS - Agregar Producto por Filtro Despensa
     And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
     And seleccionamos tipo de emision <"tipoEmision">
-   #Then seleccionar boton imprimir
+   Then seleccionar boton imprimir
 
     @agregarProdBtnCarta
 Scenario: POS - Agregar Producto por boton Carta
@@ -102,18 +102,17 @@ Scenario: Ventas - Probar boton Crear Producto libre
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
     And seleccionamos boton nueva venta
-    And le damos click en el boton de crear prod libre
-    And visualizamos el formulario para ingresar un producto
-    And ingresamos el codigo "<codProd>"
-    And ingresamos una descripcion "<descProd>"
-    And ingresamos una unidad de medida "<uniMed>"
-    And seleccionamos un Tratamiento Tributario
-    And seleccionamos un Codigo Especial
+    And le asignamos el cliente a quien venderemos "<nombreCliente>"
+    And le damos click en el boton de crear prod libre y visualizamos el formulario para ingresar un producto
+    And ingresamos el codigo "<codProd>", una descripcion "<descProd>" , una unidad de medida "<uniMed>"
+    And seleccionamos un Tratamiento Tributario y un Codigo Especial
     And ingresamos la cantidad del producto <"cantProdC"> el precio <"precio"> y descuento <"descuento">
   #  And ingresamos las dimensiones <"dimensiones"> y estado de entrega <"estadoE">
     And ingresamos la glosa <"glosa">
     And le damos click al boton confirmar
-   # Then visualizamos el producto ingresado en el carro de compras
-        #Then seleccionar boton imprimir
+    And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
+    And seleccionar boton guardar
+    And seleccionamos tipo de emision <"tipoEmision">
+   #Then seleccionar boton imprimir
 
 

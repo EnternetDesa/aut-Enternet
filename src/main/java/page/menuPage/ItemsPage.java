@@ -245,14 +245,14 @@ public class ItemsPage {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement chxUsaLotes = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"TABLE_CONTAINER_USALOTE\"]/div/div/span/label")));
             Utils.enmarcarElemento(driver, chxUsaLotes);
-            esperarElementoYMedirTiempo(By.xpath("//*[@id=\"TABLE_CONTAINER_USALOTE\"]/div/div/span/label"), "¿Producto usa Lotes?: " + lotes + "");
+            esperarElementoYMedirTiempo(By.xpath("//*[@id=\"TABLE_CONTAINER_USALOTE\"]/div/div/span/label"), "¿Producto usa Lotes.feature?: " + lotes + "");
             Utils.desenmarcarObjeto(driver, chxUsaLotes);
             chxUsaLotes.click();
 
             WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement chbxProdVendeLotes = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"TABLE_CONTAINER_MITEMVENDELOTE\"]/div/div/span/label")));
             Utils.enmarcarElemento(driver, chbxProdVendeLotes);
-            esperarElementoYMedirTiempo(By.xpath("//*[@id=\"TABLE_CONTAINER_MITEMVENDELOTE\"]/div/div/span/label"), "¿Producto vende con Lotes?" + vendeLotes + "");
+            esperarElementoYMedirTiempo(By.xpath("//*[@id=\"TABLE_CONTAINER_MITEMVENDELOTE\"]/div/div/span/label"), "¿Producto vende con Lotes.feature?" + vendeLotes + "");
             Utils.desenmarcarObjeto(driver, chbxProdVendeLotes);
 
             if (vendeLotes.equals("Si")) {
@@ -262,7 +262,7 @@ public class ItemsPage {
             WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement txtCodLotes = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vLOTECODIGO\"]")));
             Utils.enmarcarElemento(driver, chxUsaLotes);
-            esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vLOTECODIGO\"]"), "¿Producto usa Lotes?: " + lotes + "");
+            esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vLOTECODIGO\"]"), "¿Producto usa Lotes.feature?: " + lotes + "");
             Utils.desenmarcarObjeto(driver, chxUsaLotes);
             txtCodLotes.sendKeys(DatosGlobales.datos.get("codigoLotes"));
 
@@ -965,7 +965,7 @@ public class ItemsPage {
         WebElement dropdown = driver.findElement(By.id("vFILTROBUSCADORACATCOD"));
         Select select = new Select(dropdown);
         // Selecciona por VALOR del atributo 'value'
-        select.selectByValue(datos.get("codCatBuscadoraTipo"));
+        select.selectByValue(DatosGlobales.datos.get("codCatBuscadoraTipo"));
         tomarCaptura("Seleccion Codigo Categoria Buscadora");
         Utils.desenmarcarObjeto(driver, codCatBuscadoraTipo);
 
@@ -995,7 +995,7 @@ public class ItemsPage {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement txtCodigoItems = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vITMCOD")));
         Utils.enmarcarElemento(driver, txtCodigoItems );
-        esperarElementoYMedirTiempo(By.id("vITMCOD"),"Busqueda por Codigo:"+codigo);
+        esperarElementoYMedirTiempo(By.id("vITMCOD"),"Busqueda por Codigo:" +DatosGlobales.datos.get("codigo"));
         txtCodigoItems.sendKeys(DatosGlobales.datos.get("codigo"));
         tomarCaptura("Busqueda por codigo de items");
         Utils.desenmarcarObjeto(driver,txtCodigoItems);
@@ -1165,7 +1165,7 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, txtSeparador );
         esperarElementoYMedirTiempo(By.id("vSEPARADOR"), "Separador de celdas");
         Utils.desenmarcarObjeto(driver,txtSeparador);
-        txtSeparador.sendKeys(datos.get("separadorCeldas"));
+        txtSeparador.sendKeys(DatosGlobales.datos.get("separadorCeldas"));
         tomarCaptura("Seleccionar Separador de celdas ");
         driver.switchTo().defaultContent();
     }
@@ -1240,7 +1240,7 @@ public class ItemsPage {
         Utils.enmarcarElemento(driver, txtCodigoBarra );
         esperarElementoYMedirTiempo(By.id("vCODIGOBARRA"), "ingreso Codigo Barra");
         Utils.desenmarcarObjeto(driver,txtCodigoBarra);
-        txtCodigoBarra.sendKeys(datos.get("codSKU"));
+        txtCodigoBarra.sendKeys(DatosGlobales.datos.get("codSKU"));
     }
     public static void seleccionarBtnSigte() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -1274,33 +1274,76 @@ public class ItemsPage {
 
     }
     public static void buscarProductoPorNombre(String nombreProducto) throws InterruptedException {
-        Thread.sleep(2000);
-        nombreProducto= DatosGlobales.datos.get("descProd");
-        // Espera que cargue la tabla
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"GriditemsContainerTbl\"]")));
 
-        // Encuentra todas las filas de la tabla (excepto el encabezado)
-        List<WebElement> filas = driver.findElements(By.xpath("//*[@id=\"GriditemsContainerTbl\"]//tr[position()>1]"));
+        Thread.sleep(2000);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Espera que la tabla esté visible
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("GriditemsContainerTbl")));
+
+        // Filas que contienen celdas (evita encabezados vacíos)
+        List<WebElement> filas = driver.findElements(By.xpath("//*[@id='GriditemsContainerTbl']//tr[td]"));
 
         boolean encontrado = false;
 
         for (WebElement fila : filas) {
-            // Busca el valor de la columna "Nombre"
-            WebElement celdaNombre = fila.findElement(By.xpath("./td[3]")); // Asumiendo que 'Nombre' es la tercera columna
+            try {
+                WebElement celdaNombre = fila.findElement(By.xpath("./td[3]"));
+                String textoCelda = celdaNombre.getText().trim();
 
-            if (celdaNombre.getText().trim().equalsIgnoreCase(nombreProducto.trim())) {
-                Utils.enmarcarElemento(driver, celdaNombre );
-                System.out.println("✅ Producto encontrado: " + celdaNombre.getText());
-                tomarCaptura("Producto encontrado");
-                Utils.desenmarcarObjeto(driver, celdaNombre );
-                encontrado = true;
-                break;
+                if (textoCelda.equalsIgnoreCase(nombreProducto.trim())) {
+                    Utils.enmarcarElemento(driver, celdaNombre);
+                    System.out.println("✅ Producto encontrado: " + textoCelda);
+                    tomarCaptura("Producto encontrado");
+                    Utils.desenmarcarObjeto(driver, celdaNombre);
+                    encontrado = true;
+                    break;
+                }
+            } catch (Exception e) {
+                // Si una fila no tiene td[3], continúa con la siguiente
+                continue;
             }
         }
 
         if (!encontrado) {
             System.out.println("❌ Producto no encontrado: " + nombreProducto);
+            tomarCaptura("Producto no encontrado");
+        }
+    }
+    public static void buscarProductoPorDescripcion(String descProd) throws InterruptedException {
+        Thread.sleep(2000);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Espera que la tabla esté visible
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("GriditemsContainerTbl")));
+
+        // Filas que contienen celdas (evita encabezados vacíos)
+        List<WebElement> filas = driver.findElements(By.xpath("//*[@id='GriditemsContainerTbl']//tr[td]"));
+
+        boolean encontrado = false;
+
+        for (WebElement fila : filas) {
+            try {
+                WebElement celdaNombre = fila.findElement(By.xpath("./td[3]"));
+                String textoCelda = celdaNombre.getText().trim();
+
+                if (textoCelda.equalsIgnoreCase(descProd.trim())) {
+                    Utils.enmarcarElemento(driver, celdaNombre);
+                    System.out.println("✅ Producto encontrado: " + textoCelda);
+                    tomarCaptura("Producto encontrado");
+                    Utils.desenmarcarObjeto(driver, celdaNombre);
+                    encontrado = true;
+                    break;
+                }
+            } catch (Exception e) {
+                // Si una fila no tiene td[3], continúa con la siguiente
+                continue;
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("❌ Producto no encontrado: " + descProd);
+            tomarCaptura("Producto no encontrado");
         }
     }
 

@@ -3,7 +3,9 @@
     "clave": "carito.123",
     "rol": "Inventario",
     "menu": "Definiciones",
-    "subMenu": "Items",
+    "subMenu": "Lotes",
+
+
     "tipoDocumento": "Factura",
     "folio": "20250305",
     "rutEmisor": "995998602",

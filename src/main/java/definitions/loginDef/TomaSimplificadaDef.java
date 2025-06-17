@@ -87,7 +87,7 @@ public class TomaSimplificadaDef {
                     codLotes.sendKeys(BaseTest.datos.get("codigoLotes"));
                     Utils.desenmarcarObjeto(driver, codLotes);
                     long duration = (endTime - startTime) / 1_000_000; // Convertir a milisegundos
-                    System.out.println("⏳ Tiempo de espera hasta que se pueda ingresar el 'Codigo de Lotes' esté visible: " + duration + " ms");
+                    System.out.println("⏳ Tiempo de espera hasta que se pueda ingresar el 'Codigo de Lotes.feature' esté visible: " + duration + " ms");
 
                     WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
                     WebElement cantProd2 = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0032vSTRCANTIDADTOMADA\"]")));

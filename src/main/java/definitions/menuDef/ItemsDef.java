@@ -175,9 +175,13 @@ public class ItemsDef {
 
 
     @Then("nos debe de mostrar los productos de esa categoria")
-    public void nosDebeDeMostrarLosProductosDeEsaCategoria(String nombreProducto) throws IOException, InterruptedException {
+    public void nosDebeDeMostrarLosProductosDeEsaCategoria() throws IOException, InterruptedException {
+//        buscarProductoPorNombre(nombreProducto);
+//        //mostrarListadoDeItems();
+//        System.out.println("PDF generado con éxito en: " + RUTA_PDF);
+//        cerrarDriver();
+        String nombreProducto = DatosGlobales.datos.get("descProd");
         buscarProductoPorNombre(nombreProducto);
-        //mostrarListadoDeItems();
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
         cerrarDriver();
 
@@ -359,9 +363,9 @@ public class ItemsDef {
     }
 
     @Then("nos debe de mostrar el producto creado {string}")
-    public void nosDebeDeMostrarElProductoCreado(String nombreProducto) throws InterruptedException {
-        buscarProductoPorNombre(nombreProducto);
-        //mostrarListadoDeItems();
+    public void nosDebeDeMostrarElProductoCreado(String args0) throws InterruptedException {
+        String descProd = DatosGlobales.datos.get("descProd");
+        buscarProductoPorDescripcion(descProd);
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
         cerrarDriver();
     }
@@ -376,6 +380,23 @@ public class ItemsDef {
     public void seleccionamosGuardarProductoYNosDebeRedirigirALaVistaDeIngreseCódigoDeBarras() throws IOException, InterruptedException {
         seleccionarBtnGuardarProducto();
         tomarCaptura("vista Ingrese Codigo de Barra");
+        cerrarDriver();
+    }
+
+    @Then("nos debe de mostrar los productos encontrado")
+    public void nosDebeDeMostrarLosProductosEncontrado() throws InterruptedException {
+        String nombreProducto = DatosGlobales.datos.get("codigo");
+        buscarProductoPorNombre(nombreProducto);
+        System.out.println("PDF generado con éxito en: " + RUTA_PDF);
+        cerrarDriver();
+    }
+
+    @Then("nos debe de mostrar los productos Sin categoria")
+    public void nosDebeDeMostrarLosProductosSinCategoria() throws IOException, InterruptedException {
+        String nombreProducto = DatosGlobales.datos.get("codigo");
+        mostrarListadoDeItems();
+       // buscarProductoPorNombre(nombreProducto);
+        System.out.println("PDF generado con éxito en: " + RUTA_PDF);
         cerrarDriver();
     }
 }

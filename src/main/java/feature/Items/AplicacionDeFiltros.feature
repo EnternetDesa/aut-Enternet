@@ -23,7 +23,7 @@ Scenario: Aplicar Filtros - Sin categorias
     And seleccionamos filtro por categoria
     And seleccionamos sin categoria "<sinCategoria>"
     And luego seleccionemos el boton buscar
-    Then nos debe de mostrar los productos de esa categoria
+    Then nos debe de mostrar los productos Sin categoria
 
     @filtroItems @items
 Scenario: Aplicar Filtros - categoria Clasificadora
@@ -48,6 +48,7 @@ Scenario: Aplicar Filtros - categoria Buscadora
     And seleccionamos codigo categoria buscadora "<codCatBuscadoraTipo>"
     And luego seleccionemos el boton buscar
     Then nos debe de mostrar los productos de esa categoria
+        #ver
 
     @filtroItems @items
 Scenario: Aplicar Filtros - Filtros Generales -Codigo
@@ -58,7 +59,7 @@ Scenario: Aplicar Filtros - Filtros Generales -Codigo
     And seleccionamos filtros generales
     And seleccionamos codigo "<codigo>"
     And luego seleccionemos el boton buscar
-    Then nos debe de mostrar los productos de esa categoria
+    Then nos debe de mostrar los productos encontrado
 
     @filtroItems @items
 Scenario: Aplicar Filtros - Filtros Generales -Descripcion
