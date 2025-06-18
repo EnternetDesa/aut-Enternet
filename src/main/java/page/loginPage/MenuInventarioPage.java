@@ -1,6 +1,6 @@
 package page.loginPage;
 
-import definitions.Commons.Utils;
+import Utils.Commons.Utils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -182,9 +182,9 @@ public class MenuInventarioPage {
                 switchIframe = btnTomaSimplificada;
                 System.out.println("Transformaciones");
                 break;
-            case "Lotes":
+            case "Lotes.feature":
                 switchIframe = btnTomaSimplificada;
-                System.out.println("Lotes");
+                System.out.println("Lotes.feature");
                 break;
             case "Reglas de Stock criticos":
                 switchIframe = btnTomaSimplificada;

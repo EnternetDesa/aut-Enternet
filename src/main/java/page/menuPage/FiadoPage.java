@@ -1,54 +1,72 @@
 package page.menuPage;
 
-import definitions.Commons.BaseTest;
-import org.openqa.selenium.Rectangle;
+import Utils.Commons.BaseTest;
+import Utils.Commons.DatosGlobales;
 import org.openqa.selenium.WebDriver;
-import definitions.Commons.Utils;
+import Utils.Commons.Utils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
-import java.awt.Toolkit;
-import java.awt.Robot;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.*;
+import static Utils.Commons.DatosGlobales.datosFiado;
 
 
 public class FiadoPage {
     public static WebDriver driver = BaseTest.getDriver();
 
     public static void cerrarMsjAlerta()  {
-       // driver.switchTo().frame(0);
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         esperarElementoYMedirTiempo(By.xpath("//div/div[2]"), "cerrar mensaje de alerta");
         WebElement btnCerrarMsjAlerta = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div/div[2]")));
         Utils.enmarcarElemento(driver, btnCerrarMsjAlerta);
         Utils.desenmarcarObjeto(driver, btnCerrarMsjAlerta);
         btnCerrarMsjAlerta.click();
-        //driver.switchTo().defaultContent();
+
     }
 
     public static void seleccionarMenuFiado() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"MENUTOGGLE_MPAGE\"]"), "menu izquierdo");
-        WebElement btnMenuAndesPos = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"MENUTOGGLE_MPAGE\"]")));
+
+        // Abre el menú lateral
+        esperarElementoYMedirTiempo(By.id("MENUTOGGLE_MPAGE"), "menu izquierdo");
+        WebElement btnMenuAndesPos = wait.until(ExpectedConditions.elementToBeClickable(By.id("MENUTOGGLE_MPAGE")));
         btnMenuAndesPos.click();
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a/div/span"), "Seleccion Fiado");
-        WebElement linkFiado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a/div/span")));
-        Utils.enmarcarElemento(driver, linkFiado);
-        tomarCaptura("Seleccion Fiado");
-       // esperarElementoYMedirTiempo(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a"), "Seleccion Fiado");
-        Utils.desenmarcarObjeto(driver, linkFiado);
-        linkFiado.click();
+        Thread.sleep(1000); // Espera breve para que cargue el menú
+
+        // Busca todos los elementos del menú
+        List<WebElement> opcionesMenu = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+                By.cssSelector("#K2baccordionmenu li a span")));
+
+        boolean encontrado = false;
+
+        for (WebElement opcion : opcionesMenu) {
+            String texto = opcion.getText().trim();
+            if (texto.equalsIgnoreCase("Fiado")) {
+                Utils.enmarcarElemento(driver, opcion);
+                esperarElementoYMedirTiempo(By.xpath(BaseTest.getXPath(opcion)), "Seleccion Fiado");
+                tomarCaptura("Seleccion Fiado");
+                Utils.desenmarcarObjeto(driver, opcion);
+                opcion.click();
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            throw new RuntimeException("❌ No se encontró la opción de menú 'Fiado'");
+        }
+
     }
     public static void clickBtnAgregarCliente() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -60,14 +78,15 @@ public class FiadoPage {
         btnAgregarCliente.click();
     }
     public static void ingresarRutCliente() {
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vCLIENTEFIADORUT\"]"), "rut cliente");
         WebElement txtRutCliente = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vCLIENTEFIADORUT\"]")));
         Utils.enmarcarElemento(driver, txtRutCliente);
         Utils.desenmarcarObjeto(driver, txtRutCliente);
         txtRutCliente.clear();
-        txtRutCliente.sendKeys((CharSequence) datosFiado.get("rutCliente"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", txtRutCliente);
+        txtRutCliente.sendKeys(datosFiado.get("rutCliente"));
+        txtRutCliente.sendKeys(Keys.TAB); // <- aquí el cambio
     }
     public static void clickBtnConfirmar() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -108,7 +127,7 @@ public class FiadoPage {
         btnActualizar.click();
     }
     public static void seleccionarEstado(){
-        String valorEstado = String.valueOf(datosFiado.get("estado")).trim();
+        String valorEstado = String.valueOf(DatosGlobales.datos.get("estado")).trim();
         try {
             WebElement selectEstado = driver.findElement(By.xpath("//select[contains(@id, 'W0036W0024CLIENTEFIADOESTADO')]"));
             Select dropdown = new Select(selectEstado);
@@ -218,47 +237,84 @@ public class FiadoPage {
         Utils.desenmarcarObjeto(driver, linkExportar);
         linkExportar.click();
     }
+    public static void clickBtnEditar() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15)); //*[@id="MENUTOGGLE_MPAGE"]
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vUPDATE_0006\"]"), "btn Actualizar");
+        WebElement btnActualizar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"vUPDATE_0006\"]")));
+        Utils.enmarcarElemento(driver, btnActualizar);
+        tomarCaptura("Exportar");
+        // esperarElementoYMedirTiempo(By.xpath("//*[@id=\"K2baccordionmenu\"]/li[8]/a"), "Seleccion Fiado");
+        Utils.desenmarcarObjeto(driver, btnActualizar);
+        btnActualizar.click();
+    }
+    public static void abrirArchivo(File archivo) {
+        try {
+            if (archivo.exists()) {
+                Desktop.getDesktop().open(archivo);
+                System.out.println("Archivo abierto: " + archivo.getName());
+                Thread.sleep(4000); // Espera a que se abra
 
-//    public static void abrirArchivoYTomarCaptura() {
-//        JFileChooser fileChooser = new JFileChooser();
-//        fileChooser.setDialogTitle("Selecciona un archivo para abrir");
-//
-//        int seleccion = fileChooser.showOpenDialog(null);
-//
-//        if (seleccion == JFileChooser.APPROVE_OPTION) {
-////            File archivoSeleccionado = fileChooser.getSelectedFile();
-//            File archivoSeleccionado = new File("C:\\Users\\alexi\\Downloads\\ExportWWClienteFiado-0140e025-f270-46e4-be6c-cace9a72d795.xlsx");
-//            if (archivoSeleccionado.exists()) {
-//                try {
-//                    // Abre el archivo con la app predeterminada
-//                    Desktop.getDesktop().open(archivoSeleccionado);
-//                    System.out.println("✅ Archivo abierto: " + archivoSeleccionado.getAbsolutePath());
-//
-//                    // Espera a que se abra la app
-//                    Thread.sleep(3000);
-//
-//                    // Captura de pantalla
-//                    Robot robot = new Robot();
-//                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//                    Rectangle screenRect = new Rectangle(screenSize);
-//                    BufferedImage captura = robot.createScreenCapture(screenRect);
-//
-//                    // Guardar la imagen
-//                    String rutaCaptura = "captura_pantalla.png";
-//                    ImageIO.write(captura, "png", new File(rutaCaptura));
-//                    System.out.println("📸 Captura guardada como: " + rutaCaptura);
-//
-//                } catch (IOException | InterruptedException | AWTException e) {
-//                    System.err.println("❌ Error: " + e.getMessage());
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                System.err.println("❌ El archivo no existe.");
-//            }
-//        } else {
-//            System.out.println("ℹ️ Selección cancelada por el usuario.");
-//        }
-//    }
+                // Tomar captura
+                tomarCapturaPantalla("Captura_" + archivo.getName());
+            } else {
+                System.err.println("El archivo no existe: " + archivo.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static File buscarArchivoPorPrefijo(String carpeta, String prefijo) {
+        File directorio = new File(carpeta);
+
+        if (!directorio.exists() || !directorio.isDirectory()) {
+            System.err.println("❌ Carpeta no válida: " + carpeta);
+            return null;
+        }
+
+        File[] archivos = directorio.listFiles((dir, nombre) -> nombre.startsWith(prefijo));
+
+        if (archivos != null && archivos.length > 0) {
+            // Ordenar los archivos por fecha de modificación (más reciente primero)
+            Arrays.sort(archivos, Comparator.comparingLong(File::lastModified).reversed());
+
+            // Retornar el más reciente
+            return archivos[0];
+        } else {
+            System.err.println("⚠ No se encontró ningún archivo que empiece con: " + prefijo);
+            return null;
+        }
+    }
+
+
+    public static boolean buscarYEnmarcarClienteFiado(String rutCliente){
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            List<WebElement> promociones = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//table//tr//td[3]")));
+
+            for (WebElement promo : promociones) {
+                String nombreActual = promo.getText().trim();
+                System.out.println("[DEBUG] Promoción encontrada: " + nombreActual);
+
+                if (nombreActual.contains(rutCliente)) {
+                    // Utiliza el metodo Utils para enmarcar el elemento
+                    Utils.enmarcarElemento(driver, promo);
+                    tomarCaptura("Promocion Encontrada");
+                    driver.switchTo().defaultContent();
+                    return true;
+                }
+
+                // Intentar hacer scroll para buscar más promociones
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", promo);
+                Thread.sleep(500);
+            }
+
+            System.err.println("[ERROR] Cliente '" + rutCliente + "' no encontrada.");
+            return false;
+        } catch (Exception e) {
+            System.err.println("[ERROR] Error al buscar y enmarcar al cliente: " + e.getMessage());
+            return false;
+        }
+    }
 
 
 }

@@ -1,7 +1,7 @@
 {
     "user": "183475444",
     "clave": "carito.123",
-    "rol": "Punto de ventas Enternet",
+    "rol": "Inventario",
     "menu": "Definiciones",
     "subMenu": "Items",
     "tipoDocumento": "Factura",
@@ -26,7 +26,7 @@
     "dirReceptor": "Hernando de Aguirre 163",
     "comunaReceptor": "Providencia",
     "giroRecept": "Enternet",
-    "descProd": "Leche Cultivada Protein Frutilla 1 Lt",
+    "descProd": "Aceite De Oliva Extra Virgen Banquete 1 Lt",
     "equivalenciaComparacion": "1",
     "producto1": "7801610323236",
     "codigoLotes": "20240805",

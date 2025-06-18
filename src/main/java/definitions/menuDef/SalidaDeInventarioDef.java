@@ -1,6 +1,6 @@
 package definitions.menuDef;
 
-import definitions.Commons.Utils;
+import Utils.Commons.Utils;
 import definitions.loginDef.LoginDef;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
@@ -14,8 +14,6 @@ import page.loginPage.MenuInventarioPage;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.Map;
-
-import static definitions.Commons.BaseTest.esperarElementoYMedirTiempo;
 
 public class SalidaDeInventarioDef {
 

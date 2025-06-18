@@ -1,19 +1,15 @@
 package definitions.menuDef;
 
-import definitions.Commons.BaseTest;
-import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
+import Utils.Commons.BaseTest;
+import Utils.Commons.DatosGlobales;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 
+import java.io.File;
 import java.util.Map;
 
-import java.io.InputStream;
-
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.*;
 import static page.menuPage.FiadoPage.*;
 import static page.menuPage.PromocionesPage.buscarYEnmarcarPromocion;
-import static page.menuPage.PromocionesPage.editarPromocion;
 
 
 public class FiadoDef {
@@ -22,13 +18,11 @@ public class FiadoDef {
 
     @And("hacemos click en menu izquierdo y en la opcion fiado")
     public void hacemosClickEnMenuIzquierdoYEnLaOpcionFiado() throws InterruptedException {
-        //cerrarMsjAlerta();
-        seleccionarMenuFiado();
+          seleccionarMenuFiado();
     }
 
     @And("seleccionamos boton agregar cliente")
     public void seleccionamosBotonAgregarCliente() throws InterruptedException {
-
         clickBtnAgregarCliente();
     }
 
@@ -65,16 +59,18 @@ public class FiadoDef {
     }
 
     @And("validamos que se haya creado correctamente")
-    public void validamosQueSeHayaCreadoCorrectamente() {
+    public void validamosQueSeHayaCreadoCorrectamente() throws InterruptedException {
 
-        String nombreClienteFiado = datosFiado.get("rutCliente"); //
-        boolean encontrada = buscarYEnmarcarPromocion(nombreClienteFiado);
+        String nombreClienteFiado = DatosGlobales.datos.get("rutCliente"); //
+        boolean encontrada = buscarYEnmarcarClienteFiado(nombreClienteFiado);
 
         if (encontrada) {
             System.out.println("✅ El cliente fue encontrado correctamente.");
         } else {
             System.out.println("❌ El cliente no fue encontrado.");
         }
+
+        tomarCaptura("Promocion creada");
 
     }
 
@@ -87,16 +83,58 @@ public class FiadoDef {
     @And("seleccionamos boton descargar cliente y luego exportar")
     public void seleccionamosBotonDescargarClienteYLuegoExportar() throws InterruptedException {
         clickDescargarTablaYExportar();
-        cerrarDriver();
+        //cerrarDriver();
 
     }
 
     @And("abrimos el documento")
-    public void abrimosElDocumento() throws InterruptedException {
-        //abrirArchivoYTomarCaptura();
-        Thread.sleep(2000);
-        tomarCaptura("excell");
+    public void abrimosElDocumento() throws Exception {
+
+//        String carpetaDescargas = "C:/Users/alexi/Downloads";
+//        String prefijo = "ExportWWClienteFiado";
+//
+//        File archivo = buscarArchivoPorPrefijo(carpetaDescargas, prefijo);
+//
+//        if (archivo != null) {
+//            System.out.println("✅ Archivo encontrado: " + archivo.getAbsolutePath());
+//            // Puedes abrirlo
+//            abrirArchivo(archivo);
+//        }
+        String carpetaDescargas = "C:/Users/alexi/Downloads";
+        String prefijo = "ExportWWClienteFiado";
+
+        File archivo = buscarArchivoPorPrefijo(carpetaDescargas, prefijo);
+
+        if (archivo != null) {
+            System.out.println("✅ Archivo encontrado: " + archivo.getAbsolutePath());
+
+            // Abrir el archivo
+            abrirArchivo(archivo);
+
+            // Esperar unos segundos para asegurarse que el archivo está abierto en pantalla
+            Thread.sleep(3000);
+
+            // Tomar captura
+            String nombreCaptura = "Captura_" + archivo.getName();
+            String rutaCaptura = tomarCapturaPantalla(nombreCaptura);
+
+            // Registrar captura si se generó correctamente
+            if (rutaCaptura != null) {
+              //  BaseTest.capturasPendientes.get().add(rutaCaptura);
+                agregarCapturaAlReporte("C:/git/aut-Enternet/reportes/capturas/");
+            } else {
+                System.out.println("⚠ No se pudo tomar la captura del archivo abierto.");
+            }
+        } else {
+            System.out.println("❌ No se encontró un archivo que comience con: " + prefijo);
+        }
+
         cerrarDriver();
 
+    }
+
+    @And("seleccionamos el cliente que queremos editar")
+    public void seleccionamosElClienteQueQueremosEditar() throws InterruptedException {
+        clickBtnEditar();
     }
 }

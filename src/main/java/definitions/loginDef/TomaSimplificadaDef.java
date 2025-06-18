@@ -1,7 +1,7 @@
 package definitions.loginDef;
 
-import definitions.Commons.BaseTest;
-import definitions.Commons.Utils;
+import Utils.Commons.BaseTest;
+import Utils.Commons.Utils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Random;
 
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.*;
 
 
 public class TomaSimplificadaDef {
@@ -87,7 +87,7 @@ public class TomaSimplificadaDef {
                     codLotes.sendKeys(BaseTest.datos.get("codigoLotes"));
                     Utils.desenmarcarObjeto(driver, codLotes);
                     long duration = (endTime - startTime) / 1_000_000; // Convertir a milisegundos
-                    System.out.println("⏳ Tiempo de espera hasta que se pueda ingresar el 'Codigo de Lotes' esté visible: " + duration + " ms");
+                    System.out.println("⏳ Tiempo de espera hasta que se pueda ingresar el 'Codigo de Lotes.feature' esté visible: " + duration + " ms");
 
                     WebDriverWait wait3 = new WebDriverWait(driver, Duration.ofSeconds(10));
                     WebElement cantProd2 = wait3.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0032vSTRCANTIDADTOMADA\"]")));

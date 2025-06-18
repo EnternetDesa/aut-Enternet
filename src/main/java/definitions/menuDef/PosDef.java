@@ -1,31 +1,34 @@
 package definitions.menuDef;
 
-import definitions.Commons.BaseTest;
+import Utils.Commons.BaseTest;
+import Utils.Commons.DatosGlobales;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import page.menuPage.PosPage;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.time.Duration;
 import java.util.Map;
 import java.awt.*;
 
-import java.io.InputStream;
-import java.util.Map;
 
-import static definitions.Commons.BaseTest.cerrarDriver;
+import static Utils.Commons.BaseTest.cerrarDriver;
+import static Utils.Commons.BaseTest.tomarCaptura;
 import static page.menuPage.PosPage.*;
-import static definitions.Commons.BaseTest.*;
+import static page.menuPage.PromocionesPage.capturarMensajePantalla;
 
 public class PosDef {
      public static Map<String, String> datosPOS;
+
+
     @Given("que ingreso los datos desde el archivo datosPos {string}")
     public void queIngresoLosDatosDesdeElArchivoDatosPOS(String arg0) {
         try {
@@ -98,14 +101,14 @@ public class PosDef {
 
     @And("selecciono el menu de Pos {string}")
     public void seleccionoElMenuDePos(String menuP) throws InterruptedException {
-        menuP = datosPOS.get("menuPOS");
-        seleccionMenuPos(menuP);
+        String menu = DatosGlobales.datos.get("menuPOS");
+        PosPage.seleccionMenuPos(menu);
     }
 
     @And("luego el submenu de Pos {string}")
-    public void luegoElSubmenuDePos(String subMenuP) throws InterruptedException {
-        subMenuP =datosPOS.get("subMenuP");
-        seleccionamosSubMenuPOS(subMenuP);
+    public void luegoElSubmenuDePos(String args0) throws InterruptedException {
+        String subMenuP = DatosGlobales.datos.get("subMenuP");
+        PosPage.seleccionamosSubMenuPOS(subMenuP);
     }
 
     @When("este en el modulo de Enrolamiento de Terminales")
@@ -131,6 +134,7 @@ public class PosDef {
 
     @And("ingresamos el tipo de perfil")
     public void ingresamosElTipoDePerfil() throws InterruptedException, AWTException {
+
         clickBtnIrALogin();
         seleccionTipoPerfil();
     }
@@ -141,14 +145,14 @@ public class PosDef {
     }
 
     @And("ingresamos el rut {string} y contrasenia {string}")
-    public void ingresamosElRutYContrasenia(String rutPos, String clavePos) {
+    public void ingresamosElRutYContrasenia(String args0, String args1) {
         ingresarRut();
         ingresarClave();
     }
 
     @And("seleccionamos el boton ingresar")
     public void seleccionamosElBotonIngresar() throws InterruptedException {
-        seleccionarBtnIngresar();
+       // seleccionarBtnIngresar();
     }
 
     @And("hacemos click en la caja que muestra nuestro nombre")
@@ -163,16 +167,16 @@ public class PosDef {
 
     @And("le asignamos el cliente a quien venderemos {string}")
     public void leAsignamosElClienteAQuienVenderemos(String nombreCliente) throws InterruptedException {
-   //     buscarClienteYSeleccionarPorRut(); //poner que si se depliega antes la lista de clientes seleccione
-        clickBtnCliente();  //clickbtnCliente
-        ingresarRutcliente(); //203344473
-        seleccionCliente(); //hace click en nombe cliente
+        buscarClienteYSeleccionarPorRut(); //poner que si se depliega antes la lista de clientes seleccione
+//        clickBtnCliente();  //clickbtnCliente
+//        ingresarRutcliente(); //203344473
+//        seleccionCliente(); //hace click en nombe cliente
     }
 
     @And("Ingresamos la descripcion o codigo de un producto y apretamos enter")
     public void ingresamosLaDescripcionOCodigoDeUnProductoYApretamosEnter() throws InterruptedException {
         ingresarProductoPorDescripcion();
-        seleccionarNombreProducto();
+        PosPage.seleccionarNombreProducto();
        // ingresarProductoPorCodigo();
       //  clickBtnEnter();
     }
@@ -180,44 +184,61 @@ public class PosDef {
     @And("ingresamos la cantidad de producto que llevaremos")
     public void ingresamosLaCantidadDeProductoQueLlevaremos() throws InterruptedException {
         ingresarCantidadDeProducto();
-
     }
     @And("seleccionamos la forma de pago <{string}> que ocuparemos e ingresamos los datos para el pago")
     public void seleccionamosLaFormaDePagoQueOcuparemosEIngresamosLosDatosParaElPago(String args0) throws InterruptedException {
         ingresarFormaDePago();
-        ingresarTipoDePago();
-      //  ingresoDeDatosParaElPago();
+
+        if ("Efectivo".equalsIgnoreCase(DatosGlobales.datos.get("formaDePago"))) {
+
+            ingresoMontoEfectivo();
+        } else {
+            ingresarTipoDePago();
+        }
+
+          // ingresoDeDatosParaElPago();
+
     }
 
     @And("seleccionar boton guardar")
-    public void seleccionarBotonGuardar() {
+    public void seleccionarBotonGuardar() throws InterruptedException {
         seleccionarBtnGuardar();
     }
+    @And("seleccionamos tipo de emision <{string}>")
+    public void seleccionamosTipoDeEmision(String arg0) throws InterruptedException {
+        seleccionTipoDeEmision();
+        Thread.sleep(6000);
 
-    @And("seleccionamos tipo de emision")
-    public void seleccionamosTipoDeEmision(String tipoEmision) {
-        seleccionTipoDeEmision(tipoEmision);
     }
 
     @And("ingresamos un producto desde el modulo del filtro por categorias")
-    public void ingresamosUnProductoDesdeElModuloDelFiltroPorCategorias()  {
+    public void ingresamosUnProductoDesdeElModuloDelFiltroPorCategorias() throws InterruptedException {
 
     }
 
     @And("ingresamos un producto en el filtro de despensa {string}")
     public void ingresamosUnProductoEnElFiltroDeDespensa(String arg0) throws InterruptedException {
+        String tipoCategoria = DatosGlobales.datosPOS.get("tipoCategoria");
         escribirProductoEnFiltroDespensa();
+
+        if ("Despensa".equalsIgnoreCase(tipoCategoria)) {
+            escribirProductoEnFiltroDespensa();
+        } else if ("Anio".equalsIgnoreCase(tipoCategoria)){
+            escribirProductoEnFiltroANNO();
+        }else {
+            escribirProductoEnFiltroOtros();
+        }
     }
 
-    @And("ingresamos un producto en el filtro de ANNO {string}")
-    public void ingresamosUnProductoEnElFiltroDeANNO(String arg0) throws InterruptedException {
-        escribirProductoEnFiltroANNO();
-    }
+//    @And("ingresamos un producto en el filtro de ANNO {string}")
+//    public void ingresamosUnProductoEnElFiltroDeANNO(String arg0) throws InterruptedException {
+//        escribirProductoEnFiltroANNO();
+//    }
 
-    @And("ingresamos un producto en el filtro de Otros {string}")
-    public void ingresamosUnProductoEnElFiltroDeOtros(String arg0) throws InterruptedException {
-        escribirProductoEnFiltroOtros();
-    }
+//    @And("ingresamos un producto en el filtro de Otros {string}")
+//    public void ingresamosUnProductoEnElFiltroDeOtros(String arg0) throws InterruptedException {
+//        escribirProductoEnFiltroOtros();
+//    }
 
     @And("hacemos click en el boton carta y seleccionamos el producto que muestre")
     public void hacemosClickEnElBotonCartaYSeleccionamosElProductoQueMuestre() throws InterruptedException {
@@ -276,42 +297,36 @@ public class PosDef {
     @And("ingresamos el numero de patente <{string}> y confirmamos")
     public void ingresamosElNumeroDePatenteYConfirmamos(String arg0) throws InterruptedException {
         ingresarPatente();
+        cerrarDriver();
     }
 
-    @And("le damos click en el boton de crear prod libre")
-    public void leDamosClickEnElBotonDeCrearProdLibre() throws InterruptedException {
-        clickBtnCrearProdLibre();
+    @And("le damos click en el boton de crear prod libre y visualizamos el formulario para ingresar un producto")
+    public void leDamosClickEnElBotonDeCrearProdLibreYVisualizamosElFormularioParaIngresarUnProducto() {
     }
 
-    @And("visualizamos el formulario para ingresar un producto")
-    public void visualizamosElFormularioParaIngresarUnProducto() {
+    @And("ingresamos el codigo {string}, una descripcion {string} , una unidad de medida {string}")
+    public void ingresamosElCodigoUnaDescripcionUnaUnidadDeMedida(String arg0, String arg1, String arg2) throws InterruptedException {
+        crearEIngresarProductoLibre();
+    }
+    @And("seleccionamos un Tratamiento Tributario y un Codigo Especial")
+    public void seleccionamosUnTratamientoTributarioYUnCodigoEspecial() {
     }
 
-    @And("ingresamos el codigo {string}")
-    public void ingresamosElCodigo(String arg0) {
-        ingresarCodigoProductoLibre();
-    }
+//    @And("ingresamos una unidad de medida {string}")
+//    public void ingresamosUnaUnidadDeMedida(String arg0) throws InterruptedException {
+//        seleccionarUnidadDeMedida();
+//        seleccionarUnidadDeMedida2();
+//    }
 
-    @And("ingresamos una descripcion {string}")
-    public void ingresamosUnaDescripcion(String arg0) {
-        ingresarDescripcionCPL();
-    }
+//    @And("seleccionamos un Tratamiento Tributario")
+//    public void seleccionamosUnTratamientoTributario() throws InterruptedException {
+//        seleccionTratamientoTributario();
+//    }
 
-    @And("ingresamos una unidad de medida {string}")
-    public void ingresamosUnaUnidadDeMedida(String arg0) throws InterruptedException {
-        seleccionarUnidadDeMedida();
-        seleccionarUnidadDeMedida2();
-    }
-
-    @And("seleccionamos un Tratamiento Tributario")
-    public void seleccionamosUnTratamientoTributario() throws InterruptedException {
-        seleccionTratamientoTributario();
-    }
-
-    @And("seleccionamos un Codigo Especial")
-    public void seleccionamosUnCodigoEspecial() throws InterruptedException {
-        seleccionCodigoEspecial();
-    }
+//    @And("seleccionamos un Codigo Especial")
+//    public void seleccionamosUnCodigoEspecial() throws InterruptedException {
+//        seleccionCodigoEspecial();
+//    }
 
     @And("ingresamos la cantidad del producto <{string}> el precio <{string}> y descuento <{string}>")
     public void ingresamosLaCantidadDelProductoElPrecioYDescuento(String arg0, String arg1, String arg2) throws InterruptedException {
@@ -339,7 +354,6 @@ public class PosDef {
     @Then("visualizamos el producto ingresado en el carro de compras")
     public void visualizamosElProductoIngresadoEnElCarroDeCompras() throws InterruptedException {
         visualizarProductoAgreadoCarroCompras();
-
     }
 
     @And("seleccionamos la forma de pago <{string}> y el tipo de pago <{string}> que ocuparemos")
@@ -351,5 +365,10 @@ public class PosDef {
     @Then("seleccionar boton imprimir")
     public void seleccionarBotonImprimir() throws InterruptedException {
         seleccionarBtnImprimir();
+        Thread.sleep(3000);
+        cerrarDriver();
     }
+
+
+
 }

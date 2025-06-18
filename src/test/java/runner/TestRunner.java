@@ -7,7 +7,7 @@ import io.cucumber.junit.CucumberOptions;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/main/java/feature", // Ruta fija al directorio de tus features
-        glue = {"definitions", "page"},
+        glue = {"definitions", "page", "Utils"},
         plugin = {
                 "pretty",
                 "html:target/cucumber-report.html",

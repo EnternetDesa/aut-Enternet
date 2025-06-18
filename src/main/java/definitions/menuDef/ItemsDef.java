@@ -1,6 +1,7 @@
 package definitions.menuDef;
 
-import definitions.Commons.BaseTest;
+import Utils.Commons.BaseTest;
+import Utils.Commons.DatosGlobales;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -12,8 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static definitions.Commons.BaseTest.obtenerNumeroConsecutivo;
-import static definitions.Commons.BaseTest.*;
+import static Utils.Commons.BaseTest.*;
 import static page.menuPage.ItemsPage.*;
 
 
@@ -50,22 +50,22 @@ public class ItemsDef {
 
     @And("ingresamos los datos de descripcion de producto {string}")
     public void ingresamosLosDatosDeDescripcionDeProducto(String arg0) {
-        ingresarDescripcionDeProducto(BaseTest.datos.get("descProd"));
+        ingresarDescripcionDeProducto(DatosGlobales.datos.get("descProd"));
     }
 
     @And("seleccione una unidad de medida <{string}>")
     public void seleccioneUnaUnidadDeMedida(String uniMedida) {
-        seleccionUnidadDeMedida(BaseTest.datos.get("uniMedida"));
+        seleccionUnidadDeMedida(DatosGlobales.datos.get("uniMedida"));
     }
 
     @And("seleccione una unidad de comparacion <{string}>")
     public void seleccioneUnaUnidadDeComparacion(String uniComparacion) {
-        seleccionUnidadDeComparacion(BaseTest.datos.get("uniComparacion"));
+        seleccionUnidadDeComparacion(DatosGlobales.datos.get("uniComparacion"));
     }
 
     @And("seleccione una equivalencia de comparacion <{string}>")
     public void seleccioneUnaEquivalenciaDeComparacion(String equivalenciaComparacion) throws InterruptedException {
-        ingresoEquivalenciaDeComparacion(BaseTest.datos.get("equivalenciaComparacion"));
+        ingresoEquivalenciaDeComparacion(DatosGlobales.datos.get("equivalenciaComparacion"));
     }
 
     @And("seleccionamos si el producto usa lotes o no")
@@ -75,37 +75,37 @@ public class ItemsDef {
 
     @And("ingresamos en codigo de producto el codigo INT <{string}>")
     public void ingresamosEnCodigoDeProductoElCodigoINT(String arg0) {
-        ingresarCodigoInternoDelProducto(BaseTest.datos.get("codInterno"));
+        ingresarCodigoInternoDelProducto(DatosGlobales.datos.get("codInterno"));
     }
 
     @And("ingresamos el codigo EAN <{string}>")
     public void ingresamosElCodigoEAN(String arg0) {
-        ingresarCodigoEANDelProducto(BaseTest.datos.get("codEAN"));
+        ingresarCodigoEANDelProducto(DatosGlobales.datos.get("codEAN"));
     }
 
     @And("ingresamos el codigo SKU <{string}>")
     public void ingresamosElCodigoSKU(String arg0) {
-        ingresarCodigoSKUDelProducto(BaseTest.datos.get("codSKU"));
+        ingresarCodigoSKUDelProducto(DatosGlobales.datos.get("codSKU"));
     }
 
     @And("ingresamos el codigo base <{string}>")
     public void ingresamosElCodigoBase(String arg0) throws IOException, InterruptedException {
 
-        ingresarCodigoBase(BaseTest.datos.get("codBase"));
+        ingresarCodigoBase(DatosGlobales.datos.get("codBase"));
     }
 
     @And("en la seccion de categorias del producto seleccionamos la categoria buscadora <{string}> y seleccionamos el boton buscar")
     public void enLaSeccionDeCategoriasDelProductoSeleccionamosLaCategoriaBuscadoraYSeleccionamosElBotonBuscar(String arg0) throws InterruptedException {
-        seleccionCategoriaBuscadora(BaseTest.datos.get("catBuscadora"));
+        seleccionCategoriaBuscadora(DatosGlobales.datos.get("catBuscadora"));
         seleccionarBtnBuscar();
     }
     @And("Luego seleccionamos la categoria Buscadora que necesitamos <{string}>")
     public void luegoSeleccionamosLaCategoriaBuscadoraQueNecesitamos(String arg0) throws IOException, InterruptedException {
-        if (BaseTest.datos.get("catBuscadora").equals("ANNO")){
+        if (DatosGlobales.datos.get("catBuscadora").equals("ANNO")){
             seleccionCategoriaBuscadoraTipoANNO();
 
         }else {
-            seleccionCategoriaBuscadoraTipoOtros(BaseTest.datos.get("codCatBuscadoraTipo"));
+            seleccionCategoriaBuscadoraTipoOtros(DatosGlobales.datos.get("codCatBuscadoraTipo"));
         }
         scroll();
     }
@@ -117,22 +117,22 @@ public class ItemsDef {
 
     @And("luego seleccionamos el tipo de categoria  <{string}>")
     public void luegoSeleccionamosElTipoDeCategoria(String arg0) throws IOException, InterruptedException {
-        page.menuPage.ItemsPage.seleccionCategoriaClasificadoraTipo(BaseTest.datos.get("catClasificadora"));
+        page.menuPage.ItemsPage.seleccionCategoriaClasificadoraTipo(DatosGlobales.datos.get("catClasificadora"));
     }
     @And("en configuracion por ubicacion ingresamos la cantidad <{string}>")
     public void enConfiguracionPorUbicacionIngresamosLaCantidad(String arg0) throws InterruptedException {
-        ingresoDeCantidadDeProductoPorUbicacion(BaseTest.datos.get("cantidadP"));
+        ingresoDeCantidadDeProductoPorUbicacion(DatosGlobales.datos.get("cantidadP"));
     }
 
     @And("el costo unitario <{string}>")
     public void elCostoUnitario(String arg0) throws InterruptedException {
-        ingresoDeCostoUnitario(BaseTest.datos.get("costoUni"));
+        ingresoDeCostoUnitario(DatosGlobales.datos.get("costoUni"));
 
     }
 
     @And("el precio del producto <{string}>")
     public void elPrecioDelProducto(String arg0) throws InterruptedException {
-        ingresarPrecioProducto(BaseTest.datos.get("precioProd"));
+        ingresarPrecioProducto(DatosGlobales.datos.get("precioProd"));
     }
 
 
@@ -144,7 +144,7 @@ public class ItemsDef {
     @And("seleccionamos las categorias ingresadas anteriormente y buscamos por esos filtros")
     public void seleccionamosLasCategoriasIngresadasAnteriormenteYBuscamosPorEsosFiltros() throws InterruptedException, IOException {
         seleccionarFiltroCatClasificadoraVistaModuloItems();
-        seleccionarCodigoCatClasificadoraVistaModuloItems(BaseTest.datos.get("catClasificadora"));
+        seleccionarCodigoCatClasificadoraVistaModuloItems(DatosGlobales.datos.get("catClasificadora"));
 
     }
 
@@ -157,7 +157,7 @@ public class ItemsDef {
        // mostrarListadoDeItems();
         buscarProductoPorNombre(nombreProducto);
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
 
@@ -175,11 +175,15 @@ public class ItemsDef {
 
 
     @Then("nos debe de mostrar los productos de esa categoria")
-    public void nosDebeDeMostrarLosProductosDeEsaCategoria(String nombreProducto) throws IOException, InterruptedException {
+    public void nosDebeDeMostrarLosProductosDeEsaCategoria() throws IOException, InterruptedException {
+//        buscarProductoPorNombre(nombreProducto);
+//        //mostrarListadoDeItems();
+//        System.out.println("PDF generado con éxito en: " + RUTA_PDF);
+//        cerrarDriver();
+        String nombreProducto = DatosGlobales.datos.get("descProd");
         buscarProductoPorNombre(nombreProducto);
-        //mostrarListadoDeItems();
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
 
     }
 
@@ -218,7 +222,7 @@ public class ItemsDef {
 
     @And("seleccionamos codigo categoria buscadora {string}")
     public void seleccionamosCodigoCategoriaBuscadora(String codCatBuscadoraTipo) throws IOException, InterruptedException {
-        if (BaseTest.datos.get("catBuscadora").equals("ANNO")){
+        if (DatosGlobales.datos.get("catBuscadora").equals("ANNO")){
             seleccionarCodigoCatBuscadoraVistaModuloItemsANNO(codCatBuscadoraTipo);
         }else {
             seleccionarCodigoCatBuscadoraVistaModuloItems(codCatBuscadoraTipo);
@@ -236,7 +240,7 @@ public class ItemsDef {
 
     @And("seleccionamos descripcion {string}")
     public void seleccionamosDescripcion(String descProd) throws InterruptedException, IOException {
-        busquedaPorDescripcionItems(BaseTest.datos.get("descProd"));
+        busquedaPorDescripcionItems(DatosGlobales.datos.get("descProd"));
     }
 
     @And("le demos click en mostrar todo")
@@ -256,9 +260,9 @@ public class ItemsDef {
 
     @Then("nos debe de mostrar que no este ningun filtro seleccionado")
     public void nosDebeDeMostrarQueNoEsteNingunFiltroSeleccionado() throws InterruptedException, IOException {
-        BaseTest.tomarCaptura("Sin Filtros Aplicados");
+        tomarCaptura("Sin Filtros Aplicados");
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("seleccione el boton de descargar columna base para maestras")
@@ -270,7 +274,7 @@ public class ItemsDef {
     public void seDescargaElArchivoCvs() {
         validarArchivoDescargado();
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("seleccionamos guardar producto")
@@ -282,7 +286,7 @@ public class ItemsDef {
     public void nosDebeDeMostrarElMsjCreadoEnLaListaElItems() throws InterruptedException, IOException {
         visualizarMsjAlerta();
 //        BaseTest.tomarCaptura(" Debe ingresar una descripcion");
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("validar que los datos ingresados esten el la base de datos")
@@ -318,7 +322,7 @@ public class ItemsDef {
     @Then("nos debe de mostrar un mensaje que la base esta cargada")
     public void nosDebeDeMostrarUnMensajeQueLaBaseEstaCargada() throws InterruptedException, IOException {
        validarMensajeDeCarga();
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("luego seleccionamos varios tipos de categoria  <{string}>")
@@ -332,16 +336,16 @@ public class ItemsDef {
     public void alIntentarSeleccionarVariosTiposDeCategoriaClasificadoraDebeMostrarElMensajeQueSoloSePuedeSeleccionarUna() throws InterruptedException, IOException {
         validarMsjAlerta();
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @And("Luego seleccionamos varios tipos de categoria Buscadoras <{string}>")
     public void luegoSeleccionamosVariosTiposDeCategoriaBuscadoras(String arg0) throws InterruptedException, IOException {
-        if (BaseTest.datos.get("catBuscadora").equals("ANNO")){
+        if (DatosGlobales.datos.get("catBuscadora").equals("ANNO")){
             seleccionCategoriaBuscadoraTipoANNO();
 
         }else {
-            seleccionCategoriaBuscadoraTipoOtros(BaseTest.datos.get("codCatBuscadoraTipo"));
+            seleccionCategoriaBuscadoraTipoOtros(DatosGlobales.datos.get("codCatBuscadoraTipo"));
         }
         scroll();
     }
@@ -359,11 +363,11 @@ public class ItemsDef {
     }
 
     @Then("nos debe de mostrar el producto creado {string}")
-    public void nosDebeDeMostrarElProductoCreado(String nombreProducto) throws InterruptedException {
-        buscarProductoPorNombre(nombreProducto);
-        //mostrarListadoDeItems();
+    public void nosDebeDeMostrarElProductoCreado(String args0) throws InterruptedException {
+        String descProd = DatosGlobales.datos.get("descProd");
+        buscarProductoPorDescripcion(descProd);
         System.out.println("PDF generado con éxito en: " + RUTA_PDF);
-        BaseTest.cerrarDriver();
+        cerrarDriver();
     }
 
     @Then("nos debe mostrar un mensaje de alerta que el producto ya existe")
@@ -376,6 +380,23 @@ public class ItemsDef {
     public void seleccionamosGuardarProductoYNosDebeRedirigirALaVistaDeIngreseCódigoDeBarras() throws IOException, InterruptedException {
         seleccionarBtnGuardarProducto();
         tomarCaptura("vista Ingrese Codigo de Barra");
+        cerrarDriver();
+    }
+
+    @Then("nos debe de mostrar los productos encontrado")
+    public void nosDebeDeMostrarLosProductosEncontrado() throws InterruptedException {
+        String nombreProducto = DatosGlobales.datos.get("codigo");
+        buscarProductoPorNombre(nombreProducto);
+        System.out.println("PDF generado con éxito en: " + RUTA_PDF);
+        cerrarDriver();
+    }
+
+    @Then("nos debe de mostrar los productos Sin categoria")
+    public void nosDebeDeMostrarLosProductosSinCategoria() throws IOException, InterruptedException {
+        String nombreProducto = DatosGlobales.datos.get("codigo");
+        mostrarListadoDeItems();
+       // buscarProductoPorNombre(nombreProducto);
+        System.out.println("PDF generado con éxito en: " + RUTA_PDF);
         cerrarDriver();
     }
 }
