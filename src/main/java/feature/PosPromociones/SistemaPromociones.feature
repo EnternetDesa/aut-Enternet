@@ -12,7 +12,7 @@ Feature: Gestion de Promociones
     And selecciono la opcion "rol"
     And debe de mostrar la vista del Administrador de Promociones
 
-    @agregarPromocion @promociones
+    @agregarPromocion
 Scenario: Promociones - Agregar Promocion
   And selecciono el nombre de la empresa
   And nos debe dirigir a la vista de promociones
@@ -39,7 +39,7 @@ Scenario: Promociones - Agregar Promocion
   And seleccionamos el boton finalizar
   Then nos debe dirigir a la pantalla principal y visualizar nuestra promocion
 
-  @editarPromocion @promociones
+  @editarPromocion
   Scenario: Promociones - Editar Promocion
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
@@ -64,7 +64,7 @@ Scenario: Promociones - Agregar Promocion
     And seleccionamos el boton finalizar
     Then nos debe dirigir a la pantalla principal y visualizar nuestra promocion editada
 
-  @copiarPromocion @promociones
+  @copiarPromocion
   Scenario: Promociones - Copiar Promocion
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones
@@ -73,7 +73,7 @@ Scenario: Promociones - Agregar Promocion
     And hacemos click en confirmar la promocion
     Then visualizar nuestra promocion copiada
 
-  @anularPromocion @promociones
+  @anularPromocion
   Scenario: Promociones - Anular Promocion
     And selecciono el nombre de la empresa
     And nos debe dirigir a la vista de promociones

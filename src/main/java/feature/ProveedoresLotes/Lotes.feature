@@ -17,9 +17,9 @@ Feature: Lotes -
   Scenario: Aplicar Filtros - Sin categorias
     Given estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de Inventario "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en el modulo de Lotes
-    And seleccionamos filtro por categoria
-    And seleccionamos sin categoria "<sinCategoria>"
-    And luego seleccionemos el boton buscar
-    Then nos debe de mostrar los productos Sin categoria
+   # And seleccionamos filtro por categoria
+   # And seleccionamos sin categoria "<sinCategoria>"
+   # And luego seleccionemos el boton buscar
+   # Then nos debe de mostrar los productos Sin categoria

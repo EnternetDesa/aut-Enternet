@@ -44,7 +44,7 @@ Feature: POS - Fiado
     And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
     And seleccionamos tipo de emision <"tipoEmision">
-   #Then seleccionar boton imprimir
+    Then seleccionar boton imprimir
 
   @EditarFiado
   Scenario: Pos Fiado - Editar Cliente
@@ -75,7 +75,7 @@ Feature: POS - Fiado
     And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
     And seleccionamos tipo de emision <"tipoEmision">
-   #Then seleccionar boton imprimir
+    Then seleccionar boton imprimir
 
 @descargar
   Scenario: Pos Fiado - descargar Tabla clientes

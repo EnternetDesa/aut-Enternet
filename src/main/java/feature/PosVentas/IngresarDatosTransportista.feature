@@ -1,5 +1,6 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
+  @Ventas
 Feature: POS -Definiciones - Ingresar Datos Transportista
 
   Background:
@@ -12,6 +13,7 @@ Feature: POS -Definiciones - Ingresar Datos Transportista
     And en la vista del warning selecciono enviar de todas formas
     And debe de mostrar la vista de Pos
 
+    @datosTransporte
   Scenario: POS - Agregar Datos Transportista
     And estoy en home de Pos
     And selecciono el menu de Pos "<menuPOS>"
@@ -26,12 +28,13 @@ Feature: POS -Definiciones - Ingresar Datos Transportista
     And seleccionamos el boton ingresar
     And hacemos click en la caja que muestra nuestro nombre
     And seleccionamos boton nueva venta
+    And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And seleccionamos el boton transportista
     And ingresamos el motivo de traslado
     And Ingresamos el tipo de traslado
     And ingresamos el nombre del chofer <"nombreChofer">
     And ingresamos el rut del chofer <"rutChofer">
-    And ingresamos el numero de patente <"patente"> y confirmamos
-   #Then nos debe de mostrar los productos de esa categoria
+    Then ingresamos el numero de patente <"patente"> y confirmamos
+
 
 

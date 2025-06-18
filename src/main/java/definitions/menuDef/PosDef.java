@@ -8,9 +8,14 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import page.menuPage.PosPage;
 
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.Map;
 import java.awt.*;
 
@@ -18,6 +23,7 @@ import java.awt.*;
 import static Utils.Commons.BaseTest.cerrarDriver;
 import static Utils.Commons.BaseTest.tomarCaptura;
 import static page.menuPage.PosPage.*;
+import static page.menuPage.PromocionesPage.capturarMensajePantalla;
 
 public class PosDef {
      public static Map<String, String> datosPOS;
@@ -183,8 +189,15 @@ public class PosDef {
     public void seleccionamosLaFormaDePagoQueOcuparemosEIngresamosLosDatosParaElPago(String args0) throws InterruptedException {
         ingresarFormaDePago();
 
-        ingresarTipoDePago();
-         //  ingresoDeDatosParaElPago();
+        if ("Efectivo".equalsIgnoreCase(DatosGlobales.datos.get("formaDePago"))) {
+
+            ingresoMontoEfectivo();
+        } else {
+            ingresarTipoDePago();
+        }
+
+          // ingresoDeDatosParaElPago();
+
     }
 
     @And("seleccionar boton guardar")
@@ -195,7 +208,6 @@ public class PosDef {
     public void seleccionamosTipoDeEmision(String arg0) throws InterruptedException {
         seleccionTipoDeEmision();
         Thread.sleep(6000);
-        visualizarBotones();
 
     }
 
@@ -206,18 +218,27 @@ public class PosDef {
 
     @And("ingresamos un producto en el filtro de despensa {string}")
     public void ingresamosUnProductoEnElFiltroDeDespensa(String arg0) throws InterruptedException {
+        String tipoCategoria = DatosGlobales.datosPOS.get("tipoCategoria");
         escribirProductoEnFiltroDespensa();
+
+        if ("Despensa".equalsIgnoreCase(tipoCategoria)) {
+            escribirProductoEnFiltroDespensa();
+        } else if ("Anio".equalsIgnoreCase(tipoCategoria)){
+            escribirProductoEnFiltroANNO();
+        }else {
+            escribirProductoEnFiltroOtros();
+        }
     }
 
-    @And("ingresamos un producto en el filtro de ANNO {string}")
-    public void ingresamosUnProductoEnElFiltroDeANNO(String arg0) throws InterruptedException {
-        escribirProductoEnFiltroANNO();
-    }
+//    @And("ingresamos un producto en el filtro de ANNO {string}")
+//    public void ingresamosUnProductoEnElFiltroDeANNO(String arg0) throws InterruptedException {
+//        escribirProductoEnFiltroANNO();
+//    }
 
-    @And("ingresamos un producto en el filtro de Otros {string}")
-    public void ingresamosUnProductoEnElFiltroDeOtros(String arg0) throws InterruptedException {
-        escribirProductoEnFiltroOtros();
-    }
+//    @And("ingresamos un producto en el filtro de Otros {string}")
+//    public void ingresamosUnProductoEnElFiltroDeOtros(String arg0) throws InterruptedException {
+//        escribirProductoEnFiltroOtros();
+//    }
 
     @And("hacemos click en el boton carta y seleccionamos el producto que muestre")
     public void hacemosClickEnElBotonCartaYSeleccionamosElProductoQueMuestre() throws InterruptedException {
@@ -276,6 +297,7 @@ public class PosDef {
     @And("ingresamos el numero de patente <{string}> y confirmamos")
     public void ingresamosElNumeroDePatenteYConfirmamos(String arg0) throws InterruptedException {
         ingresarPatente();
+        cerrarDriver();
     }
 
     @And("le damos click en el boton de crear prod libre y visualizamos el formulario para ingresar un producto")
@@ -332,7 +354,6 @@ public class PosDef {
     @Then("visualizamos el producto ingresado en el carro de compras")
     public void visualizamosElProductoIngresadoEnElCarroDeCompras() throws InterruptedException {
         visualizarProductoAgreadoCarroCompras();
-
     }
 
     @And("seleccionamos la forma de pago <{string}> y el tipo de pago <{string}> que ocuparemos")
@@ -344,7 +365,6 @@ public class PosDef {
     @Then("seleccionar boton imprimir")
     public void seleccionarBotonImprimir() throws InterruptedException {
         seleccionarBtnImprimir();
-        tomarCaptura("boleta emitida");
         Thread.sleep(3000);
         cerrarDriver();
     }

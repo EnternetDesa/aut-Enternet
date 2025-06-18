@@ -35,7 +35,7 @@ Scenario: POS - Agregar Producto por Buscador
     And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
     And seleccionamos tipo de emision <"tipoEmision">
-   #Then seleccionar boton imprimir
+    Then seleccionar boton imprimir
 
     @agregarProdFiltroDespensa @agregarPorDespensa
 Scenario: POS - Agregar Producto por Filtro Despensa
@@ -54,7 +54,7 @@ Scenario: POS - Agregar Producto por Filtro Despensa
     And seleccionamos boton nueva venta
     And le asignamos el cliente a quien venderemos "<nombreCliente>"
     And ingresamos un producto desde el modulo del filtro por categorias
-    And ingresamos un producto en el filtro de despensa "<catDespensa>"
+    And ingresamos un producto en el filtro de despensa "<tipoCategoria>"
     And seleccionamos el boton buscar
     And seleccionamos un producto
     And ingresamos la cantidad de producto que llevaremos
@@ -85,7 +85,7 @@ Scenario: POS - Agregar Producto por boton Carta
     And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
     And seleccionamos tipo de emision <"tipoEmision">
-   #Then seleccionar boton imprimir
+    Then seleccionar boton imprimir
 
     @crearProdLibre
 Scenario: Ventas - Probar boton Crear Producto libre
@@ -113,6 +113,6 @@ Scenario: Ventas - Probar boton Crear Producto libre
     And seleccionamos la forma de pago <"formaDePago"> que ocuparemos e ingresamos los datos para el pago
     And seleccionar boton guardar
     And seleccionamos tipo de emision <"tipoEmision">
-   #Then seleccionar boton imprimir
+    Then seleccionar boton imprimir
 
 

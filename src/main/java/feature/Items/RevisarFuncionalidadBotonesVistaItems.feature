@@ -1,5 +1,6 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
+  @Items
 Feature: Definiciones - Funcionalidades de botones
 
   Background:
@@ -15,7 +16,7 @@ Feature: Definiciones - Funcionalidades de botones
 Scenario: Definiciones - Seleccionar Descargar Columnas Base para Maestras
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en el modulo de items
     And seleccione el boton de descargar columna base para maestras
     Then se descarga el archivo cvs
@@ -23,7 +24,7 @@ Scenario: Definiciones - Seleccionar Descargar Columnas Base para Maestras
   Scenario: Definiciones - Items - Importar Archivo
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de Inventario {string} "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en el modulo de items
     And seleccionamos el boton importar archivo
     And en la ventana de carga de archivo ingresamos el tipo de separador de celdas "<separadorCeldas>"

@@ -52,7 +52,7 @@ public class Hook {
           DatosGlobales.datosFiado = DataLoader.cargarDatosDesde("datosFiado.json");
           DatosGlobales.datosActuales = DatosGlobales.datosFiado;
 
-      } else if (scenario.getSourceTagNames().contains("@Inventario")) {
+      } else if (scenario.getSourceTagNames().contains("@Items")) {
 //          archivo = "datos.json";
           DatosGlobales.datos = DataLoader.cargarDatosDesde("datos.json");
           DatosGlobales.datosActuales = DatosGlobales.datos;

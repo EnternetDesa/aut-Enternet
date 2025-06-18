@@ -1,5 +1,6 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
+  @Items
 Feature: Definiciones- Crear Items - EditarProducto.
 
   Background:

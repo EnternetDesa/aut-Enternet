@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static Utils.Commons.BaseTest.*;
+import static page.menuPage.PromocionesPage.capturarMensajePantalla;
 
 public class PosPage {
 
@@ -419,6 +420,7 @@ public class PosPage {
                 //BaseTest.tomarCaptura("Usuarios");
                 Utils.desenmarcarObjeto(driver, btnEfectivo);
                 btnEfectivo.click();
+
                 break;
             case "Tarjeta":
                 WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(30));
@@ -476,6 +478,67 @@ public class PosPage {
             default:
                 System.out.println("Opción no válida");
         }
+    }
+
+    public static void listarInputsTextoVisibles() {
+        List<WebElement> inputs = driver.findElements(By.xpath("//input[@type='text']"));
+        System.out.println("🔍 Inputs tipo 'text' visibles encontrados:");
+        for (WebElement input : inputs) {
+            try {
+                if (input.isDisplayed()) {
+                    String id = input.getAttribute("id");
+                    String name = input.getAttribute("name");
+                    String value = input.getAttribute("value");
+                    System.out.println("🟦 ID: " + id + " | name: " + name + " | value: " + value);
+                }
+            } catch (Exception e) {
+                // Ignorar excepciones si el input desaparece o es inaccesible
+            }
+        }
+    }
+    public static void ingresoMontoEfectivo() throws InterruptedException {
+//        Thread.sleep(3000);
+//        String precioTotalRaw = capturarMensajePantalla("//*[normalize-space(text())='Total']/following-sibling::*[1]");
+//        if (precioTotalRaw == null) throw new RuntimeException("❌ No se pudo capturar el total para pago en efectivo.");
+//
+//        String precioTotal = precioTotalRaw.replaceAll("[^\\d]", ""); // Solo dígitos enteros
+//        driver.switchTo().frame(0);
+//        listarInputsTextoVisibles();
+//        // Buscar campo de Monto de Pago por su proximidad visual
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+//
+//        WebElement campoMonto = wait.until(ExpectedConditions.visibilityOfElementLocated(
+//                By.xpath("//*[normalize-space(text())='Monto de Pago']/following::input[1]")
+//        ));
+//        campoMonto.clear();
+//        campoMonto.sendKeys(precioTotal);
+//        System.out.println("💵 Monto ingresado: " + precioTotal);
+//        driver.switchTo().defaultContent();
+
+        Thread.sleep(3000);
+        String precioTotalRaw = capturarMensajePantalla("//*[normalize-space(text())='Total']/following-sibling::*[1]");
+        if (precioTotalRaw == null) throw new RuntimeException("❌ No se pudo capturar el total para pago en efectivo.");
+
+        String soloDigitos = precioTotalRaw.replaceAll("[^\\d]", "");
+        if (soloDigitos.isBlank()) throw new RuntimeException("❌ No se pudo extraer número del total bruto.");
+
+        int monto = Integer.parseInt(soloDigitos);
+        int montoRedondeado = ((int) Math.ceil(monto / 100.0)) * 100;
+
+        String precioTotal = String.valueOf(montoRedondeado);
+
+        driver.switchTo().frame(0);
+        listarInputsTextoVisibles();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebElement campoMonto = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[normalize-space(text())='Monto de Pago']/following::input[1]")
+        ));
+
+        campoMonto.clear();
+        campoMonto.sendKeys(precioTotal);
+        System.out.println("💵 Monto ingresado (redondeado): " + precioTotal);
+        driver.switchTo().defaultContent();
     }
 
     public static void ingresarTipoDePago() throws InterruptedException {
@@ -541,26 +604,25 @@ public class PosPage {
     }
 
     public static void seleccionarBtnImprimir() throws InterruptedException {
-
-        Thread.sleep(4000);
-        driver.switchTo().frame(0);
+        Thread.sleep(2000);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        WebElement txtMontoPago = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"IMPRIMIR\"]")));
-        Utils.enmarcarElemento(driver, txtMontoPago);
-        tomarCaptura("btn imprimir");
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"IMPRIMIR\"]"), "Imprimir Boleta o Factura");
-        Utils.desenmarcarObjeto(driver, txtMontoPago);
-        txtMontoPago.click();
+        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"IMPRIMIR\"]"), "btn Imprimir");
+        WebElement btnImprimir = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"IMPRIMIR\"]")));
+        Utils.enmarcarElemento(driver, btnImprimir);
+        tomarCaptura("btn Imprimir");
+        btnImprimir.click();
+        Utils.desenmarcarObjeto(driver, btnImprimir);
         driver.switchTo().defaultContent();
     }
     public static void visualizarBotones() throws InterruptedException {
         Thread.sleep(2000);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"IMPRIMIR\"]"), "Firmar Boleta o Factura");
-        WebElement btnFirmar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"IMPRIMIR\"]")));
-        Utils.enmarcarElemento(driver, btnFirmar);
-        tomarCaptura("btn Formar");
-        Utils.desenmarcarObjeto(driver, btnFirmar);
+        WebElement btnImprimir = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"IMPRIMIR\"]")));
+        Utils.enmarcarElemento(driver, btnImprimir);
+        tomarCaptura("btn Forma de pago");
+        btnImprimir.click();
+        Utils.desenmarcarObjeto(driver, btnImprimir);
         driver.switchTo().defaultContent();
     }
 
@@ -699,27 +761,65 @@ public class PosPage {
     }
 
     public static void escribirProductoEnFiltroANNO() throws InterruptedException {
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//        WebElement txtCatAnno = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0001\"]")));
+//        Utils.enmarcarElemento(driver, txtCatAnno);
+//        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0001\"]"), "ingreso de producto por filtro");
+//        Utils.desenmarcarObjeto(driver, txtCatAnno);
+//        tomarCaptura("ingreso de producto por filtro");
+//        txtCatAnno.sendKeys(DatosGlobales.datosPOS.get("catANNO"));
+        String catANIO = DatosGlobales.datosPOS.get("catANNO");
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        WebElement txtCatAnno = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0001\"]")));
-        Utils.enmarcarElemento(driver, txtCatAnno);
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0001\"]"), "ingreso de producto por filtro");
-        Utils.desenmarcarObjeto(driver, txtCatAnno);
-        tomarCaptura("ingreso de producto por filtro");
-        txtCatAnno.sendKeys(DatosGlobales.datosPOS.get("catANNO"));
+        By locatorInput = By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0001\"]");
+
+        WebElement txtAnio = wait.until(ExpectedConditions.elementToBeClickable(locatorInput));
+        Utils.enmarcarElemento(driver, txtAnio);
+        esperarElementoYMedirTiempo(locatorInput, "Ingrese código o descripción de producto...");
+        Utils.desenmarcarObjeto(driver, txtAnio);
+
+        txtAnio.click(); // Asegura el foco
+        txtAnio.clear(); // Limpia el campo
+        Thread.sleep(5000);
+        txtAnio.sendKeys(catANIO);
+        Thread.sleep(500); // Espera leve tras escribir
+
+        // Opcional: presiona ENTER si el filtro requiere activación
+        txtAnio.sendKeys(Keys.ENTER);
+        Thread.sleep(500);
     }
 
     public static void escribirProductoEnFiltroOtros() throws InterruptedException {
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//        WebElement txtCatOtros = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0002\"]")));
+//        Utils.enmarcarElemento(driver, txtCatOtros);
+//        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0002\"]"), "ingreso de producto por filtro");
+//        Utils.desenmarcarObjeto(driver, txtCatOtros);
+//        tomarCaptura("ingreso de producto por filtro");
+//        txtCatOtros.sendKeys(DatosGlobales.datosPOS.get("catOtros"));
+        String catOtros = DatosGlobales.datosPOS.get("catOtros");
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        WebElement txtCatOtros = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0002\"]")));
+        By locatorInput = By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0002\"]");
+
+        WebElement txtCatOtros = wait.until(ExpectedConditions.elementToBeClickable(locatorInput));
         Utils.enmarcarElemento(driver, txtCatOtros);
-        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"W0164vBUSCADORACATCOD_0002\"]"), "ingreso de producto por filtro");
+        esperarElementoYMedirTiempo(locatorInput, "Ingrese código o descripción de producto...");
         Utils.desenmarcarObjeto(driver, txtCatOtros);
-        tomarCaptura("ingreso de producto por filtro");
-        txtCatOtros.sendKeys(DatosGlobales.datosPOS.get("catOtros"));
+
+        txtCatOtros.click(); // Asegura el foco
+        txtCatOtros.clear(); // Limpia el campo
+        Thread.sleep(5000);
+        txtCatOtros.sendKeys(catOtros);
+        Thread.sleep(500); // Espera leve tras escribir
+
+        // Opcional: presiona ENTER si el filtro requiere activación
+        txtCatOtros.sendKeys(Keys.ENTER);
+        Thread.sleep(500);
     }
 
     public static void clickBtnTransportista() throws InterruptedException {
-        Thread.sleep(2500);
+        Thread.sleep(3000);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); //*[@id="DATOSTRANSPORTISTAContainer"]/button
         WebElement btnTransportista = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"DATOSTRANSPORTISTAContainer\"]/button")));
         Utils.enmarcarElemento(driver, btnTransportista);
@@ -786,10 +886,11 @@ public class PosPage {
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"vPATENTE\"]"), "Nro Patente");
         Utils.desenmarcarObjeto(driver, txtPatente);
         txtPatente.sendKeys(DatosGlobales.datosPOS.get("patente"));
-        tomarCaptura("Nro Patente");
+        Utils.enmarcarElemento(driver, btnConfirmar);
+        tomarCaptura("Transportista");
+        Utils.desenmarcarObjeto(driver, btnConfirmar);
         btnConfirmar.click();
         driver.switchTo().defaultContent();
-        cerrarDriver();
     }
 
     public static void clickBtnBuscar() throws InterruptedException {
@@ -1022,71 +1123,6 @@ public class PosPage {
         btnCrearProducto.click();
     }
 
-//    public static void crearEIngresarProductoLibre() throws InterruptedException {
-//        try {
-//            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-//
-//            // Paso 1: Click en el botón "Crear Producto Libre"
-//            Thread.sleep(3000);
-//            WebElement btnCrearProducto = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("CREARPRODUCTOLIBRE")));
-//            Utils.enmarcarElemento(driver, btnCrearProducto);
-//            esperarElementoYMedirTiempo(By.id("CREARPRODUCTOLIBRE"), "Click btn Crear Prod Libre");
-//            Utils.desenmarcarObjeto(driver, btnCrearProducto);
-//            btnCrearProducto.click();
-//            System.out.println("✅ Click en 'Crear Producto Libre' realizado.");
-//
-//            tomarCaptura("Click_Crear_Producto_Libre");
-//            Thread.sleep(2000); // espera para cargar iframe u otros elementos
-//
-//            // Paso 2: Detectar y cambiar a iframe si existe
-//            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
-//            System.out.println("🔍 Iframes encontrados después del clic: " + iframes.size());
-//            for (WebElement iframe : iframes) {
-//                System.out.println("📋 iframe id: " + iframe.getAttribute("id") + ", name: " + iframe.getAttribute("name"));
-//            }
-//
-//            if (!iframes.isEmpty()) {
-//                driver.switchTo().frame(iframes.get(0));
-//                System.out.println("✅ Cambiado al primer iframe.");
-//            }
-//
-//            // Paso 3: Revisar campos con ID 'LIBRE'
-//            List<WebElement> inputs = driver.findElements(By.xpath("//*[contains(@id,'LIBRE')]"));
-//            System.out.println("📊 Inputs con 'LIBRE' encontrados: " + inputs.size());
-//            for (WebElement input : inputs) {
-//                System.out.println("🧾 ID real encontrado: " + input.getAttribute("id"));
-//            }
-//
-//            // Paso 4: Esperar campo del código y escribir el valor desde JSON
-//            WebElement txtCodigoPL = esperarElementoSeguro("NOTAVENTAITEMLIBRECODIGO", 30);
-//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", txtCodigoPL);
-//            Utils.enmarcarElemento(driver, txtCodigoPL);
-//            esperarElementoYMedirTiempo(By.xpath("//*[contains(@id,'NOTAVENTAITEMLIBRECODIGO')]"), "Ingreso de código");
-//
-//            String codigo = DatosGlobales.datosPOS.get("codProd");
-//            if (codigo == null || codigo.isBlank()) {
-//                throw new IllegalArgumentException("❌ codProd no está definido o está vacío en el JSON cargado.");
-//            }
-//
-//            txtCodigoPL.clear();
-//            txtCodigoPL.sendKeys(codigo);
-//            Utils.desenmarcarObjeto(driver, txtCodigoPL);
-//            System.out.println("✅ Código ingresado: " + codigo);
-//
-//            // Paso 5: Salir del iframe si fue usado
-//            if (!iframes.isEmpty()) {
-//                driver.switchTo().defaultContent();
-//                System.out.println("🔁 Regresado al contenido principal.");
-//            }
-//
-//        } catch (Exception e) {
-//            tomarCaptura("Error_Crear_Producto_Libre");
-//            System.out.println("⚠ Ocurrió un error: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
-
-
     public static void crearEIngresarProductoLibre() throws InterruptedException {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
@@ -1316,18 +1352,62 @@ public class PosPage {
         driver.switchTo().defaultContent();
     }
 
-    public static void ingresarCantidad() throws InterruptedException {
-        driver.switchTo().frame(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        WebElement txtCantidad = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECANTIDAD\"]")));
+//    public static void ingresarCantidad() throws InterruptedException {
+//        driver.switchTo().frame(0);
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//        WebElement txtCantidad = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECANTIDAD\"]")));
+//        Utils.enmarcarElemento(driver, txtCantidad);
+//        esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECANTIDAD\"]"), "cantidad");
+//        Thread.sleep(2000);
+//        txtCantidad.clear();
+//        txtCantidad.sendKeys(DatosGlobales.datosPOS.get("cantProdC"));  //
+//        Utils.desenmarcarObjeto(driver, txtCantidad);
+//        driver.switchTo().defaultContent();
+//    }
+public static void ingresarCantidad() throws InterruptedException {
+    driver.switchTo().frame(0);
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+    try {
+        WebElement txtCantidad = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECANTIDAD\"]"))
+        );
+
         Utils.enmarcarElemento(driver, txtCantidad);
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBRECANTIDAD\"]"), "cantidad");
-        Thread.sleep(2000);
+
+        Thread.sleep(1000);
         txtCantidad.clear();
-        txtCantidad.sendKeys(DatosGlobales.datosPOS.get("cantProdC"));  //
+
+        String cantidad = DatosGlobales.datosPOS.get("cantProdC");
+        System.out.println("🔢 Cantidad a ingresar: " + cantidad);
+
+        if (cantidad == null || cantidad.isBlank()) {
+            throw new IllegalArgumentException("❌ 'cantProdC' no está definido o está vacío.");
+        }
+
+        txtCantidad.sendKeys(cantidad);
+        txtCantidad.sendKeys(Keys.TAB);
+        Thread.sleep(500);
+
+        String ingresado = txtCantidad.getAttribute("value");
+        System.out.println("✅ Valor ingresado en el campo: '" + ingresado + "'");
+
+        if (!ingresado.equals(cantidad)) {
+            System.out.println("⚠ Valor no se ingresó correctamente. Probando con JavaScript...");
+            ((JavascriptExecutor) driver).executeScript("arguments[0].value='" + cantidad + "';", txtCantidad);
+        }
+
         Utils.desenmarcarObjeto(driver, txtCantidad);
+    } catch (Exception e) {
+        tomarCaptura("❌ Error al ingresar cantidad");
+        System.out.println("⚠ Error al ingresar cantidad: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
         driver.switchTo().defaultContent();
     }
+}
+
 
     public static void ingresarPrecio() throws InterruptedException {
         driver.switchTo().frame(0);
@@ -1337,6 +1417,7 @@ public class PosPage {
         esperarElementoYMedirTiempo(By.xpath("//*[@id=\"NOTAVENTAITEMLIBREPRECIO\"]"), "Ingreso Precio");
         Thread.sleep(2000);
         txtPrecio.clear();
+        Thread.sleep(200);
         txtPrecio.sendKeys(DatosGlobales.datosPOS.get("precio"));  //
         Utils.desenmarcarObjeto(driver, txtPrecio);
         driver.switchTo().defaultContent();

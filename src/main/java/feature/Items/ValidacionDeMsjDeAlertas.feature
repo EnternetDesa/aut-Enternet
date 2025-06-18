@@ -1,5 +1,6 @@
 #Auto generated Octane revision tag
 #given:dado - when: cuando - then:entonces
+  @Items
 Feature: Definiciones- Crear Items - Validacion de mensajes de alerta por falta de ingreso de datos.
 
   Background:
@@ -15,7 +16,7 @@ Feature: Definiciones- Crear Items - Validacion de mensajes de alerta por falta 
 Scenario: Crear items - Crear Items Sin descripcion
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en lista de items y presionamos el boton crear items
     And nos redirige a la vista de creacion de producto
    # And ingresamos los datos de descripcion de producto "<descProducto>"
@@ -34,7 +35,7 @@ Scenario: Crear items - Crear Items Sin descripcion
   Scenario: Crear items - Crear Items Sin equivalencia de comparacion
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en lista de items y presionamos el boton crear items
     And nos redirige a la vista de creacion de producto
     And ingresamos los datos de descripcion de producto "<descProducto>"
@@ -52,7 +53,7 @@ Scenario: Crear items - Crear Items Sin descripcion
   Scenario: Crear items - Sin codigo interno, EAN o SKU
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en lista de items y presionamos el boton crear items
     And nos redirige a la vista de creacion de producto
     And ingresamos los datos de descripcion de producto "<descProducto>"
@@ -69,7 +70,7 @@ Scenario: Crear items - Crear Items Sin descripcion
   Scenario: Crear items - Crear Items Sin codigo Base
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en lista de items y presionamos el boton crear items
     And nos redirige a la vista de creacion de producto
     And ingresamos los datos de descripcion de producto "<descProducto>"
@@ -83,10 +84,11 @@ Scenario: Crear items - Crear Items Sin descripcion
     And seleccionamos guardar producto
     Then nos debe de mostrar el msj creado en la lista el items
 
+    @codigoEAN
   Scenario: Crear items - Ingresar un codigo EAN incorrecto
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en lista de items y presionamos el boton crear items
     And nos redirige a la vista de creacion de producto
     And ingresamos los datos de descripcion de producto "<descProducto>"
@@ -100,10 +102,11 @@ Scenario: Crear items - Crear Items Sin descripcion
     And seleccionamos guardar producto
     Then nos debe de mostrar el msj creado en la lista el items
 
+      @filtroclasificador
   Scenario: Crear items - Validacion de filtro clasificadora/Buscadora
     And estoy en home de stock
     And selecciono el menu de "<menu>"
-    And luego el submenu de "<subMenuD>"
+    And luego el submenu de Inventario "<subMenu>"
     When este en lista de items y presionamos el boton crear items
     And nos redirige a la vista de creacion de producto
     And en la seccion de categorias del producto seleccionamos la categoria buscadora <"catBuscadora"> y seleccionamos el boton buscar
